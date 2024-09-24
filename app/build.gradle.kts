@@ -36,7 +36,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.core)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.flexbox)
     implementation(libs.arsceneview)
     implementation(libs.io.github.sceneview.sceneview)
     implementation(libs.androidx.core.ktx)

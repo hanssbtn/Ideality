@@ -2,6 +2,7 @@
 agp = "8.6.1"
 arsceneview = "2.2.1"
 core = "1.45.0"
+coreSplashscreen = "1.0.1"
 filamentAndroid = "1.52.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -13,9 +14,14 @@ material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
 sceneviewVersion = "2.2.1"
+navigationFragmentKtx = "2.8.2"
+navigationUiKtx = "2.8.2"
+flexbox = "3.0.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 arsceneview = { module = "io.github.sceneview:arsceneview", version.ref = "arsceneview" }
 core = { module = "com.google.ar:core", version.ref = "core" }
 filament-android = { module = "com.google.android.filament:filament-android", version.ref = "filamentAndroid" }
@@ -27,6 +33,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 
 
 [plugins]
