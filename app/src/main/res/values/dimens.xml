@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="model_preview_list_element_size">80dp</dimen>
+</resources>

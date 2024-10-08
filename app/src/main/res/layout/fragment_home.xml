@@ -14,18 +14,20 @@
         tools:layout_editor_absoluteY="72dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginTop="20dp"/>
 
     <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexboxLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:alignItems="center"
         app:flexDirection="row"
         app:flexWrap="wrap"
         app:justifyContent="space_evenly"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/navbar_divider">
 
@@ -33,24 +35,25 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/catalogue_button"
                 style="@style/default_icon_clickable"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:scaleType="center"
                 android:contentDescription="@string/desc_catalogue_button"
-                app:srcCompat="@drawable/shopping_cart_outline_svgrepo_com_48x48"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/shopping_cart_outline_svgrepo_com"
                 tools:layout_editor_absoluteX="30dp"
                 tools:layout_editor_absoluteY="40dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/desc_catalogue_button"
+                android:labelFor="@id/catalogue_button"
+                android:text="@string/label_catalogue_button"
                 android:textAlignment="center"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -58,28 +61,32 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/preview_button"
                 style="@style/default_icon_clickable"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:contentDescription="@string/desc_preview_button"
-                app:srcCompat="@drawable/photo_camera_svgrepo_com_48x48" />
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/photo_camera_svgrepo_com" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/desc_preview_button"
+                android:labelFor="@id/preview_button"
+                android:text="@string/label_preview_button"
                 android:textAlignment="center"
                 android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/models_button"
@@ -88,14 +95,16 @@
                 android:layout_height="80dp"
                 android:contentDescription="@string/desc_models_button"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/models_icon_48x48" />
+                app:srcCompat="@drawable/models_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/desc_models_button"
+                android:labelFor="@id/models_button"
+                android:text="@string/label_models_button"
                 android:textAlignment="center"
                 android:textSize="16sp" />
         </LinearLayout>
     </com.google.android.flexbox.FlexboxLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

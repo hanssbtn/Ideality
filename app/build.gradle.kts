@@ -36,6 +36,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.filament.android)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.jetbrains.kotlinx.coroutines.android)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.core)
     implementation(libs.navigation.fragment.ktx)

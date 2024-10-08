@@ -1,11 +1,13 @@
 package com.example.ideality.activities
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,13 +15,19 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.ideality.R
 import com.google.ar.core.ArCoreApk
+import java.time.Clock
+import java.time.Instant
+import java.util.Date
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private var userRequestedInstall = true
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+//        val splashScreen =
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         checkAndInstallARCore()

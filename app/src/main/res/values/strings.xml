@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Ideality</string>
-    <string name="desc_catalogue_button">Catalogue</string>
-    <string name="desc_preview_button">Preview</string>
-    <string name="desc_models_button">Models</string>
+    <string name="label_catalogue_button">Catalogue</string>
+    <string name="label_preview_button">Preview</string>
+    <string name="label_models_button">Models</string>
+    <string name="desc_model_list">List of downloaded models</string>
+    <string name="desc_models_button">This is a button to open the models folder.</string>
+    <string name="desc_preview_button">This is a button for opening model previews.</string>
+    <string name="desc_catalogue_button">This is a button to open the catalogue</string>
 </resources>
