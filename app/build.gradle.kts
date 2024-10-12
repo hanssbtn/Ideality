@@ -58,5 +58,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     //volly
     implementation("com.android.volley:volley:1.2.1")
-
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.rengwuxian.materialedittext:library:2.1.4")
 }
