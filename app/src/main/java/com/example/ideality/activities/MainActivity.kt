@@ -1,5 +1,6 @@
 package com.example.ideality.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -13,16 +14,28 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.ideality.R
 import com.google.ar.core.ArCoreApk
 import java.time.Clock
 import java.time.Instant
 import java.util.Date
 import kotlin.system.exitProcess
+import com.rengwuxian.materialedittext.MaterialEditText
+import com.example.ideality.fragments.HomeFragment
 
 class MainActivity : AppCompatActivity() {
     private var userRequestedInstall = true
 
+    private lateinit var appURL: String
+    private lateinit var EMAIL: String
+    private lateinit var PASSWORD: String
+    private lateinit var mEmail: MaterialEditText
+    private lateinit var mPassword: MaterialEditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +43,15 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        appURL = "http://192.168.18.40/api/logIn.php"
+        mEmail = findViewById(R.id.text_Email)
+        mPassword = findViewById(R.id.text_password)
+
         checkAndInstallARCore()
 
         setContentView(R.layout.activity_main)
+
+        // Call the login function wherever needed, e.g., when a login button is clicked
 
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -144,7 +163,7 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
             onPositiveClick()
         }
-        builder.setCancelable(false) // Prevent the dialog from being dismissed by clicking outside
+        builder.setCancelable(false)
         builder.show()
     }
 
@@ -152,4 +171,66 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+
+    private fun logIn() {
+        EMAIL = mEmail.text.toString()
+        PASSWORD = mPassword.text.toString()
+
+        if (EMAIL.isEmpty()) {
+            showAlert("Email cannot be empty")
+        } else if (PASSWORD.isEmpty()) {
+            showAlert("Password cannot be empty")
+        } else if (PASSWORD.length < 8) {
+            showAlert("Password length must be at least 8 characters")
+        } else {
+            val stringRequest = object : StringRequest(Request.Method.POST, appURL,
+                Response.Listener<String> { response ->
+                    // Handle the server response here
+                    if (response == "true") {
+                        // Navigate to HomeFragment
+                        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+                        navController.navigate(R.id.homeFragment)
+                    } else {
+                        showAlert(response)
+                    }
+                },
+                Response.ErrorListener { error ->
+                    // Handle error response
+                    val errorMessage = if (error.networkResponse != null) {
+                        String(error.networkResponse.data)
+                    } else {
+                        "Network error. Please try again."
+                    }
+                    showAlert(errorMessage)
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    return mapOf("Accept" to "application/json; charset=UTF-8")
+                }
+
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    return mapOf(
+                        "email" to EMAIL,
+                        "password" to PASSWORD
+                    )
+                }
+            }
+
+            // Add the request to the request queue
+            Volley.newRequestQueue(this).add(stringRequest)
+        }
+    }
+
+    private fun showAlert(message: String) {
+        AlertDialog.Builder(this)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
 }
+
+
+
