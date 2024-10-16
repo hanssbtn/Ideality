@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/model_list_element_view">
     <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@color/material_dynamic_neutral0"/>
+        android:layout_width="@dimen/model_preview_list_element_size"
+        android:layout_height="@dimen/model_preview_list_element_size"
+        android:src="@color/material_dynamic_neutral0"
+        android:contentDescription="placeholder description"
+        android:id="@+id/model_list_element_button"
+        />
 </LinearLayout>

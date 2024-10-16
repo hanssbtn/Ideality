@@ -2,7 +2,6 @@ package com.example.ideality.fragments
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.AssetManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -13,7 +12,12 @@ import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ideality.R
+import com.example.ideality.utils.ModelPreviewListAdapter
+import com.example.ideality.utils.ProductDataRepository
+import com.example.ideality.viewmodels.PreviewListElementViewModel
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.loaders.ModelLoader
 import io.github.sceneview.node.ModelNode
@@ -26,10 +30,12 @@ import kotlinx.coroutines.launch
 class PreviewFragment: Fragment() {
     private val tag = "PreviewFragment"
     private lateinit var arSceneView: ARSceneView
+    private lateinit var elementViewModel: PreviewListElementViewModel
+    private lateinit var modelList: RecyclerView
 //    private var modelNodes : ArrayMap<, ModelNode> = HashMap()
     private lateinit var modelLoader: ModelLoader
     private lateinit var loadingScreen: PopupWindow
-
+    private lateinit var listAdapter: ModelPreviewListAdapter
     private var trackingFailureReason: TrackingFailureReason? = null
 
     override fun onCreateView(
@@ -46,10 +52,15 @@ class PreviewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tag = this.tag
 
+        showLoadingScreen(checkCameraAvailability())
         arSceneView = view.findViewById(R.id.arSceneView)
+        modelList = view.findViewById(R.id.model_list)
+        modelList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
         if (arSceneView.session == null) {
-            Log.d(tag, "OnViewCreated: ARSceneView has no session")
+            Log.e(tag, "OnViewCreated: ARSceneView has no session")
         }
+
         modelLoader = ModelLoader(arSceneView.engine, view.context)
         arSceneView.apply {
             lifecycle = this@PreviewFragment.lifecycle
@@ -97,7 +108,9 @@ class PreviewFragment: Fragment() {
             Log.d(tag, "lifeCycleScope.launch.onViewCreated: added child node.")
 
         }
-        showLoadingScreen(checkCameraAvailability())
+        val repo = ProductDataRepository(requireContext())
+        elementViewModel = PreviewListElementViewModel(repo)
+        listAdapter = ModelPreviewListAdapter()
     }
 
     override fun onPause() {

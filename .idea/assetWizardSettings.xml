@@ -79,7 +79,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\Student\AndroidStudioProjects\Ideality\app\src\main\res\drawable\ideality_icon_dark.png" />
+                                                <entry key="imagePath" value="C:\Users\Student\AndroidStudioProjects\Ideality\app\src\main\res\drawable\models_icon.png" />
                                                 <entry key="scalingPercent" value="65" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -115,9 +115,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="backgroundLayerName" value="ideality_icon_dark_background" />
-                                      <entry key="foregroundLayerName" value="ideality_icon_dark_foreground" />
-                                      <entry key="outputName" value="ideality_icon" />
+                                      <entry key="outputName" value="models_icon_xml" />
                                     </map>
                                   </option>
                                 </PersistentState>

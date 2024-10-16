@@ -15,15 +15,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.ideality.R
 import com.google.ar.core.ArCoreApk
-import java.time.Clock
-import java.time.Instant
-import java.util.Date
 import kotlin.system.exitProcess
+import com.example.ideality.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var userRequestedInstall = true
-
-
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        val splashScreen =
@@ -32,7 +29,8 @@ class MainActivity : AppCompatActivity() {
 
         checkAndInstallARCore()
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
