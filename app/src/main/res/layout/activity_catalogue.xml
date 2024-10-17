@@ -7,6 +7,33 @@
     android:layout_height="match_parent"
     tools:context=".Catalogue">
 
+    <LinearLayout
+        android:layout_width="240dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/CatalogueListButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/catalogue_list_button"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:backgroundTint="@color/color_light_progress_bar" />
+
+        <Button
+            android:id="@+id/CatalogueGridButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/catalogue_grid_button"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:backgroundTint="@color/color_dark_progress_bar" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
