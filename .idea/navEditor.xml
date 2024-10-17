@@ -8,6 +8,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="catalogueFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-1171" />
+                            <option name="y" value="-159" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="homeFragment">
                     <value>
                       <LayoutPositions>
@@ -29,13 +41,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="mainActivity">
+                  <entry key="loginFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-1510" />
-                            <option name="y" value="-70" />
+                            <option name="x" value="-916" />
+                            <option name="y" value="-392" />
                           </Point>
                         </option>
                       </LayoutPositions>

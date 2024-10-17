@@ -19,4 +19,12 @@
         android:name="com.example.ideality.fragments.PreviewFragment"
         android:label="PreviewFragment"
         tools:layout="@layout/fragment_preview"/>
+    <fragment
+        android:id="@+id/catalogueFragment"
+        android:name="com.example.ideality.fragments.CatalogueFragment"
+        android:label="CatalogueFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.ideality.fragments.LoginFragment"
+        android:label="LoginFragment" />
 </navigation>

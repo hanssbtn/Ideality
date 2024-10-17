@@ -4,12 +4,14 @@
     <string name="label_preview_button">Preview</string>
     <string name="label_models_button">Models</string>
     <string name="desc_model_list">List of downloaded models</string>
-    <string name="desc_models_button">This is a button to open the models folder.</string>
-    <string name="desc_preview_button">This is a button for opening model previews.</string>
-    <string name="desc_catalogue_button">This is a button to open the catalogue</string>
-    <string name="orders_text">Orders</string>
-    <string name="desc_orders_button">This is a button for viewing orders</string>
+    <string name="desc_models_button">View downloaded models</string>
+    <string name="desc_preview_button">Preview models</string>
+    <string name="desc_catalogue_button">View product catalogue</string>
+    <string name="label_orders">Orders</string>
+    <string name="desc_orders_button">View orders</string>
     <string name="desc_settings_button">Settings button</string>
     <string name="desc_profile_button">Profile button</string>
     <string name="username_placeholder">Customer</string>
+    <string name="label_register">Register</string>
+    <string name="desc_app_logo">Ideality logo</string>
 </resources>

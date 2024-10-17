@@ -17,6 +17,7 @@ android {
     }
     dataBinding {
         enable = true
+
     }
     buildTypes {
         release {
@@ -47,6 +48,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.flexbox)
     implementation(libs.arsceneview)
+    implementation(libs.androidx.coordinatorlayout)
     implementation(libs.io.github.sceneview.sceneview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -59,10 +61,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //volly
-    implementation("com.android.volley:volley:1.2.1")
+    //volley
+    implementation(libs.volley)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.rengwuxian.materialedittext:library:2.1.4")
 }

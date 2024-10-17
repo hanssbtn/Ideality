@@ -1,14 +1,11 @@
 package com.example.ideality.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,8 +19,6 @@ import com.android.volley.toolbox.Volley
 import com.example.ideality.R
 import com.google.ar.core.ArCoreApk
 import kotlin.system.exitProcess
-import com.rengwuxian.materialedittext.MaterialEditText
-import com.example.ideality.fragments.HomeFragment
 import com.example.ideality.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -32,8 +27,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appURL: String
     private lateinit var EMAIL: String
     private lateinit var PASSWORD: String
-    private lateinit var mEmail: MaterialEditText
-    private lateinit var mPassword: MaterialEditText
 
     private lateinit var binding: ActivityMainBinding
 
@@ -43,8 +36,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         appURL = "http://192.168.18.40/api/logIn.php"
-        mEmail = findViewById(R.id.text_Email)
-        mPassword = findViewById(R.id.text_password)
 
         checkAndInstallARCore()
 
@@ -174,8 +165,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun logIn() {
-        EMAIL = mEmail.text.toString()
-        PASSWORD = mPassword.text.toString()
 
         if (EMAIL.isEmpty()) {
             showAlert("Email cannot be empty")

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.ideality.R
@@ -34,16 +35,16 @@ class HomeFragment: Fragment() {
 
 
         Log.d(tag, "OnViewCreated: Setting OnClickListeners")
-        previewButton?.setOnClickListener { view ->
+        previewButton?.setOnClickListener { v ->
             findNavController().navigate(R.id.action_homeFragment_to_previewFragment)
         }
-        ordersButton.setOnClickListener { view ->
+        ordersButton?.setOnClickListener { v ->
             findNavController().navigate(R.id.action_homeFragment_to_previewFragment)
         }
-        modelsButton.setOnClickListener { view ->
+        modelsButton?.setOnClickListener { v ->
             findNavController().navigate(R.id.action_homeFragment_to_previewFragment)
         }
-        catalogueButton.setOnClickListener { view ->
+        catalogueButton?.setOnClickListener { v ->
             findNavController().navigate(R.id.action_homeFragment_to_previewFragment)
         }
     }

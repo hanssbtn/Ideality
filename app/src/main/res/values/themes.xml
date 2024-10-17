@@ -3,9 +3,13 @@
     <style name="Base.Theme.Ideality" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
-
+        <item name="android:colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/color_light_main_background</item>
+        <item name="fontFamily">@font/roboto_black</item>
+        <item name="backgroundColor">@color/color_light_main_background</item>
     </style>
-
+    <style name="app_logo_image">
+        <item name="srcCompat">@drawable/ideality_logo_light</item>
+    </style>
     <style name="Theme.Ideality" parent="Base.Theme.Ideality" />
 </resources>

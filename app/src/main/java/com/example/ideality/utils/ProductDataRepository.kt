@@ -20,7 +20,7 @@ class ProductDataRepository(private val context: Context) {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         var bmp: Bitmap? = BitmapFactory.decodeFile(path, options)
-        if (bmp.height == -1 || bmp.width == -1) {
+        if (bmp?.height == -1 || bmp?.width == -1) {
             throw InvalidParameterException("Invalid filename parameter: $path")
         }
         options.inJustDecodeBounds = false

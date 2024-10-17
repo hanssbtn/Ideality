@@ -4,18 +4,17 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_home"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.Ideality"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/navbar_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center">
+        android:gravity="center"
+        >
 
         <ImageButton
             android:id="@+id/profile_button"
@@ -202,14 +201,39 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_condensed_bold"
                 android:labelFor="@id/orders_button"
-                android:text="@string/orders_text"
+                android:text="@string/label_orders"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </com.google.android.flexbox.FlexboxLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintHeight_percent="0.5"
+        android:minHeight="200dp"
+        android:id="@+id/recents_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <View
+            android:id="@+id/handle"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:layout_gravity="bottom|center"
+            android:background="@color/color_light_main_background" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recents"
+            style="@style/recents_view_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:translationY="1000dp"
+            app:layout_behavior=".utils.DraggableHandleBehavior"
+            />
 
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

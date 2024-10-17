@@ -51,16 +51,15 @@ class ModelPreviewListAdapter(): Adapter<ModelPreviewListAdapter.ModelPreviewLis
         return ModelPreviewListViewHolder(itemView)
     }
 
-    override fun getItemCount() = itemList.size
+    override fun getItemCount() = 0
 
     override fun onBindViewHolder(holder: ModelPreviewListViewHolder, position: Int) {
-        val item = itemList[position]
+//        val item = itemList[position]
         Log.d(tag, "onBindViewHolder")
-        holder.button.contentDescription = item.desc ?: ""
-        if (item.imgUrl != null) {
-            holder.button.setImageBitmap(BitmapFactory.decodeFile(item.imgUrl))
-        }
-
+//        holder.button.contentDescription = item.desc ?: ""
+//        if (item.?imgUrl != null) {
+//            holder.button.setImageBitmap(BitmapFactory.decodeFile(item.imgUrl))
+//        }
     }
 
 

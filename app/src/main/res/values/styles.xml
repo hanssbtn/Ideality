@@ -2,12 +2,12 @@
 <resources>
     <style name="Theme.Ideality.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/color_light_main_background</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ideality_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ideality_logo_light</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.Ideality</item>
     </style>
     <style name="Theme.Ideality.Splash.Dark" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/color_dark_main_background</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ideality_logo_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ideality_icon_dark</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.Ideality</item>
     </style>
     <style name="default_icon_clickable" parent="android:Widget.Button">
@@ -15,10 +15,13 @@
     </style>
     <style name="default_text_view_style_light" parent="TextAppearance.AppCompat">
         <item name="android:drawable">@drawable/default_text_view_shape_light</item>
-        <item name="android:textColor">@color/text_color_hint</item>
+        <item name="android:textColor">@color/text_color_hint_primary</item>
     </style>
     <style name="default_text_view_style_dark" parent="TextAppearance.AppCompat">
-        <item name="android:drawable">@drawable/default_text_view_shape_dark</item>
+        <item name="android:background">@drawable/default_text_view_shape_dark</item>
+    </style>
+    <style name="recents_view_home">
+        <item name="android:background">@drawable/home_recents_view_shape</item>
     </style>
 
 </resources>

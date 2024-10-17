@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.1"
 arsceneview = "2.2.1"
+coordinatorlayout = "1.2.0"
 core = "1.46.0"
 coreSplashscreen = "1.0.1"
 filamentAndroid = "1.52.0"
@@ -22,9 +23,11 @@ sceneviewVersion = "2.2.1"
 navigationFragmentKtx = "2.8.2"
 navigationUiKtx = "2.8.2"
 flexbox = "3.0.0"
+volley = "1.2.1"
 
 
 [libraries]
+androidx-coordinatorlayout = { module = "androidx.coordinatorlayout:coordinatorlayout", version.ref = "coordinatorlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
@@ -46,6 +49,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 
 [plugins]

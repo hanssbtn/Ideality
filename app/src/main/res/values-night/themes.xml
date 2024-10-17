@@ -3,7 +3,11 @@
     <style name="Base.Theme.Ideality" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="android:colorBackground">@color/color_dark_main_background</item>
+        <item name="backgroundColor">@color/color_dark_main_background</item>
         <item name="colorSecondary">@color/color_dark_secondary</item>
+        <item name="fontFamily">@font/roboto_black</item>
+    </style>
+    <style name="app_logo_image">
+        <item name="srcCompat">@drawable/ideality_logo_dark</item>
     </style>
 </resources>

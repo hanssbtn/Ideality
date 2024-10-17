@@ -2,6 +2,7 @@ package com.example.ideality.fragments
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -22,9 +23,13 @@ import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.loaders.ModelLoader
 import io.github.sceneview.node.ModelNode
 import com.google.ar.core.Config
+import com.google.ar.core.Session
 import com.google.ar.core.TrackingFailureReason
+import io.github.sceneview.ar.arcore.ARSession
 import io.github.sceneview.node.Node
+import io.github.sceneview.utils.readBuffer
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 
 class PreviewFragment: Fragment() {
@@ -59,6 +64,7 @@ class PreviewFragment: Fragment() {
 
         if (arSceneView.session == null) {
             Log.e(tag, "OnViewCreated: ARSceneView has no session")
+//           arSceneView.session = ARSession(requireContext(), onResume(), )
         }
 
         modelLoader = ModelLoader(arSceneView.engine, view.context)
@@ -84,6 +90,7 @@ class PreviewFragment: Fragment() {
                     Log.d(tag, "arSceneView.apply.onSessionUpdated: node ${node.name} at index $index")
                     if (node is ModelNode) {
                         Log.d(tag, "arSceneView.apply.onSessionUpdated: Model Node found")
+                        Log.d(tag, "arSceneView.apply.onSessionUpdated: location: ${node.position?.toString()}")
                     }
                 }
             }
@@ -95,18 +102,26 @@ class PreviewFragment: Fragment() {
         }
         lifecycleScope.launch {
             Log.d(tag, "lifeCycleScope.launch: loading model")
-            val model = modelLoader.createModel("Lobster_Chair_N210823.glb")
+            try {
+                val bytes = requireContext().assets.open("Wooden Chair.glb", AssetManager.ACCESS_BUFFER).readBuffer()
+                Log.d(tag, "${bytes?.toString()}")
+                if (bytes == null) {
+                    throw IOException()
+                }
+                val model = modelLoader.createModel(bytes)
+                val modelInstance = model.instance
+                Log.d(tag, "lifeCycleScope.launch.onViewCreated: created model instance.")
 
-            val modelInstance = model.instance
-            Log.d(tag, "lifeCycleScope.launch.onViewCreated: created model instance.")
+                val modelNode = ModelNode(modelInstance)
+                modelNode.name = "chair"
+                Log.d(tag, "lifeCycleScope.launch.onViewCreated: created model node.")
 
-            val modelNode = ModelNode(modelInstance)
-            modelNode.name = "chair"
-            Log.d(tag, "lifeCycleScope.launch.onViewCreated: created model node.")
-
-            arSceneView.addChildNode(modelNode)
-            Log.d(tag, "lifeCycleScope.launch.onViewCreated: added child node.")
-
+                arSceneView.addChildNode(modelNode)
+                Log.d(tag, "lifeCycleScope.launch.onViewCreated: added child node.")
+            } catch (ioe: IOException) {
+                Log.d(tag, "onViewCreated.lifeCycleScope.launch: failed to read file (reason: ${ioe.printStackTrace()})")
+                return@launch
+            }
         }
         val repo = ProductDataRepository(requireContext())
         elementViewModel = PreviewListElementViewModel(repo)
