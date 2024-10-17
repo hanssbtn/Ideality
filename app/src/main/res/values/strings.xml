@@ -14,4 +14,6 @@
     <string name="username_placeholder">Customer</string>
     <string name="catalogue_product">Product</string>
     <string name="catalogue_description">Product description</string>
+    <string name="catalogue_list_button">List</string>
+    <string name="catalogue_grid_button">Grid</string>
 </resources>
