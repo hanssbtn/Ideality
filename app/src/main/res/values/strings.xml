@@ -12,4 +12,6 @@
     <string name="desc_settings_button">Settings button</string>
     <string name="desc_profile_button">Profile button</string>
     <string name="username_placeholder">Customer</string>
+    <string name="catalogue_product">Product</string>
+    <string name="catalogue_description">Product description</string>
 </resources>
