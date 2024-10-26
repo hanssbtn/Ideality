@@ -23,7 +23,7 @@
         android:theme="@style/Theme.Ideality.Splash"
         tools:targetApi="31" >
         <activity
-            android:name=".activities.signUp"
+            android:name=".activities.SignUp"
             android:exported="false" />
         <activity
             android:name=".activities.logIn"
