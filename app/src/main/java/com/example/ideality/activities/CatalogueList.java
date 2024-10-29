@@ -26,8 +26,8 @@ public class CatalogueList extends AppCompatActivity {
         });
     }
 
-
-}public void listToGrid(View view) {
-    Intent intent = new Intent(this, CatalogueGrid.class);
-    startActivity(intent);
+    public void listToGrid(View view) {
+        Intent intent = new Intent(this, CatalogueGrid.class);
+        startActivity(intent);
+    }
 }

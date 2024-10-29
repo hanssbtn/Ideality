@@ -13,18 +13,32 @@
         <action
             android:id="@+id/action_homeFragment_to_previewFragment"
             app:destination="@id/previewFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_catalogueFragment"
+            app:destination="@id/catalogueFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/previewFragment"
         android:name="com.example.ideality.fragments.PreviewFragment"
         android:label="PreviewFragment"
-        tools:layout="@layout/fragment_preview"/>
+        tools:layout="@layout/fragment_preview">
+        <action
+            android:id="@+id/action_previewFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/catalogueFragment"
         android:name="com.example.ideality.fragments.CatalogueFragment"
-        android:label="CatalogueFragment" />
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.ideality.fragments.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="CatalogueFragment"
+        tools:layout="@layout/fragment_catalogue">
+        <action
+            android:id="@+id/action_catalogueFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_catalogueFragment_to_previewFragment"
+            app:destination="@id/previewFragment" />
+    </fragment>
+
 </navigation>
