@@ -85,4 +85,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // ARCore dependencies
+    implementation 'com.google.ar:core:1.14.0'
 }
