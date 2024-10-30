@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+
 android {
     namespace = "com.example.ideality"
     compileSdk = 34
@@ -49,6 +50,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
 
     // AndroidX and other dependencies
     implementation(libs.androidx.recyclerview)
@@ -87,5 +89,11 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // ARCore dependencies
-    implementation 'com.google.ar:core:1.14.0'
+    implementation ("com.google.ar:core:1.14.0")
+
+    //Chip Navigation
+    implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
+
+    //auth
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

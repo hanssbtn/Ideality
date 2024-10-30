@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "270702607846",
+    "firebase_url": "https://ideality-fa6f1-default-rtdb.firebaseio.com",
+    "project_id": "ideality-fa6f1",
+    "storage_bucket": "ideality-fa6f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270702607846:android:a5c39a9c2e959d90822a27",
+        "android_client_info": {
+          "package_name": "com.example.ideality"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270702607846-0jon05plfrd5jksvchuv1ma59j2uoc2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ideality",
+            "certificate_hash": "2ba1512c9202389cedf35f429f76900807b144f0"
+          }
+        },
+        {
+          "client_id": "270702607846-908dv5dqkkjmk5dmg741fv0o9rioeu08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8vvwhZiXl0PR9kjChhgYY_eTpJ4IMnmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270702607846-908dv5dqkkjmk5dmg741fv0o9rioeu08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ideality">
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -14,9 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ideality">
 
-        <!-- Login Activity as launcher -->
-        <activity
-            android:name=".activities.LogIn"
+        <activity android:name=".activities.LogIn"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,18 +23,18 @@
             </intent-filter>
         </activity>
 
-        <!-- SignUp Activity -->
         <activity
             android:name=".activities.SignUp"
-            android:exported="false" />
+            android:exported="true" />
 
-        <!-- MainActivity -->
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false" />
+            android:exported="true" />
 
-        <!-- ARCore -->
-        <meta-data android:name="com.google.ar.core" android:value="required" />
-        
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required"
+            tools:replace="android:value" />
     </application>
+
 </manifest>

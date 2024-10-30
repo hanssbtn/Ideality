@@ -3,61 +3,95 @@ package com.example.ideality.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.ideality.R
+import com.example.ideality.models.UserData
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.FirebaseUser
 
 class LogIn : AppCompatActivity() {
+    // Add request code for Google Sign In
+    private val RC_SIGN_IN = 9001
+
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private lateinit var usersRef: DatabaseReference
+    private lateinit var googleSignInClient: GoogleSignInClient
+
     private lateinit var emailInput: TextInputEditText
     private lateinit var passwordInput: TextInputEditText
-    private lateinit var loginButton: View
+    private lateinit var loginButton: MaterialButton
+    private lateinit var progressBar: ProgressBar
+
+    private lateinit var signUpText: View
     private lateinit var googleLoginBtn: View
     private lateinit var facebookLoginBtn: View
     private lateinit var githubLoginBtn: View
-    private lateinit var signUpText: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_log_in)
 
+        initializeFirebase()
+        configureGoogleSignIn()  // Add this line
         initializeViews()
         setupClickListeners()
+        checkCurrentUser()
+    }
 
+    private fun configureGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("270702607846-908dv5dqkkjmk5dmg741fv0o9rioeu08.apps.googleusercontent.com")  // Web client ID from your JSON
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    private fun initializeFirebase() {
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+        usersRef = database.getReference("users")
+
         auth.signOut()
-        // Check if user is already logged in
-        if (auth.currentUser != null) {
-            navigateToMainActivity()
-        }
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun initializeViews() {
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
         loginButton = findViewById(R.id.loginButton)
+        progressBar = findViewById(R.id.progressBar)
+
+        // Add these lines
+        signUpText = findViewById(R.id.signUpText)
         googleLoginBtn = findViewById(R.id.googleLoginBtn)
         facebookLoginBtn = findViewById(R.id.facebookLoginBtn)
         githubLoginBtn = findViewById(R.id.githubLoginBtn)
-        signUpText = findViewById(R.id.signUpText)
+    }
+
+    private fun checkCurrentUser() {
+        auth.currentUser?.let {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     private fun setupClickListeners() {
@@ -67,36 +101,95 @@ class LogIn : AppCompatActivity() {
             }
         }
 
-        signUpText.setOnClickListener {
-            // Simplest possible navigation
-            val intent = Intent(this, SignUp::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.signUpText).setOnClickListener {
+            startActivity(Intent(this, SignUp::class.java))
         }
 
-        googleLoginBtn.setOnClickListener {
-            Toast.makeText(this, "Google Sign In coming soon!", Toast.LENGTH_SHORT).show()
+        // Update Google login button click listener
+        findViewById<View>(R.id.googleLoginBtn).setOnClickListener {
+            signInWithGoogle()
         }
 
-        facebookLoginBtn.setOnClickListener {
+        findViewById<View>(R.id.facebookLoginBtn).setOnClickListener {
             Toast.makeText(this, "Facebook Sign In coming soon!", Toast.LENGTH_SHORT).show()
         }
 
-        githubLoginBtn.setOnClickListener {
+        findViewById<View>(R.id.githubLoginBtn).setOnClickListener {
             Toast.makeText(this, "GitHub Sign In coming soon!", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleGoogleSignInResult(task)
+            } catch (e: Exception) {
+                showError("Google sign in failed: ${e.message}")
+            }
+        }
+    }
+
+    private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            firebaseAuthWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            showError("Google sign in failed: ${e.statusCode}")
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        showLoading(true)
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    saveUserToDatabase(user)
+                } else {
+                    showLoading(false)
+                    showError("Authentication failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+    private fun saveUserToDatabase(firebaseUser: FirebaseUser?) {
+        firebaseUser?.let { user ->
+            val userData = UserData(
+                uid = user.uid,
+                username = user.displayName ?: "",
+                email = user.email ?: "",
+                phone = user.phoneNumber ?: "",
+                createdAt = System.currentTimeMillis()
+            )
+
+            usersRef.child(user.uid).setValue(userData)
+                .addOnCompleteListener { task ->
+                    showLoading(false)
+                    if (task.isSuccessful) {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    } else {
+                        showError("Failed to save user data")
+                    }
+                }
+        }
+    }
+
     private fun validateInputs(): Boolean {
-        val email = emailInput.text.toString().trim()
+        val emailOrUsername = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
 
-        if (email.isEmpty()) {
-            emailInput.error = "Email is required"
-            return false
-        }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInput.error = "Please enter a valid email"
+        if (emailOrUsername.isEmpty()) {
+            emailInput.error = "Email or username is required"
             return false
         }
 
@@ -105,60 +198,76 @@ class LogIn : AppCompatActivity() {
             return false
         }
 
-        if (password.length < 6) {
-            passwordInput.error = "Password must be at least 6 characters"
-            return false
-        }
-
         return true
     }
 
     private fun loginUser() {
-        val email = emailInput.text.toString().trim()
+        val emailOrUsername = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
 
-        loginButton.isEnabled = false
+        showLoading(true)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                auth.signInWithEmailAndPassword(email, password).await()
-                withContext(Dispatchers.Main) {
-                    navigateToMainActivity()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    handleLoginError(e)
-                    loginButton.isEnabled = true
-                }
-            }
+        // Check if input is email or username
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailOrUsername).matches()) {
+            // Login with email
+            loginWithEmail(emailOrUsername, password)
+        } else {
+            // Login with username
+            loginWithUsername(emailOrUsername, password)
         }
     }
 
-    private fun handleLoginError(e: Exception) {
-        val errorMessage = when (e) {
-            is com.google.firebase.auth.FirebaseAuthInvalidUserException ->
-                "No account exists with this email"
-            is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException ->
-                "Invalid email or password"
-            else -> "Login failed: ${e.message}"
-        }
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+    private fun loginWithEmail(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                showLoading(false)
+                if (task.isSuccessful) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                } else {
+                    showError(task.exception?.message ?: "Login failed")
+                }
+            }
     }
 
-    private fun navigateToMainActivity() {
-        try {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
-            finish()
-        } catch (e: Exception) {
-            Toast.makeText(
-                this,
-                "Error navigating to main: ${e.message}",
-                Toast.LENGTH_LONG
-            ).show()
-            e.printStackTrace()
+    private fun loginWithUsername(username: String, password: String) {
+        usersRef.orderByChild("username").equalTo(username)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val userData = snapshot.children.first().getValue(UserData::class.java)
+                        userData?.let { user ->
+                            loginWithEmail(user.email, password)
+                        }
+                    } else {
+                        showLoading(false)
+                        showError("Username not found")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    showLoading(false)
+                    showError("Database error: ${error.message}")
+                }
+            })
+    }
+
+    private fun showLoading(show: Boolean) {
+        findViewById<View>(R.id.loadingBackground).visibility = if (show) View.VISIBLE else View.GONE
+        progressBar.visibility = if (show) View.VISIBLE else View.GONE
+
+        // Disable user interaction while loading
+        if (show) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

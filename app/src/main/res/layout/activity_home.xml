@@ -33,4 +33,23 @@
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp" />
 
+    <me.ibrahimsn.lib.NiceBottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="8dp"
+        android:elevation="8dp"
+        app:backgroundColor="@color/white"
+        app:iconSize="24dp"
+        app:textSize="12sp"
+        app:itemPadding="8dp"
+        app:iconMargin="4dp"
+        app:indicatorColor="@color/black"
+        app:textColor="@color/black"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

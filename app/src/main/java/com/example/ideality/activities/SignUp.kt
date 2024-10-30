@@ -3,18 +3,17 @@ package com.example.ideality.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.ideality.R
+import com.example.ideality.models.UserData  // Make sure UserData is in the models package
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.*
 import com.hbb20.CountryCodePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,9 @@ import kotlinx.coroutines.withContext
 
 class SignUp : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private val db = Firebase.firestore
+    private lateinit var database: FirebaseDatabase
+    private lateinit var usersRef: DatabaseReference
+
 
     private lateinit var usernameInput: TextInputEditText
     private lateinit var emailInput: TextInputEditText
@@ -33,25 +34,21 @@ class SignUp : AppCompatActivity() {
     private lateinit var ccp: CountryCodePicker
     private lateinit var signUpButton: MaterialButton
     private lateinit var signInText: View
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_sign_up)
 
         initializeFirebase()
         initializeViews()
         setupClickListeners()
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun initializeFirebase() {
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+        usersRef = database.getReference("users")
     }
 
     private fun initializeViews() {
@@ -62,6 +59,7 @@ class SignUp : AppCompatActivity() {
         ccp = findViewById(R.id.ccp)
         signUpButton = findViewById(R.id.signUpButton)
         signInText = findViewById(R.id.signInText)
+        progressBar = findViewById(R.id.progressBar)
 
         ccp.registerCarrierNumberEditText(phoneInput)
     }
@@ -74,8 +72,7 @@ class SignUp : AppCompatActivity() {
         }
 
         signInText.setOnClickListener {
-            // Just finish this activity to go back to Login
-            onBackPressed()
+            finish() // Return to login screen
         }
     }
 
@@ -87,6 +84,11 @@ class SignUp : AppCompatActivity() {
 
         if (username.isEmpty()) {
             usernameInput.error = "Username is required"
+            return false
+        }
+
+        if (username.length < 3) {
+            usernameInput.error = "Username must be at least 3 characters"
             return false
         }
 
@@ -124,67 +126,87 @@ class SignUp : AppCompatActivity() {
     }
 
     private fun registerUser() {
+        val username = usernameInput.text.toString().trim()
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
+        val phone = ccp.fullNumberWithPlus
 
-        signUpButton.isEnabled = false
+        showLoading(true)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                // Create authentication account
-                val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-
-                // Save additional user data to Firestore
-                val userData = hashMapOf(
-                    "username" to usernameInput.text.toString().trim(),
-                    "email" to email,
-                    "phone" to ccp.fullNumberWithPlus,
-                    "createdAt" to System.currentTimeMillis()
-                )
-
-                authResult.user?.uid?.let { uid ->
-                    db.collection("users").document(uid).set(userData).await()
+        // First check if username exists
+        usersRef.orderByChild("username").equalTo(username)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        showLoading(false)
+                        usernameInput.error = "Username already exists"
+                    } else {
+                        // Username is available, proceed with registration
+                        proceedWithRegistration(username, email, password, phone)
+                    }
                 }
 
-                withContext(Dispatchers.Main) {
-                    navigateToMainActivity()
+                override fun onCancelled(error: DatabaseError) {
+                    showLoading(false)
+                    showError("Database error: ${error.message}")
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    handleSignUpError(e)
-                    signUpButton.isEnabled = true
+            })
+    }
+
+    private fun proceedWithRegistration(username: String, email: String, password: String, phone: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.let {
+                        val userData = UserData(
+                            uid = it.uid,
+                            username = username,
+                            email = email,
+                            phone = phone,
+                            password = password // In production, use proper encryption
+                        )
+
+                        // Save to Realtime Database
+                        usersRef.child(it.uid).setValue(userData)
+                            .addOnCompleteListener { dbTask ->
+                                showLoading(false)
+                                if (dbTask.isSuccessful) {
+                                    showSuccess("Registration successful!")
+                                    // Navigate to login
+                                    finish()
+                                } else {
+                                    showError("Failed to save user data")
+                                }
+                            }
+                    }
+                } else {
+                    showLoading(false)
+                    showError(task.exception?.message ?: "Registration failed")
                 }
             }
+    }
+
+    private fun showLoading(show: Boolean) {
+        findViewById<View>(R.id.loadingBackground).visibility = if (show) View.VISIBLE else View.GONE
+        progressBar.visibility = if (show) View.VISIBLE else View.GONE
+
+        // Disable user interaction while loading
+        if (show) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
 
-    private fun handleSignUpError(e: Exception) {
-        val errorMessage = when (e) {
-            is com.google.firebase.auth.FirebaseAuthWeakPasswordException ->
-                "Password is too weak. Please use at least 6 characters"
-            is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException ->
-                "Invalid email format"
-            is com.google.firebase.auth.FirebaseAuthUserCollisionException ->
-                "An account already exists with this email"
-            else -> "Registration failed: ${e.message}"
-        }
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun navigateToMainActivity() {
-        try {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
-            finish()
-        } catch (e: Exception) {
-            Toast.makeText(
-                this,
-                "Error navigating to main: ${e.message}",
-                Toast.LENGTH_LONG
-            ).show()
-            e.printStackTrace()
-        }
+    private fun showSuccess(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
