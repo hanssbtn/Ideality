@@ -26,4 +26,13 @@
 
     <!-- Legacy/unused -->
     <color name="models_icon_xml_background">#FFFFFF</color>
+
+    <color name="red">#FF0000</color>
+    <color name="orange">#FFA500</color>
+    <color name="green">#4CAF50</color>
+    <color name="gray">#808080</color>
+    <color name="shimmer_color">#DDDDDD</color>
+    <color name="shimmer_color_start">#E6E6E6</color>
+    <color name="shimmer_color_center">#EEEEEE</color>
+    <color name="blue">#2196F3</color>
 </resources>

@@ -7,31 +7,257 @@
     android:background="@color/ideality_icon_light_background"
     tools:context=".activities.Home">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/carouselCardView"
+    <!-- Top Bar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-    </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Ideality"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+            <FrameLayout
+                android:id="@+id/cartLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/cartIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_cart" />
+
+                <TextView
+                    android:id="@+id/cartBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginEnd="-5dp"
+                    android:background="@drawable/cart_badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Search Bar -->
+    <com.paulrybitskyi.persistentsearchview.PersistentSearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@id/carouselCardView"
-        app:tabBackground="@drawable/tab_selector"
-        app:tabGravity="center"
-        app:tabIndicatorHeight="0dp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Carousel -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/carouselCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </androidx.cardview.widget.CardView>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintBottom_toBottomOf="@id/carouselCardView"
+                    app:tabBackground="@drawable/tab_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp" />
+
+                <!-- Categories Section -->
+                <TextView
+                    android:id="@+id/categoriesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Categories"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/carouselCardView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/categoriesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/categoriesTitle" />
+
+                <!-- Recently Used Section -->
+                <LinearLayout
+                    android:id="@+id/recentlyUsedHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/categoriesRecyclerView">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recently Used"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/seeAllRecent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="See All"
+                        android:textColor="#2196F3" />
+                </LinearLayout>
+
+                <!-- Shimmer for Recently Used -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/recentlyUsedHeader">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="8dp">
+
+                            <include layout="@layout/item_shimmer" />
+                            <include layout="@layout/item_shimmer" />
+                            <include layout="@layout/item_shimmer" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recentlyUsedRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/recentlyUsedHeader" />
+
+                <!-- New Releases Section -->
+                <LinearLayout
+                    android:id="@+id/newReleasesHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/recentlyUsedRecyclerView">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="New Releases"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/seeAllNew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="See All"
+                        android:textColor="#2196F3" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/newReleasesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/newReleasesHeader" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintTop_toBottomOf="@id/searchView"/>
 
     <me.ibrahimsn.lib.NiceBottomBar
         android:id="@+id/bottomBar"
@@ -41,15 +267,15 @@
         android:layout_marginBottom="8dp"
         android:elevation="8dp"
         app:backgroundColor="@color/white"
-        app:iconSize="24dp"
-        app:textSize="12sp"
-        app:itemPadding="8dp"
         app:iconMargin="4dp"
+        app:iconSize="24dp"
         app:indicatorColor="@color/black"
-        app:textColor="@color/black"
-        app:menu="@menu/bottom_nav_menu"
+        app:itemPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:menu="@menu/bottom_nav_menu"
+        app:textColor="@color/black"
+        app:textSize="12sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

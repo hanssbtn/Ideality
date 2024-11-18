@@ -22,6 +22,8 @@ android {
         enable = true
     }
 
+
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -40,6 +42,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
 }
 
 dependencies {
@@ -47,7 +54,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
 
     // Individual Firebase dependencies without versions
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
@@ -75,6 +82,7 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     // Other direct dependencies
     implementation("com.hbb20:ccp:2.7.0")
@@ -96,4 +104,38 @@ dependencies {
 
     //auth
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.recaptcha:recaptcha:18.4.0")
+    implementation("com.google.android.gms:play-services-safetynet:18.0.1")
+    
+    //material3
+    implementation("androidx.compose.material3:material3")
+    implementation(platform("androidx.compose:compose-bom:2023.06.01"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+
+    //lottie
+    implementation ("com.airbnb.android:lottie:6.6.0")
+
+    //searchview
+    implementation ("com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.5")
+
+    //recycle view
+    implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
+
+    // Add Firestore
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    
+    //
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+    implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
+    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+    //appwrite
+    implementation("io.appwrite:sdk-for-android:6.0.0")
+
+
 }

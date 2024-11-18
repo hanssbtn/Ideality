@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ideality_icon_light_background">
+
+    <!-- Update the Toolbar section in activity_faq.xml -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FAQ"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Search Bar -->
+    <!-- Replace the PersistentSearchView with this custom search bar -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/black" />
+
+            <EditText
+                android:id="@+id/searchEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Search in FAQs"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/clearButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_close"
+                android:visibility="gone"
+                app:tint="@color/black" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/contactSupportButton"
+        app:layout_constraintTop_toBottomOf="@id/searchCard">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- FAQ RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:overScrollMode="never" />
+
+            <!-- No Results View -->
+            <LinearLayout
+                android:id="@+id/noResultsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/ic_no_results" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="No results found"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Try different keywords or browse all FAQs"
+                    android:textColor="#757575"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Contact Support Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactSupportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/black"
+        android:text="Can't find what you're looking for? Contact Support"
+        android:textColor="@color/white"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

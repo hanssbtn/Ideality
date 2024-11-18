@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Previous toolbar code stays the same -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Quick Actions Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Quick Actions"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Email Card with enhanced styling -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/emailCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:rippleColor="#1F000000"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F0F0F0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_email"
+                        app:tint="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Email Us"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="support@ideality.com"
+                            android:textColor="#757575"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="#757575" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Send Message Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="24dp"
+                android:text="Send us a message"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F0F0F0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Subject Input with updated styling -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/subjectInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Subject"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/black"
+                        app:hintTextColor="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/subjectInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:textColor="@color/black"
+                            android:textCursorDrawable="@null" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Message Input with updated styling -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/messageInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="Message"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/black"
+                        app:hintTextColor="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/messageInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:inputType="textMultiLine"
+                            android:minLines="5"
+                            android:textColor="@color/black"
+                            android:textCursorDrawable="@null" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Black button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/sendButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="@color/black"
+                        android:paddingVertical="12dp"
+                        android:text="Send Message"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- FAQ Section with enhanced styling -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="24dp"
+                android:text="Common Questions"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/faqCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:rippleColor="#1F000000"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F0F0F0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_help"
+                        app:tint="@color/black" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="Check our FAQ section for quick answers"
+                        android:textColor="@color/black" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:tint="#757575" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Loading overlay remains the same -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
