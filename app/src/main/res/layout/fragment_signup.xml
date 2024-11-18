@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/app_logo_signup"
+        style="@style/app_logo_image"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/desc_app_logo"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/signup_options_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/signup_options"
+        android:text="@string/label_register"
+        android:textSize="16sp"
+        android:layout_marginStart="@dimen/margin_s"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_logo_signup"
+        android:layout_marginTop="@dimen/margin_20dp"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_options_text"
+        android:id="@+id/signup_options"
+        android:layout_marginTop="@dimen/margin_15dp"
+        >
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            style="@style/default_option_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            android:checked="true"
+            android:paddingHorizontal="20dp"
+            android:text="@string/customer_string"
+            android:textSize="16sp"
+            android:id="@+id/customer_signup_button"
+            />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            style="@style/default_option_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:text="@string/business_string"
+            android:textSize="16sp"
+            android:id="@+id/business_signup_button"
+            android:checked="false"
+            />
+    </RadioGroup>
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layoutDescription="@xml/fragment_signup_scene"
+        app:layout_constraintTop_toBottomOf="@id/signup_options"
+        android:id="@+id/signup_layout">
+
+        <ScrollView
+            android:id="@+id/customer_signup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_s"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_options">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="1"
+                android:rowCount="16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_s"
+                    android:labelFor="@id/name_field_customer"
+                    android:text="@string/desc_name_field"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/name_field_customer"
+                    style="@style/default_text_view_style"
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:autofillHints="newUsername"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:labelFor="@id/email_field"
+                    android:text="@string/desc_email_field"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/email_field"
+                    style="@style/default_text_view_style"
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:autofillHints="emailAddress"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="48dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:labelFor="@id/phone_number_field_customer"
+                    android:text="@string/desc_mobile_number_field"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:orientation="horizontal">
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/country_code_customer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/margin_s"
+                        app:ccpDialog_showFlag="true"
+                        app:ccp_defaultNameCode="ID" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="200dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="@dimen/margin_s"
+                        app:endIconMode="none"
+                        android:minHeight="48dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/phone_number_field_customer"
+                            style="@style/default_text_view_style"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+
+                            android:autofillHints="phoneNational"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:labelFor="@id/address_field_customer"
+                    android:text="@string/desc_address_text_field"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/address_field_customer"
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:autofillHints="text"
+                    android:ems="12"
+                    android:inputType="textMultiLine|textNoSuggestions|textCapCharacters"
+                    android:lines="2"
+                    android:maxLength="200"
+                    android:maxLines="3"
+                    android:minHeight="48dp"
+                    android:minLines="1"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:textColorHint="@color/text_hint_color_dark"
+                    tools:lines="2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:labelFor="@id/date_of_birth_field_customer"
+                    android:text="Date of Birth"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:background="@null"
+                    app:endIconContentDescription="Select date from calendar"
+                    app:endIconDrawable="@drawable/calendar_icon_light"
+                    app:endIconMinSize="20dp"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/date_of_birth_field_customer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:labelFor="@id/password_field_customer"
+                    android:minHeight="48dp"
+                    android:text="Password"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    app:endIconContentDescription="Toggle password visibility"
+                    app:endIconMinSize="20dp"
+                    app:endIconMode="password_toggle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_field_customer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         />
+                </com.google.android.material.textfield.TextInputLayout>
+            </GridLayout>
+        </ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/business_signup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/margin_s"
+        app:layout_constraintTop_toBottomOf="@id/signup_options">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rowCount="15"
+            android:columnCount="1"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                android:ems="12"
+                android:layout_marginStart="20dp"
+                android:labelFor="@id/name_field_business"
+                android:text="@string/desc_name_field"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/name_field_business"
+                style="@style/default_text_view_style"
+                android:layout_width="240dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_s"
+                android:autofillHints="newUsername"
+                android:ems="10"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_s"
+                android:labelFor="@id/business_name_field"
+                android:text="@string/desc_business_name_field"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/business_name_field"
+                style="@style/default_text_view_style"
+                android:layout_width="240dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_s"
+                android:autofillHints="newUsername"
+                android:ems="10"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:labelFor="@id/business_email_field"
+                android:text="@string/desc_business_email_field"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/business_email_field"
+                style="@style/default_text_view_style"
+                android:layout_width="240dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:autofillHints="emailAddress"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:labelFor="@id/phone_number_field_business"
+                android:text="@string/desc_mobile_number_field"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                android:orientation="horizontal">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/country_code_business"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin_s"
+                    app:ccpDialog_showFlag="true"
+                    app:ccp_defaultNameCode="ID" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="200dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/margin_s"
+                    android:minHeight="48dp"
+                    app:endIconMode="custom"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phone_number_field_business"
+                        style="@style/default_text_view_style"
+                        android:autofillHints="phoneNational"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:labelFor="@id/address_field_business"
+                android:text="@string/desc_address_text_field"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/address_field_business"
+                android:layout_width="240dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:autofillHints="text"
+                android:ems="12"
+                android:inputType="textMultiLine|textNoSuggestions|textCapCharacters"
+                android:lines="2"
+                android:maxLength="200"
+                android:maxLines="3"
+                android:minHeight="48dp"
+                android:minLines="1"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false"
+                android:textColorHint="@color/text_hint_color_dark"
+                tools:lines="2" />
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/margin_s"-->
+<!--                android:layout_marginTop="@dimen/margin_s"-->
+<!--                android:labelFor="@id/date_of_birth_field_business"-->
+<!--                android:text="Date of Birth"-->
+<!--                android:textSize="24sp" />-->
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:layout_width="240dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_marginStart="@dimen/margin_s"-->
+<!--                android:layout_marginTop="@dimen/margin_s"-->
+<!--                android:background="@null"-->
+<!--                app:endIconContentDescription="Select date from calendar"-->
+<!--                app:endIconDrawable="@drawable/calendar_icon_light"-->
+<!--                app:endIconMinSize="20dp"-->
+<!--                app:endIconMode="custom">-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/date_of_birth_field_business"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    -->
+<!--                    />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                android:labelFor="@id/password_field_business"
+                android:minHeight="48dp"
+                android:text="Password"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="240dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_s"
+                app:endIconContentDescription="Toggle password visibility"
+                app:endIconMinSize="20dp"
+
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_field_business"
+                    android:layout_width="match_parent"
+                    
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </GridLayout>
+    </ScrollView>
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#808080"
+        android:text="Create Account"
+        style="@style/default_button_style"
+        android:id="@+id/create_account_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_layout"
+        android:textSize="16sp"
+        android:layout_marginTop="@dimen/margin_s"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "135686227881",
+    "project_id": "fifth-tensor-439807-i9",
+    "storage_bucket": "fifth-tensor-439807-i9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135686227881:android:92d5cbd329cb0952a9e6b8",
+        "android_client_info": {
+          "package_name": "com.example.ideality"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135686227881-vn8hi31be9cobqmlkp8ue9lkq0ok98l3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ideality",
+            "certificate_hash": "8ef1e85dac3c15e7fbfbbbc410ced9051f3e9171"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTHO4YvT9uMMi1AIJAFVnnAiWiu91o92c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

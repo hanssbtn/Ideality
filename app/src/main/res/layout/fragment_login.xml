@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:scaleType="fitCenter"
+        style="@style/app_logo_image"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/desc_app_logo"
+        android:layout_marginTop="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/login_app_logo"/>
+
+    <TextView
+        android:id="@+id/label_name_field_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_s"
+        android:layout_marginTop="@dimen/margin_l"
+        android:fontFamily="@font/roboto_black"
+        android:labelFor="@id/name_field_login"
+        android:text="@string/desc_name_field"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_app_logo" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_xxs"
+        android:id="@+id/name_field_login_layout"
+        android:background="@null"
+        android:maxWidth="500dp"
+        android:minWidth="200dp"
+        app:layout_constraintTop_toBottomOf="@id/label_name_field_login">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_field_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/label_password_field_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_s"
+        android:layout_marginTop="@dimen/margin_s"
+        android:fontFamily="@font/roboto_black"
+        android:labelFor="@id/password_field_login"
+        android:text="Password"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_field_login_layout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintWidth_percent="0.8"
+        android:maxWidth="500dp"
+        android:minWidth="200dp"
+        app:layout_constraintTop_toBottomOf="@id/label_password_field_login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_xxs"
+        android:background="@null"
+        android:id="@+id/password_field_login_layout"
+        app:endIconMode="password_toggle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_field_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/forgot_password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_xs"
+        android:text="@string/forgot_password_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/default_text_hint_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_field_login_layout" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guest_login_text"
+        style="@style/default_text_hint_color"
+        android:id="@+id/guest_login_text"
+        android:layout_marginTop="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/forgot_password_text"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_button"
+        style="@style/default_button_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="15dp"
+        android:text="Log In"
+        android:textSize="20sp"
+        app:backgroundTintMode="src_atop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guest_login_text" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/signup_text"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/signup_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/default_text_hint_color"
+        android:fontFamily="@font/source_sans_pro_extralight"
+        app:layout_constraintTop_toBottomOf="@id/login_button" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/gmail_login"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_button" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
