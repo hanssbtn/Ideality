@@ -1,3 +1,4 @@
 /build
 /Scratches
 .gradle
+/app/google-services.json

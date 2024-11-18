@@ -24,6 +24,9 @@ navigationFragmentKtx = "2.8.2"
 navigationUiKtx = "2.8.2"
 flexbox = "3.0.0"
 volley = "1.2.1"
+googleGmsGoogleServices = "4.4.2"
+firebaseDatabase = "21.0.0"
+firebaseAuth = "23.0.0"
 
 
 [libraries]
@@ -50,9 +53,12 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
