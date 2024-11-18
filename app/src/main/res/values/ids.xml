@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="agreementSection" type="id" />
+    <item name="arUsageSection" type="id" />
+    <item name="purchaseTermsSection" type="id" />
+    <item name="returnsSection" type="id" />
+    <item name="userAccountSection" type="id" />
+    <item name="nestedScrollView" type="id" />
+    <item name="versionCard" type="id" />
+    <item name="disclaimerCard" type="id" />
+    <item name="contactCard" type="id" />
+</resources>

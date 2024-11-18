@@ -6,22 +6,27 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ideality.R
 import com.example.ideality.adapters.FAQAdapter
 import com.example.ideality.databinding.ActivityFaqBinding
 import com.example.ideality.models.FAQItem
 import com.example.ideality.models.FAQSection
+import com.google.android.material.snackbar.Snackbar
 
 class FaqActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaqBinding
     private lateinit var faqAdapter: FAQAdapter
     private var allFAQs = mutableListOf<FAQSection>()
     private var filteredFAQs = mutableListOf<FAQSection>()
+    private var lastQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,46 +59,122 @@ class FaqActivity : AppCompatActivity() {
     }
 
     private fun setupSearch() {
-        // Setup search functionality
-        binding.searchEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        binding.apply {
+            searchEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    clearSearchButton.visibility = if (s?.isNotEmpty() == true) View.VISIBLE else View.GONE
+                }
+                override fun afterTextChanged(s: Editable?) {
+                    val query = s?.toString() ?: ""
+                    if (query != lastQuery) {
+                        lastQuery = query
+                        filterFAQs(query)
+                    }
+                }
+            })
 
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                binding.clearButton.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
-                filterFAQs(query)
+            searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard()
+                    filterFAQs(textView.text.toString())
+                    true
+                } else {
+                    false
+                }
             }
-        })
 
-        // Setup clear button
-        binding.clearButton.setOnClickListener {
-            binding.searchEdit.text.clear()
-        }
-
-        // Setup keyboard search action
-        binding.searchEdit.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            clearSearchButton.setOnClickListener {
+                searchEditText.text.clear()
+                lastQuery = ""
+                restoreOriginalList()
                 hideKeyboard()
-                return@setOnEditorActionListener true
             }
-            false
+        }
+    }
+
+    private fun updateSearchResults() {
+        binding.apply {
+            if (filteredFAQs.isEmpty()) {
+                recyclerView.visibility = View.GONE
+                noResultsView.visibility = View.VISIBLE
+
+                noResultsView.findViewById<TextView>(R.id.noResultsText)
+                    .text = "No results found for \"$lastQuery\""
+
+                suggestionText.visibility = View.VISIBLE
+                suggestionText.text = "Try using different keywords or browse all FAQs"
+
+                popularCategories.visibility = if (lastQuery.isNotEmpty()) View.VISIBLE else View.GONE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                noResultsView.visibility = View.GONE
+                suggestionText.visibility = View.GONE
+                popularCategories.visibility = View.GONE
+
+                val totalResults = filteredFAQs.sumBy { it.items.size }
+                searchResultCount.apply {
+                    visibility = View.VISIBLE
+                    text = when (totalResults) {
+                        0 -> "No results found"
+                        1 -> "1 result found"
+                        else -> "$totalResults results found"
+                    }
+                }
+            }
+
+            recyclerView.alpha = 0f
+            recyclerView.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start()
+
+            faqAdapter.submitList(filteredFAQs.toList())
+        }
+    }
+
+    private fun restoreOriginalList() {
+        binding.apply {
+            searchResultCount.visibility = View.GONE
+            noResultsView.visibility = View.GONE
+            suggestionText.visibility = View.GONE
+            popularCategories.visibility = View.GONE
+
+            filteredFAQs.clear()
+            filteredFAQs.addAll(allFAQs)
+
+            recyclerView.visibility = View.VISIBLE
+            faqAdapter.submitList(filteredFAQs.toList())
+
+            // Animate the restoration
+            recyclerView.alpha = 0f
+            recyclerView.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start()
         }
     }
 
     private fun setupContactSupport() {
         binding.contactSupportButton.setOnClickListener {
-            startActivity(Intent(this, ContactUsActivity::class.java))
+            if (filteredFAQs.isEmpty() && lastQuery.isNotEmpty()) {
+                // If no results found, pass the search query to contact support
+                val intent = Intent(this, ContactUsActivity::class.java).apply {
+                    putExtra("SEARCH_QUERY", lastQuery)
+                }
+                startActivity(intent)
+            } else {
+                startActivity(Intent(this, ContactUsActivity::class.java))
+            }
         }
     }
 
     private fun handleFAQClick(section: FAQSection, item: FAQItem, isExpanded: Boolean) {
         val sectionIndex = filteredFAQs.indexOf(section)
         if (sectionIndex != -1) {
-            filteredFAQs[sectionIndex] = FAQSection(
-                title = section.title,
+            filteredFAQs[sectionIndex] = section.copy(
                 items = section.items.map {
-                    if (it == item) FAQItem(it.question, it.answer, !isExpanded)
+                    if (it == item) it.copy(isExpanded = !isExpanded)
                     else it
                 }
             )
@@ -103,10 +184,7 @@ class FaqActivity : AppCompatActivity() {
 
     private fun filterFAQs(query: String) {
         if (query.isBlank()) {
-            filteredFAQs.clear()
-            filteredFAQs.addAll(allFAQs)
-            binding.noResultsView.visibility = View.GONE
-            binding.recyclerView.visibility = View.VISIBLE
+            restoreOriginalList()
         } else {
             val searchQuery = query.toLowerCase()
             filteredFAQs.clear()
@@ -122,13 +200,8 @@ class FaqActivity : AppCompatActivity() {
                 }
             }
 
-            binding.noResultsView.visibility =
-                if (filteredFAQs.isEmpty()) View.VISIBLE else View.GONE
-            binding.recyclerView.visibility =
-                if (filteredFAQs.isEmpty()) View.GONE else View.VISIBLE
+            updateSearchResults()
         }
-
-        faqAdapter.submitList(filteredFAQs.toList())
     }
 
     private fun hideKeyboard() {

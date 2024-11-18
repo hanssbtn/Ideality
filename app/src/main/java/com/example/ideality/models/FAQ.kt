@@ -8,5 +8,5 @@ data class FAQSection(
 data class FAQItem(
     val question: String,
     val answer: String,
-    val isExpanded: Boolean = false
+    var isExpanded: Boolean = false
 )

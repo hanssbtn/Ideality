@@ -1,12 +1,12 @@
 package com.example.ideality.models
 data class UserData(
     val uid: String = "",
-    val username: String = "",
+    var username: String = "",
     val email: String = "",
+    var phone: String = "",
     val password: String = "",
-    val phone: String = "",
-    val profileImageId: String = "", // For Appwrite storage
+    val createdAt: Long = 0,
     val googleLinked: Boolean = false,
-    val authType: String = "email",  // "email", "google", or "both"
-    val createdAt: Long = System.currentTimeMillis()
+    val authType: String = "email",
+    var profileImageId: String = "" // Added for Appwrite
 )

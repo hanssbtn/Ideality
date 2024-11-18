@@ -22,8 +22,6 @@ android {
         enable = true
     }
 
-
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -45,8 +43,24 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true  // Add this line
     }
 
+    packaging {
+        resources {
+            excludes += listOf(
+                "META-INF/NOTICE.md",
+                "META-INF/LICENSE.md",
+                "META-INF/DEPENDENCIES",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE",
+                "META-INF/notice.txt",
+                "META-INF/license.txt",
+                "META-INF/CHANGES",
+                "META-INF/*.kotlin_module"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -83,6 +97,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     // Other direct dependencies
     implementation("com.hbb20:ccp:2.7.0")
@@ -90,7 +105,8 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
+    implementation ("com.google.firebase:firebase-config-ktx")
+    implementation ("com.google.android.material:material:1.11.0")
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -136,6 +152,23 @@ dependencies {
 
     //appwrite
     implementation("io.appwrite:sdk-for-android:6.0.0")
+
+    // For email sending
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
+
+    // For secure storage of credentials
+    implementation ("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // Image loading and caching
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Image cropping
+    implementation ("com.github.yalantis:ucrop:2.2.8")
+
+    // Circle ImageView
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 
 
 }

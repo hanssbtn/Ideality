@@ -6,4 +6,5 @@
     <dimen name="home_button_padding">20dp</dimen>
     <dimen name="setting_button_margin">20dp</dimen>
     <dimen name="profile_button_margin">20dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 </resources>
