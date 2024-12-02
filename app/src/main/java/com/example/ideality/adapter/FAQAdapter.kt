@@ -22,18 +22,14 @@ class FAQAdapter(
 ) : ListAdapter<FAQSection, FAQAdapter.ViewHolder>(FAQDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            ItemFaqSectionBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val binding = ItemFaqSectionBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
         )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val section = getItem(position)
-        holder.bind(section)
+        holder.bind(getItem(position))
     }
 
     inner class ViewHolder(private val binding: ItemFaqSectionBinding) :
@@ -44,68 +40,57 @@ class FAQAdapter(
                 sectionTitle.text = section.title
                 faqContainer.removeAllViews()
 
-                // Only add items that match the search criteria
                 section.items.forEach { item ->
-                    val itemBinding = ItemFaqBinding.inflate(
-                        LayoutInflater.from(itemView.context),
+                    val itemView = ItemFaqBinding.inflate(
+                        LayoutInflater.from(root.context),
                         faqContainer,
-                        true
+                        false
                     )
 
-                    itemBinding.apply {
+                    itemView.apply {
                         question.text = item.question
                         answer.text = item.answer
-                        answer.isVisible = item.isExpanded
+                        answer.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
+                        expandIcon.rotation = if (item.isExpanded) 180f else 0f
 
                         root.setOnClickListener {
+                            // First notify the activity
                             onItemClick(section, item, item.isExpanded)
-                        }
 
-                        expandIcon.rotation = if (item.isExpanded) 180f else 0f
+                            // Then handle the local view changes
+                            val shouldExpand = !item.isExpanded
+                            answer.visibility = if (shouldExpand) View.VISIBLE else View.GONE
+
+                            // Animate the arrow
+                            expandIcon.animate()
+                                .rotation(if (shouldExpand) 180f else 0f)
+                                .setDuration(200)
+                                .start()
+
+                            // Animate the answer
+                            if (shouldExpand) {
+                                answer.alpha = 0f
+                                answer.animate()
+                                    .alpha(1f)
+                                    .setDuration(200)
+                                    .start()
+                            }
+                        }
                     }
+
+                    faqContainer.addView(itemView.root)
                 }
             }
         }
     }
 
-        private fun animateExpansion(itemView: View, isExpanding: Boolean) {
-            val answerView = itemView.findViewById<TextView>(R.id.answer)
-            val arrowIcon = itemView.findViewById<ImageView>(R.id.expandIcon)
+    class FAQDiffCallback : DiffUtil.ItemCallback<FAQSection>() {
+        override fun areItemsTheSame(oldItem: FAQSection, newItem: FAQSection): Boolean {
+            return oldItem.title == newItem.title
+        }
 
-            if (isExpanding) {
-                // Expand animation
-                answerView.visibility = View.VISIBLE
-                answerView.startAnimation(
-                    AnimationUtils.loadAnimation(itemView.context, R.anim.slide_down)
-                )
-                arrowIcon.animate()
-                    .rotation(180f)
-                    .setDuration(300)
-                    .start()
-            } else {
-                // Collapse animation
-                val slideUp = AnimationUtils.loadAnimation(itemView.context, R.anim.slide_up)
-                slideUp.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {}
-                    override fun onAnimationRepeat(animation: Animation?) {}
-                    override fun onAnimationEnd(animation: Animation?) {
-                        answerView.visibility = View.GONE
-                    }
-                })
-                answerView.startAnimation(slideUp)
-                arrowIcon.animate()
-                    .rotation(0f)
-                    .setDuration(300)
-                    .start()
-            }
+        override fun areContentsTheSame(oldItem: FAQSection, newItem: FAQSection): Boolean {
+            return oldItem == newItem
         }
     }
-
-
-class FAQDiffCallback : DiffUtil.ItemCallback<FAQSection>() {
-    override fun areItemsTheSame(oldItem: FAQSection, newItem: FAQSection) =
-        oldItem.title == newItem.title
-
-    override fun areContentsTheSame(oldItem: FAQSection, newItem: FAQSection) =
-        oldItem == newItem
 }

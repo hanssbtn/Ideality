@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaults>
+    <entry>
+        <key>privacy_policy</key>
+        <value>{
+            "introduction": "This privacy policy explains how we collect, use, and protect your personal information when you use our AR furniture application. We are committed to ensuring your privacy and protecting any information you share with us.",
+            "informationWeCollect": [
+            "Account Information: Email, name, and phone number for account creation and management",
+            "Device Information: Camera access for AR features, device type, and operating system",
+            "Usage Information: How you interact with our app, including products viewed and AR sessions",
+            "Location Information: Approximate location for delivery services"
+            ],
+            "howWeUseInfo": [
+            "Provide and improve our AR furniture visualization service",
+            "Process and fulfill your orders",
+            "Send important notifications about your orders or account",
+            "Improve our app's performance and user experience"
+            ],
+            "dataSecurity": "We implement appropriate security measures to protect your personal information. This includes encryption, secure server storage, and regular security audits. We never share your personal information with third parties without your explicit consent."
+            }</value>
+    </entry>
+</defaults>
