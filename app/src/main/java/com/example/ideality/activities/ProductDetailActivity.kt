@@ -99,7 +99,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun updateTotalPrice() {
         currentProduct?.let { product ->
             val total = product.price * currentQuantity
-            binding.addToCartButton.text = "Add to Cart - $${String.format("%.2f", total)}"
+            binding.addToCartButton.text = "Add to Cart - $${String.format(resources.configuration.locales[0] ,"%.2f", total)}"
         }
     }
 
@@ -160,7 +160,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     .into(productImage)
 
                 productName.text = product.name
-                productPrice.text = "$${String.format("%.2f", product.price)}"
+                productPrice.text = "$${String.format(resources.configuration.locales[0],"%.2f", product.price)}"
                 productDescription.text = product.description
                 ratingBar.rating = product.rating
                 ratingCount.text = "(${product.reviewCount} reviews)"
@@ -274,7 +274,7 @@ class ProductDetailActivity : AppCompatActivity() {
                 putExtra(
                     Intent.EXTRA_TEXT, """
                     Check out ${product.name} on our app!
-                    Price: $${String.format("%.2f", product.price)}
+                    Price: $${String.format(resources.configuration.locales[0], "%.2f", product.price)}
                     
                     ${product.description}
                 """.trimIndent()

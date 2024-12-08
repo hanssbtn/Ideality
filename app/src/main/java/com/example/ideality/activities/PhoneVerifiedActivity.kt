@@ -37,8 +37,10 @@ class PhoneVerifiedActivity : AppCompatActivity() {
     }
 
     // Prevent back button from interrupting success screen
+    @Deprecated("Compatibility purposes only.")
     override fun onBackPressed() {
-        super.onBackPressed()
+        @Suppress("Deprecation")
+        if (false) super.onBackPressed()
         // Do nothing - let the animation complete
     }
 }

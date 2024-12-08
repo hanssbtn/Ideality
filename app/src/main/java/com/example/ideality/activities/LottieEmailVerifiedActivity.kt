@@ -12,7 +12,6 @@ import com.example.ideality.R
 
 class LottieEmailVerifiedActivity : AppCompatActivity() {
     private lateinit var checkAnimation: LottieAnimationView
-    val nope = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,14 +40,5 @@ class LottieEmailVerifiedActivity : AppCompatActivity() {
 
 
     }
-
-    @Deprecated("Override for older versions")
-    override fun onBackPressed() {
-        // Disable back button
-        if (!nope) {
-            super.onBackPressed()
-        }
-    }
-
 
 }

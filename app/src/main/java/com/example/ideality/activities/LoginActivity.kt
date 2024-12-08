@@ -26,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.CheckBox
@@ -452,24 +451,6 @@ class LoginActivity : AppCompatActivity() {
             )
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        }
-    }
-
-    private fun validateEmail(): Boolean {
-        val email = emailInput.text.toString().trim()
-        return when {
-            email.isEmpty() -> {
-                emailInputLayout.error = "Email is required"
-                false
-            }
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                emailInputLayout.error = "Please enter a valid email"
-                false
-            }
-            else -> {
-                emailInputLayout.error = null
-                true
-            }
         }
     }
 
