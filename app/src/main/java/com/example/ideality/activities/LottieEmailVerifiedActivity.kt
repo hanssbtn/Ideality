@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.example.ideality.R
@@ -13,7 +15,16 @@ class LottieEmailVerifiedActivity : AppCompatActivity() {
     val nope = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Newer method for disabling back presses
         setContentView(R.layout.activity_lottie_emailverified)
+        onBackPressedDispatcher.addCallback(
+            object : OnBackPressedCallback(true) {// true: for prevent back and do something in handleOnBackPressed
+                override fun handleOnBackPressed() {
+                    Toast.makeText(this@LottieEmailVerifiedActivity, "Back button is disabled.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
 
         checkAnimation = findViewById(R.id.checkAnimation)
 
@@ -27,6 +38,8 @@ class LottieEmailVerifiedActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }, 2000) // Show animation for 2 seconds
+
+
     }
 
     @Deprecated("Override for older versions")
@@ -36,10 +49,6 @@ class LottieEmailVerifiedActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-}
 
-/***
- * <html>'@Deprecated(...) @MainThread() @CallSuper() fun onBackPressed(): Unit' is deprecated.
- * This method has been deprecated in favor of using the<br/>{@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.
- * <br/>The OnBackPressedDispatcher controls how back button events are dispatched<br/>to one or more {@link OnBackPressedCallback} objects.
- */
+
+}

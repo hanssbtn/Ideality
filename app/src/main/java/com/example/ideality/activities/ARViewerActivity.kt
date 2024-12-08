@@ -3,6 +3,7 @@ package com.example.ideality.activities
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import com.google.ar.core.Config
 import com.google.ar.core.Plane
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
+import io.github.sceneview.ar.camera.ARCameraStream
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
 import io.github.sceneview.node.ModelNode
@@ -69,17 +71,25 @@ class ARViewerActivity : AppCompatActivity() {
     private fun setupAR() {
         sceneView.apply {
             lifecycle = this@ARViewerActivity.lifecycle
-
+            cameraStream = ARCameraStream(this.materialLoader)
             configureSession { session, config ->
-                config.depthMode = when (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
-                    true -> Config.DepthMode.AUTOMATIC
-                    else -> Config.DepthMode.DISABLED
+                val depthSupported = when (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
+                    true -> {
+                        config.depthMode = Config.DepthMode.AUTOMATIC
+                        true
+                    }
+                    false -> {
+                        config.depthMode = Config.DepthMode.DISABLED
+                        false
+                    }
                 }
+                cameraStream?.isDepthOcclusionEnabled = depthSupported
+                Toast.makeText(this@ARViewerActivity, "setupAR.ARSceneView.configureSession: depth occlusion enabled: ${cameraStream?.isDepthOcclusionEnabled == true}", Toast.LENGTH_SHORT).show()
                 config.instantPlacementMode = Config.InstantPlacementMode.DISABLED
                 config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
             }
 
-            onSessionUpdated = { _, frame ->
+            onSessionUpdated = { session, frame ->
                 if (anchorNode == null) {
                     frame.getUpdatedPlanes()
                         .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
