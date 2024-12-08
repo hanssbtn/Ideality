@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ideality.adapter.AddressAdapter
+import com.example.ideality.adapters.AddressAdapter
 import com.example.ideality.databinding.SavedAddressesLayoutBinding
 import com.example.ideality.models.Address
 import com.google.firebase.auth.FirebaseAuth

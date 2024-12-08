@@ -134,7 +134,7 @@
             android:name=".activities.Home"
             android:exported="false" />
         <activity
-            android:name=".activities.lottieEmailverified"
+            android:name=".activities.LottieEmailVerifiedActivity"
             android:exported="false" />
         <activity
             android:name=".activities.VerifyEmailActivity"
@@ -144,7 +144,7 @@
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
         <activity
-            android:name=".activities.LogIn"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignUp"

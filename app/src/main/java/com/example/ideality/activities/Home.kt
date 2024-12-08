@@ -16,13 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.ideality.R
+import com.example.ideality.adapters.CategoryAdapter
 import com.example.ideality.adapters.*
 import com.example.ideality.databinding.ActivityHomeBinding
 import com.example.ideality.fragments.ProfileFragment
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Category
 import com.example.ideality.models.Product
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*

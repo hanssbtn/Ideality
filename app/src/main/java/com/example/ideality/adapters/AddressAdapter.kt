@@ -1,4 +1,4 @@
-package com.example.ideality.adapter
+package com.example.ideality.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

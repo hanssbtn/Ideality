@@ -25,10 +25,8 @@ import com.example.ideality.activities.FaqActivity
 import com.example.ideality.activities.Home
 import com.example.ideality.activities.PrivacyPolicyActivity
 import com.example.ideality.activities.SettingsActivity
-import com.example.ideality.activities.ShippingAddressActivity
 import com.example.ideality.activities.TermsConditionsActivity
-import com.example.ideality.activities.LogIn
-import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.example.ideality.activities.LoginActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.appwrite.Client
@@ -212,7 +210,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun navigateToLogin() {
-        val intent = Intent(requireContext(),  LogIn::class.java).apply {
+        val intent = Intent(requireContext(),  LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)

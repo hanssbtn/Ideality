@@ -121,7 +121,7 @@ class VerifyEmailActivity : AppCompatActivity() {
 
     private fun showVerificationSuccess() {
         // Show success animation
-        startActivity(Intent(this, lottieEmailverified::class.java))
+        startActivity(Intent(this, LottieEmailVerifiedActivity::class.java))
         finish()
     }
 
