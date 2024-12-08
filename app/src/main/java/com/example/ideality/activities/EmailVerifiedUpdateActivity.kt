@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ideality.databinding.ActivityLottieEmailUpdatedBinding
 
@@ -15,7 +16,14 @@ class EmailVerifiedUpdateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLottieEmailUpdatedBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!isNavigating) {
+                    isNavigating = true
+                    navigateToProfile()
+                }
+            }
+        })
         setupAnimation()
     }
 
@@ -41,14 +49,6 @@ class EmailVerifiedUpdateActivity : AppCompatActivity() {
         }
         startActivity(intent)
         finish()
-    }
-
-    override fun onBackPressed() {
-        // Prevent back navigation during animation
-        if (!isNavigating) {
-            isNavigating = true
-            navigateToProfile()
-        }
     }
 
     override fun onDestroy() {

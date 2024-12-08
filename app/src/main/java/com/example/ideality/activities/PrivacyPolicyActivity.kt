@@ -102,6 +102,7 @@ class PrivacyPolicyActivity : AppCompatActivity() {
 
             // Add elevation and touch feedback animations to cards
             arrayOf(introductionCard, informationCard, usageCard, securityCard).forEach { card ->
+                @Suppress("ClickableViewAccessibility")
                 card.setOnTouchListener { view, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {

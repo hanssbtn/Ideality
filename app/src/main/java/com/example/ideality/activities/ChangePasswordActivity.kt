@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ideality.databinding.ActivityChangePasswordBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,6 +28,12 @@ class ChangePasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressedHandler()
+            }
+        })
 
         auth = FirebaseAuth.getInstance()
         setupUI()
@@ -214,9 +221,5 @@ class ChangePasswordActivity : AppCompatActivity() {
         if (!isFinishing) {
             Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onBackPressed() {
-        onBackPressedHandler()
     }
 }

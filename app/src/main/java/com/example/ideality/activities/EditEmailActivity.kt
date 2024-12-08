@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.ideality.R
@@ -35,6 +35,12 @@ class EditEmailActivity : AppCompatActivity() {
         binding = ActivityEditEmailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressedHandler()
+            }
+        })
+
         initializeFirebase()
         loadUserData()
         setupUI()
@@ -50,7 +56,7 @@ class EditEmailActivity : AppCompatActivity() {
         val userId = auth.currentUser?.uid ?: return
         isGoogleUser = auth.currentUser?.providerData?.any {
             it.providerId == GoogleAuthProvider.PROVIDER_ID
-        } ?: false
+        } == true
 
         database.getReference("users").child(userId)
             .get()
@@ -209,7 +215,7 @@ class EditEmailActivity : AppCompatActivity() {
                 // If successful, proceed to verification
                 proceedToVerification(newEmail)
             } catch (e: Exception) {
-                showError("Authentication failed. Please check your password.")
+                showError("Authentication failed. Please check your password. got ${e.stackTraceToString()}")
                 showLoading(false)
                 isProcessing = false
             }
@@ -248,11 +254,6 @@ class EditEmailActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .setCancelable(false)
             .show()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        onBackPressedHandler()
     }
 
     private fun showLoading(show: Boolean) {
