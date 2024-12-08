@@ -19,6 +19,7 @@ import com.example.ideality.R
 import com.example.ideality.adapters.CategoryAdapter
 import com.example.ideality.adapters.*
 import com.example.ideality.databinding.ActivityHomeBinding
+import com.example.ideality.fragments.FavoriteFragment
 import com.example.ideality.fragments.ProfileFragment
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Category
@@ -86,6 +87,13 @@ class Home : AppCompatActivity() {
         setupRecyclerViews()
         setupSwipeRefresh()
         setupBottomNavigation()
+        setupCartButton()
+    }
+
+    private fun setupCartButton() {
+        binding.cartLayout.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
     }
 
     private fun setupCarousel() {
@@ -253,14 +261,13 @@ class Home : AppCompatActivity() {
     }
 
     private fun navigateToProductDetail(product: Product) {
-        val intent = Intent(this, ItemDetailsActivity::class.java).apply {
+        val intent = Intent(this, ProductDetailActivity::class.java).apply {
             putExtra("product_id", product.id)
         }
         startActivity(intent)
     }
 
-    private fun showArView(product: Product) {
-        // Update this function to use ModelViewer instead of ARViewer
+    fun showArView(product: Product) {
         val intent = Intent(this, ARViewerActivity::class.java).apply {
             putExtra("modelUrl", product.modelUrl)
             putExtra("productId", product.id)
@@ -297,6 +304,28 @@ class Home : AppCompatActivity() {
         }
     }
 
+    private fun updateCartBadge() {
+        val userId = currentUser?.uid ?: return
+
+        database.getReference("users")
+            .child(userId)
+            .child("cart")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val itemCount = snapshot.childrenCount
+                    binding.cartBadge.apply {
+                        visibility = if (itemCount > 0) View.VISIBLE else View.GONE
+                        text = itemCount.toString()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    binding.cartBadge.visibility = View.GONE
+                }
+            })
+    }
+
+
     private fun setupBottomNavigation() {
         binding.bottomBar.onItemSelected = { position ->
             when (position) {
@@ -304,7 +333,11 @@ class Home : AppCompatActivity() {
                     clearFragments()
                     showMainContent(true)
                 }
-                1 -> Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
+                1 -> { // Favorite tab
+                    val fragment = FavoriteFragment.newInstance()
+                    loadFragment(fragment)
+                    showMainContent(false)
+                }
                 2 -> Toast.makeText(this, "Transaction", Toast.LENGTH_SHORT).show()
                 3 -> {
                     loadFragment(ProfileFragment())
@@ -314,7 +347,7 @@ class Home : AppCompatActivity() {
         }
     }
 
-    private fun showMainContent(show: Boolean) {
+    fun showMainContent(show: Boolean) {
         val visibility = if (show) View.VISIBLE else View.GONE
         binding.viewPager.visibility = visibility
         binding.tabLayout.visibility = visibility
@@ -330,7 +363,7 @@ class Home : AppCompatActivity() {
             .commit()
     }
 
-    private fun clearFragments() {
+    fun clearFragments() {
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
@@ -350,11 +383,26 @@ class Home : AppCompatActivity() {
         binding.shimmerLayout.stopShimmer()
     }
 
+
+
+    // Separate function at class level (with other functions)
+    private fun refreshCartBadge() {
+        if (currentUser != null) {
+            updateCartBadge()
+        } else {
+            binding.cartBadge.visibility = View.GONE
+        }
+    }
+
+
+
+    // Update onResume()
     override fun onResume() {
         super.onResume()
         autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
         if (binding.shimmerLayout.visibility == View.VISIBLE) {
             binding.shimmerLayout.startShimmer()
         }
+        refreshCartBadge() // Add this call
     }
 }

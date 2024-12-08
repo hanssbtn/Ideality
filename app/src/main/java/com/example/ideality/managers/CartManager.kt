@@ -1,4 +1,4 @@
-package com.example.ideality.managers
+/*package com.example.ideality.managers
 
 
 import com.example.ideality.models.CartItem
@@ -122,4 +122,4 @@ class CartManager(private val database: FirebaseDatabase) {
                 }
         }
     }
-}
+}*/
