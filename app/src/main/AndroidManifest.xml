@@ -6,16 +6,17 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Add these new permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.capability.manual_post_processing"/>
     <uses-feature
         android:name="android.hardware.camera.ar"
-        android:required="true" />
+        android:required="false" />
     <uses-feature
-        android:glEsVersion="0x00020000"
+        android:glEsVersion="0x00030000"
         android:required="true" />
 
     <application
@@ -82,7 +83,7 @@
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
         <activity
-            android:name=".activities.LoadingActivity"
+            android:name=".ar.ARActivity"
             android:exported="false" />
         <activity
             android:name=".activities.Home"
@@ -90,11 +91,11 @@
         <activity
             android:name=".activities.lottieEmailverified"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".activities."-->
+<!--            android:exported="false" />-->
         <activity
-            android:name=".activities.verify_email"
-            android:exported="false" />
-        <activity
-            android:name=".activities.forgot_password"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
         <activity

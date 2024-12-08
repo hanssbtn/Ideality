@@ -1,4 +1,6 @@
 package com.example.ideality.activities
 
-class EditPhoneActivity {
+import androidx.appcompat.app.AppCompatActivity
+
+class EditPhoneActivity: AppCompatActivity() {
 }

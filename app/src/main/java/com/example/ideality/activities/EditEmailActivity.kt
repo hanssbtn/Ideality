@@ -1,4 +1,6 @@
 package com.example.ideality.activities
 
-class EditEmailActivity {
+import androidx.appcompat.app.AppCompatActivity
+
+class EditEmailActivity: AppCompatActivity() {
 }

@@ -1,11 +1,13 @@
 package com.example.ideality.models
 
+import android.graphics.Bitmap
+
 data class Product(
     val id: String,
     val name: String,
     val description: String,
     val price: Double,
-    val image: Int,  // Resource ID for now, can be changed to URL later
+    val image: Bitmap,
     val modelFile: String,  // AR model file path/reference
     val category: String,
     val rating: Float,

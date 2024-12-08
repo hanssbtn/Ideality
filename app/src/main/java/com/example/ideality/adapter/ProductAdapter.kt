@@ -19,7 +19,7 @@ class ProductAdapter(
     private var products: List<Product>,
     private val onProductClick: (Product) -> Unit,
     private val onFavoriteClick: (Product) -> Unit,
-    private val onQuickArView: (Product) -> Unit? = {}
+    private val onPreview: (Product) -> Unit? = {}
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -39,7 +39,7 @@ class ProductAdapter(
             shimmerLayout?.startShimmer()
 
             // Load image and stop shimmer when done
-            image.setImageResource(product.image)
+            image.setImageBitmap(product.image)
             shimmerLayout?.stopShimmer()
             shimmerLayout?.hideShimmer()
 
@@ -71,7 +71,7 @@ class ProductAdapter(
 
             quickArButton.setOnClickListener {
                 it.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
-                onQuickArView(product)
+                onPreview(product)
             }
         }
     }

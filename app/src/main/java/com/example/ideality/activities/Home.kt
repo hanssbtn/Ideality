@@ -25,13 +25,23 @@ import com.google.firebase.database.FirebaseDatabase
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import com.example.ideality.ar.ARActivity
 import me.ibrahimsn.lib.NiceBottomBar
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.managers.SearchHistoryManager
 import com.example.ideality.managers.ProductFilterManager
+import com.example.ideality.utils.getBitmapOrPlaceholder
+import java.io.IOException
 
 class Home : AppCompatActivity() {
+    companion object {
+        const val TAG = "Home"
+    }
+
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
     private lateinit var categoriesRecyclerView: RecyclerView
@@ -79,7 +89,8 @@ class Home : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        try {
+        // Removed unnecessary try catch block
+//        try {
             viewPager = findViewById(R.id.viewPager)
             tabLayout = findViewById(R.id.tabLayout)
             categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
@@ -91,19 +102,20 @@ class Home : AppCompatActivity() {
             shimmerFrameLayout = findViewById(R.id.shimmerLayout)
 
             // Verify that required views are not null
-            requireNotNull(viewPager) { "ViewPager not found in layout" }
-            requireNotNull(tabLayout) { "TabLayout not found in layout" }
-            requireNotNull(categoriesRecyclerView) { "Categories RecyclerView not found in layout" }
-            requireNotNull(recentlyUsedRecyclerView) { "Recently Used RecyclerView not found in layout" }
-            requireNotNull(newReleasesRecyclerView) { "New Releases RecyclerView not found in layout" }
-            requireNotNull(searchView) { "SearchView not found in layout" }
-            requireNotNull(swipeRefreshLayout) { "SwipeRefreshLayout not found in layout" }
-            requireNotNull(bottomBar) { "BottomBar not found in layout" }
-        } catch (e: Exception) {
-            Log.e("Home", "Error initializing views", e)
-            Toast.makeText(this, "Error initializing app", Toast.LENGTH_SHORT).show()
-            finish()
-        }
+//            requireNotNull(viewPager) { "ViewPager not found in layout" }
+//            requireNotNull(tabLayout) { "TabLayout not found in layout" }
+//            requireNotNull(categoriesRecyclerView) { "Categories RecyclerView not found in layout" }
+//            requireNotNull(recentlyUsedRecyclerView) { "Recently Used RecyclerView not found in layout" }
+//            requireNotNull(newReleasesRecyclerView) { "New Releases RecyclerView not found in layout" }
+//            requireNotNull(searchView) { "SearchView not found in layout" }
+//            requireNotNull(swipeRefreshLayout) { "SwipeRefreshLayout not found in layout" }
+//            requireNotNull(bottomBar) { "BottomBar not found in layout" }
+
+//        } catch (e: Exception) {
+//            Log.e("Home", "Error initializing views", e)
+//            Toast.makeText(this, "Error initializing app", Toast.LENGTH_SHORT).show()
+//            finish()
+//        }
     }
 
     private fun setupBottomNavigation() {
@@ -178,16 +190,20 @@ class Home : AppCompatActivity() {
         }
     }
 
+
+
     private fun loadRecentlyUsedProducts() {
         // Example data - replace with your actual data loading
+        val bitmap: Bitmap = getBitmapOrPlaceholder("model_images/damaged_helmet.png")
+
         val recentProducts = listOf(
             Product(
                 id = "1",
-                name = "Modern Sofa",
-                description = "Comfortable modern sofa",
+                name = "Damaged Helmet",
+                description = "Damaged Helmet (Test)",
                 price = 599.99,
-                image = R.drawable.placeholder_sofa,
-                modelFile = "sofa.glb",
+                image = bitmap,
+                modelFile = "models/damaged_helmet.glb",
                 category = "sofa",
                 rating = 4.5f,
                 reviewCount = 128,
@@ -207,8 +223,8 @@ class Home : AppCompatActivity() {
                 name = "Designer Chair",
                 description = "Modern designer chair",
                 price = 299.99,
-                image = R.drawable.placeholder_chair,
-                modelFile = "chair.glb",
+                image = getBitmapOrPlaceholder("model_images/damaged_helmet.png"),
+                modelFile = "models/damaged_helmet.glb",
                 category = "chair",
                 rating = 4.8f,
                 reviewCount = 45,
@@ -263,13 +279,15 @@ class Home : AppCompatActivity() {
         recentlyUsedAdapter = ProductAdapter(
             products = emptyList(),
             onProductClick = { product -> navigateToProductDetail(product) },
-            onFavoriteClick = { product -> toggleFavorite(product) }
+            onFavoriteClick = { product -> toggleFavorite(product) },
+            onPreview = { product -> showArView(product) }
         )
 
         newReleasesAdapter = ProductAdapter(
             products = emptyList(),
             onProductClick = { product -> navigateToProductDetail(product) },
-            onFavoriteClick = { product -> toggleFavorite(product) }
+            onFavoriteClick = { product -> toggleFavorite(product) },
+            onPreview = { product -> showArView(product) }
         )
 
         recentlyUsedRecyclerView.adapter = recentlyUsedAdapter
@@ -367,6 +385,10 @@ class Home : AppCompatActivity() {
     private fun showArView(product: Product) {
         // Implement AR view logic
         Toast.makeText(this, "Showing AR view for: ${product.name}", Toast.LENGTH_SHORT).show()
+        Intent(this, ARActivity::class.java).let {
+            it.putExtra("model", product.modelFile)
+            startActivity(it)
+        }
     }
 
     private fun setupCarousel() {
