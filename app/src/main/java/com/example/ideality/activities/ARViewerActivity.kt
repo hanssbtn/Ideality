@@ -47,10 +47,14 @@ import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.camera.ARCameraStream
 import io.github.sceneview.ar.node.AnchorNode
+import io.github.sceneview.managers.safeDestroy
 import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.node.ModelNode
+import io.github.sceneview.safeDestroyMaterial
+import io.github.sceneview.safeDestroyMaterialInstance
+import io.github.sceneview.safeDestroyTexture
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -614,6 +618,9 @@ class ARViewerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         runCatching {
+            sceneView.engine.safeDestroyTexture(texture)
+            sceneView.engine.safeDestroyMaterialInstance(depthMaterialInstance)
+            sceneView.engine.renderableManager.safeDestroy(entity)
             EntityManager.get().destroy(entity)
             lifecycleScope.cancel()
         }
