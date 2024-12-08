@@ -3,6 +3,7 @@ package com.example.ideality.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import com.example.ideality.activities.SavedAddressesActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -96,7 +97,7 @@ class ProfileFragment : Fragment() {
 
             // Account Section
             addressLayout.setOnClickListener {
-                startActivity(Intent(requireContext(), ShippingAddressActivity::class.java))
+                startActivity(Intent(requireContext(), SavedAddressesActivity::class.java))
             }
 
             settingsLayout.setOnClickListener {

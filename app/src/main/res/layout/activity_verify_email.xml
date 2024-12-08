@@ -63,8 +63,8 @@
 
     <ImageView
         android:id="@+id/emailImage"
-        android:layout_width="270dp"
-        android:layout_height="257dp"
+        android:layout_width="283dp"
+        android:layout_height="303dp"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

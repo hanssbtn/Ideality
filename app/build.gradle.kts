@@ -20,6 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     dataBinding {
@@ -200,8 +201,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.core.ktx)
 
-    // Chip Navigation
-    implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
+    //Chip Navigation
+        implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
 
     // auth
     implementation("com.google.android.recaptcha:recaptcha:18.6.1")
@@ -244,7 +245,14 @@ dependencies {
 
     // Circle ImageView
     implementation ("de.hdodenhof:circleimageview:3.1.0")
-}
+
+    // JavaMail API for custom email sending
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
+
+    implementation ("androidx.webkit:webkit:1.8.0")
+
+    implementation ("io.github.sceneview:arsceneview:2.2.1")
 
 java {
     toolchain {

@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ideality">
 
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,7 +32,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ideality">
 
-        <!-- Add FileProvider for camera functionality -->
+        <activity
+            android:name=".activities.ItemDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PhoneVerifiedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddEditAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SavedAddressesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.VerifyPhoneActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.VerifyCurrentEmailActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="${applicationId}.firebaseapp.com" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.VerifyEmailUpdateActivity"
+            android:exported="false" /> <!-- Add FileProvider for camera functionality -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -36,9 +73,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
-
-        <!-- Make SplashScreen the launcher activity -->
+        </provider> <!-- Make SplashScreen the launcher activity -->
         <activity
             android:name=".activities.SplashScreen"
             android:exported="true"
@@ -47,25 +82,40 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Add the new activities -->
+        </activity> <!-- Add the new activities -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
-
+        <activity
+            android:name=".activities.ARViewerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditEmailActivity"
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
-
+        <activity
+            android:name=".activities.EmailVerifiedUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Ideality" />
+        <activity
+            android:name=".activities.VerifyEmailCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.EditPhoneActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
-
-        <!-- Your existing activities -->
+            android:theme="@style/Theme.Ideality" /> <!-- Your existing activities -->
         <activity
             android:name=".activities.PrivacyPolicyActivity"
             android:exported="false"
@@ -91,9 +141,6 @@
         <activity
             android:name=".activities.lottieEmailverified"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".activities."-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
