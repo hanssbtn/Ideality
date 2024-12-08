@@ -142,9 +142,14 @@ class ProductDetailActivity : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val productMap = snapshot.value as? Map<String, Any?> ?: return
-                    currentProduct = Product.fromMap(productMap, snapshot.key ?: "")
-                    updateUI()
-                    loadSimilarProducts()
+                    val product = Product.fromMap(productMap, snapshot.key ?: "")
+
+                    // Check wishlist status when product loads
+                    wishlistManager.isInWishlist(productId) { isInWishlist ->
+                        currentProduct = product.copy(isFavorite = isInWishlist)
+                        updateUI()
+                        loadSimilarProducts()
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -247,15 +252,25 @@ class ProductDetailActivity : AppCompatActivity() {
 
         currentProduct?.let { product ->
             if (product.isFavorite) {
+                // If it's currently favorited, remove it
                 wishlistManager.removeFromWishlist(
                     productId = product.id,
-                    onSuccess = { updateFavoriteStatus(false) },
+                    onSuccess = {
+                        updateFavoriteStatus(false)
+                        // Optional: Show feedback
+                        showSuccess("Removed from favorites")
+                    },
                     onFailure = { e -> showError("Failed to remove from favorites: ${e.message}") }
                 )
             } else {
+                // If it's not favorited, add it
                 wishlistManager.addToWishlist(
                     product = product,
-                    onSuccess = { updateFavoriteStatus(true) },
+                    onSuccess = {
+                        updateFavoriteStatus(true)
+                        // Optional: Show feedback
+                        showSuccess("Added to favorites")
+                    },
                     onFailure = { e -> showError("Failed to add to favorites: ${e.message}") }
                 )
             }
