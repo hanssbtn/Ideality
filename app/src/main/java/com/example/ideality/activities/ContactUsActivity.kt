@@ -30,7 +30,7 @@ import javax.mail.internet.MimeMessage
 class ContactUsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContactUsBinding
     private val emailPrefs by lazy {
-        getSharedPreferences("email_prefs", Context.MODE_PRIVATE)
+        getSharedPreferences("email_prefs", MODE_PRIVATE)
     }
 
     companion object {

@@ -45,176 +45,167 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
 
+        <!-- Address Input Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Address Input Section -->
-            <LinearLayout
+            <!-- Full Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/fullNameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:hint="Enter your full name"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textSize="14sp" />
 
-                <!-- Full Name -->
-                <TextView
+            <!-- Phone Number -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Phone Number"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/phoneInputContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Full Name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    app:ccp_contentColor="@android:color/black"
+                    app:ccp_showNameCode="true"
+                    app:ccp_textSize="14sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="4dp"
+                    android:background="#CCCCCC" />
 
                 <EditText
-                    android:id="@+id/fullNameInput"
+                    android:id="@+id/phoneInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:hint="Enter your full name"
-                    android:inputType="textPersonName"
-                    android:padding="12dp"
+                    android:background="@null"
+                    android:hint="Phone number"
+                    android:inputType="phone"
                     android:textSize="14sp" />
-
-                <!-- Phone Number -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Phone Number"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:id="@+id/phoneInputContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp">
-
-                    <com.hbb20.CountryCodePicker
-                        android:id="@+id/ccp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:ccp_contentColor="@android:color/black"
-                        app:ccp_showNameCode="true"
-                        app:ccp_textSize="14sp" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginVertical="4dp"
-                        android:background="#CCCCCC" />
-
-                    <EditText
-                        android:id="@+id/phoneInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="Phone number"
-                        android:inputType="phone"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <!-- Street Address -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Street Address"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/streetAddressInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:hint="Enter street address"
-                    android:inputType="textPostalAddress"
-                    android:padding="12dp"
-                    android:textSize="14sp" />
-
-                <!-- City -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="City"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/cityInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:hint="Enter city"
-                    android:inputType="text"
-                    android:padding="12dp"
-                    android:textSize="14sp" />
-
-                <!-- State/Province -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="State/Province"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/stateInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:hint="Enter state/province"
-                    android:inputType="text"
-                    android:padding="12dp"
-                    android:textSize="14sp" />
-
-                <!-- Postal Code -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Postal Code"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/postalCodeInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/input_border_background"
-                    android:hint="Enter postal code"
-                    android:inputType="number"
-                    android:padding="12dp"
-                    android:textSize="14sp" />
-
-                <!-- Save as Default Checkbox -->
-                <CheckBox
-                    android:id="@+id/defaultAddressCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Set as default shipping address"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
             </LinearLayout>
 
-        </LinearLayout>
+            <!-- Street Address -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Street Address"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
 
+            <EditText
+                android:id="@+id/streetAddressInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:hint="Enter street address"
+                android:inputType="textPostalAddress"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- City -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="City"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/cityInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:hint="Enter city"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- State/Province -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="State/Province"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/stateInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:hint="Enter state/province"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- Postal Code -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Postal Code"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/postalCodeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_border_background"
+                android:hint="Enter postal code"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- Save as Default Checkbox -->
+            <CheckBox
+                android:id="@+id/defaultAddressCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Set as default shipping address"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Save Button -->

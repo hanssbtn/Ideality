@@ -21,7 +21,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class forgot_password : AppCompatActivity() {
+class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase // Add this declaration
     private lateinit var usersRef: DatabaseReference // Add this declaration

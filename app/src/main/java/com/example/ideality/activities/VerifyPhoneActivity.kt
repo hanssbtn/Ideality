@@ -132,7 +132,7 @@ class VerifyPhoneActivity : AppCompatActivity() {
 
             // Handle backspace for previous digit
             editText.setOnKeyListener { _, keyCode, event ->
-                if (keyCode == android.view.KeyEvent.KEYCODE_DEL &&
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
                     editText.text.isEmpty() &&
                     index > 0 &&
                     event.action == KeyEvent.ACTION_DOWN) {

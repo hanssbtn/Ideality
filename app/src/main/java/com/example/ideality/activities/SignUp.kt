@@ -178,7 +178,7 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    private fun validateUsername(showError: Boolean = true): Boolean {
+    private fun validateUsername(showError: Boolean): Boolean {
         val username = usernameInput.text.toString().trim()
         return when {
             username.isEmpty() -> {
@@ -200,7 +200,7 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    private fun validateEmail(showError: Boolean = true): Boolean {
+    private fun validateEmail(showError: Boolean): Boolean {
         val email = emailInput.text.toString().trim()
         return when {
             email.isEmpty() -> {
@@ -248,7 +248,7 @@ class SignUp : AppCompatActivity() {
     }
 
     private fun validateInputs(): Boolean {
-        return validateUsername() && validateEmail() && validatePassword()
+        return validateUsername(true) && validateEmail(true) && validatePassword()
     }
 
     // Rest of your existing code remains the same...

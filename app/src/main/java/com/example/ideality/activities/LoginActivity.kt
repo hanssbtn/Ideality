@@ -138,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         forgotPasswordText.setOnClickListener {
-            startActivity(Intent(this, forgot_password::class.java))
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
 
@@ -486,7 +486,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupRememberMe() {
-        val sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("login_pref", MODE_PRIVATE)
         rememberMeCheckbox.isChecked = sharedPref.getBoolean("remember_me", false)
 
         if (rememberMeCheckbox.isChecked) {
@@ -506,7 +506,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkNetworkConnection(): Boolean {
         val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities =
             connectivityManager.getNetworkCapabilities(network) ?: return false

@@ -92,7 +92,7 @@ class EditEmailActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateEmail(showError: Boolean = true): Boolean {
+    private fun validateEmail(showError: Boolean): Boolean {
         val email = binding.newEmailInput.text.toString().trim()
         val currentEmail = auth.currentUser?.email
 
@@ -114,7 +114,7 @@ class EditEmailActivity : AppCompatActivity() {
     }
 
     private fun validateInputs(): Boolean {
-        return validateEmail()
+        return validateEmail(true)
     }
 
     private fun updateContinueButton() {
@@ -154,7 +154,7 @@ class EditEmailActivity : AppCompatActivity() {
                     .apply()
 
                 // Show success message
-                showSuccess("Please verify your current email first")
+                showSuccess()
 
                 // Navigate to verification screen
                 val intent = Intent(this@EditEmailActivity, VerifyCurrentEmailActivity::class.java)
@@ -264,9 +264,9 @@ class EditEmailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSuccess(message: String) {
+    private fun showSuccess() {
         if (!isFinishing) {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please verify your current email first", Toast.LENGTH_SHORT).show()
         }
     }
 

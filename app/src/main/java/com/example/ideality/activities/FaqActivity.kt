@@ -205,7 +205,7 @@ class FaqActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         currentFocus?.let { view ->
             imm.hideSoftInputFromWindow(view.windowToken, 0)
             view.clearFocus()

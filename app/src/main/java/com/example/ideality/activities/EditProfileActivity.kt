@@ -61,7 +61,7 @@ class EditProfileActivity : AppCompatActivity() {
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             result.data?.data?.let { uri ->
                 startCrop(uri)
             }
@@ -71,7 +71,7 @@ class EditProfileActivity : AppCompatActivity() {
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             tempImageUri?.let { uri ->
                 startCrop(uri)
             }
@@ -81,7 +81,7 @@ class EditProfileActivity : AppCompatActivity() {
     private val cropLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             val resultUri = UCrop.getOutput(result.data!!)
             resultUri?.let { uri ->
                 isProfileChanged = true
@@ -417,7 +417,7 @@ class EditProfileActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 showLoading(false)
                 if (task.isSuccessful) {
-                    showSuccess("Profile updated successfully")
+                    showSuccess()
                     finish()
                 } else {
                     showError("Failed to update profile")
@@ -434,7 +434,7 @@ class EditProfileActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showSuccess(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun showSuccess() {
+        Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
     }
 }

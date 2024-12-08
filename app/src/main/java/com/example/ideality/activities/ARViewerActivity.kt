@@ -1,6 +1,5 @@
 package com.example.ideality.activities
 
-import android.app.Activity
 import android.content.res.Configuration
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
@@ -8,7 +7,6 @@ import android.opengl.Matrix
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
@@ -24,7 +22,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.ideality.databinding.ActivityArViewerBinding
 import com.example.ideality.utils.setUV
 import com.example.ideality.utils.setXY
-import com.google.android.filament.Engine
 import com.google.android.filament.EntityManager
 import com.google.android.filament.IndexBuffer
 import com.google.android.filament.Material
@@ -36,13 +33,11 @@ import com.google.android.filament.TextureSampler
 import com.google.android.filament.VertexBuffer
 import com.google.android.filament.VertexBuffer.AttributeType
 import com.google.android.filament.VertexBuffer.VertexAttribute
-import com.google.android.filament.utils.Mat4
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.Plane
 import com.google.ar.core.Session
-import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.camera.ARCameraStream
@@ -52,19 +47,16 @@ import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.node.ModelNode
-import io.github.sceneview.safeDestroyMaterial
 import io.github.sceneview.safeDestroyMaterialInstance
 import io.github.sceneview.safeDestroyTexture
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -141,7 +133,9 @@ class ARViewerActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 with(CoroutineScope(coroutineContext)) {
-                    configChangeEvents.collect { configChange() }
+                    launch {
+                        configChangeEvents.collect { configChange() }
+                    }
                 }
                 awaitCancellation()
             } finally {

@@ -229,11 +229,11 @@ class VerifyEmailCodeActivity : AppCompatActivity() {
 
             // Vibrate for error feedback
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager)
+                (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager)
                     .defaultVibrator
             } else {
                 @Suppress("DEPRECATION")
-                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                getSystemService(VIBRATOR_SERVICE) as Vibrator
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

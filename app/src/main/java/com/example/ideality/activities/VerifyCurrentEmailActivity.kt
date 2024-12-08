@@ -94,7 +94,7 @@ class VerifyCurrentEmailActivity : AppCompatActivity() {
                 // Send verification email to current email
                 auth.currentUser?.sendEmailVerification()?.await()
                 startResendTimer()
-                showSuccess("Verification email sent")
+                showSuccess()
             } catch (e: Exception) {
                 showError("Failed to send verification email: ${e.message}")
             } finally {
@@ -243,9 +243,9 @@ class VerifyCurrentEmailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSuccess(message: String) {
+    private fun showSuccess() {
         if (!isFinishing) {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Verification email sent", Toast.LENGTH_SHORT).show()
         }
     }
 

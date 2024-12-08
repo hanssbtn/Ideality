@@ -59,6 +59,6 @@ data class Product(
     }
 
     override fun toString(): String {
-        return "ID: ${id}, Name: ${name}, price: ${price}, category: ${category}, description: ${description}"
+        return "ID: ${id}, Name: ${name}, price: ${price}, category: ${category}, description: $description"
     }
 }

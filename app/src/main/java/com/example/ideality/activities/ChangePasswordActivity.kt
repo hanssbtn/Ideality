@@ -136,7 +136,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 // After re-authentication, update the password
                 user.updatePassword(newPassword)
                     .addOnSuccessListener {
-                        showSuccess("Password updated successfully")
+                        showSuccess()
                         finish()
                     }
                     .addOnFailureListener { e ->
@@ -210,9 +210,9 @@ class ChangePasswordActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showSuccess(message: String) {
+    private fun showSuccess() {
         if (!isFinishing) {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show()
         }
     }
 
