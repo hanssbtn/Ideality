@@ -321,7 +321,7 @@ class SignUp : AppCompatActivity() {
                                             showLoading(false)
                                             if (dbTask.isSuccessful) {
                                                 // Start verification screen instead of showing success message
-                                                val intent = Intent(this, verify_email::class.java)
+                                                val intent = Intent(this, VerifyEmailActivity::class.java)
                                                 intent.putExtra("email", email)
                                                 startActivity(intent)
                                                 finish()

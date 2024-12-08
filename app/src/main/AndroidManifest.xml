@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ideality">
 
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,10 +15,7 @@
         android:maxSdkVersion="28" />
 
     <uses-feature
-        android:name="android.hardware.camera.ar"
-        android:required="true" />
-    <uses-feature
-        android:glEsVersion="0x00020000"
+        android:glEsVersion="0x00030000"
         android:required="true" />
 
     <application
@@ -141,7 +137,7 @@
             android:name=".activities.lottieEmailverified"
             android:exported="false" />
         <activity
-            android:name=".activities.verify_email"
+            android:name=".activities.VerifyEmailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.forgot_password"
