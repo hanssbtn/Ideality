@@ -222,6 +222,7 @@ class Home : AppCompatActivity() {
                     snapshot.children.forEach { child ->
                         val productMap = child.value as? Map<String, Any?> ?: return@forEach
                         val product = Product.fromMap(productMap, child.key ?: "")
+
                         filteredProducts.add(product)
                     }
                     // Handle filtered products (e.g., show in a new activity or dialog)
@@ -268,16 +269,17 @@ class Home : AppCompatActivity() {
     }
 
     fun showArView(product: Product) {
-        val intent = Intent(this, ARViewerActivity::class.java).apply {
-            putExtra("modelUrl", product.modelUrl)
-            putExtra("productId", product.id)
+        Intent(this, ARViewerActivity::class.java).let {
+            it.putExtra("modelUrl", product.modelUrl)
+            it.putExtra("productId", product.id)
+            startActivity(it)
         }
-        startActivity(intent)
 
         // Update lastUsed timestamp
         productsRef.child(product.id)
             .child("lastUsed")
             .setValue(System.currentTimeMillis())
+        Log.d("Home", "last used timestamp: ${System.currentTimeMillis()}")
     }
 
     private fun toggleFavorite(product: Product) {
