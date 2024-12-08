@@ -50,11 +50,15 @@ data class Product(
                 category = map["category"] as? String ?: "",
                 rating = (map["rating"] as? Double)?.toFloat() ?: 0f,
                 reviewCount = (map["reviewCount"] as? Long)?.toInt() ?: 0,
-                isNew = map["isNew"] as? Boolean ?: false,
+                isNew = map["isNew"] as? Boolean == true,
                 lastUsed = map["lastUsed"] as? Long,
-                isFavorite = map["isFavorite"] as? Boolean ?: false,
+                isFavorite = map["isFavorite"] as? Boolean == true,
                 dimensions = (map["dimensions"] as? Map<String, Double>) ?: mapOf()
             )
         }
+    }
+
+    override fun toString(): String {
+        return "ID: ${id}, Name: ${name}, price: ${price}, category: ${category}, description: ${description}"
     }
 }

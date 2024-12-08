@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -56,6 +57,18 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(
+            object: OnBackPressedCallback(true) {// true: for prevent back and do something in handleOnBackPressed
+                override fun handleOnBackPressed() {
+                    if (supportFragmentManager.backStackEntryCount > 0) {
+                        supportFragmentManager.popBackStack()
+                        binding.bottomBar.setActiveItem(0)
+                        showMainContent(true)
+                    }
+                }
+            }
+        )
 
         // Add test product on first launch
         addTestProduct()
