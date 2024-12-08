@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.ideality.R
 import com.example.ideality.adapters.*
 import com.example.ideality.databinding.ActivityHomeBinding
+import com.example.ideality.fragments.FavoriteFragment
 import com.example.ideality.fragments.ProfileFragment
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Category
@@ -266,8 +267,7 @@ class Home : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun showArView(product: Product) {
-        // Update this function to use ModelViewer instead of ARViewer
+    fun showArView(product: Product) {
         val intent = Intent(this, ARViewerActivity::class.java).apply {
             putExtra("modelUrl", product.modelUrl)
             putExtra("productId", product.id)
@@ -333,7 +333,11 @@ class Home : AppCompatActivity() {
                     clearFragments()
                     showMainContent(true)
                 }
-                1 -> Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
+                1 -> { // Favorite tab
+                    val fragment = FavoriteFragment.newInstance()
+                    loadFragment(fragment)
+                    showMainContent(false)
+                }
                 2 -> Toast.makeText(this, "Transaction", Toast.LENGTH_SHORT).show()
                 3 -> {
                     loadFragment(ProfileFragment())
@@ -343,7 +347,7 @@ class Home : AppCompatActivity() {
         }
     }
 
-    private fun showMainContent(show: Boolean) {
+    fun showMainContent(show: Boolean) {
         val visibility = if (show) View.VISIBLE else View.GONE
         binding.viewPager.visibility = visibility
         binding.tabLayout.visibility = visibility
@@ -359,7 +363,7 @@ class Home : AppCompatActivity() {
             .commit()
     }
 
-    private fun clearFragments() {
+    fun clearFragments() {
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
@@ -389,6 +393,8 @@ class Home : AppCompatActivity() {
             binding.cartBadge.visibility = View.GONE
         }
     }
+
+
 
     // Update onResume()
     override fun onResume() {
