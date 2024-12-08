@@ -2,6 +2,7 @@ package com.example.ideality.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.ideality.R
 import com.example.ideality.databinding.ActivitySplashScreenBinding
 
+@SuppressLint("CustomSplashScreen")
 class SplashScreen : AppCompatActivity() {
     private lateinit var binding: ActivitySplashScreenBinding
     private val splashDuration = 2000L // 2 seconds

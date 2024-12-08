@@ -95,7 +95,7 @@ class VerifyEmailActivity : AppCompatActivity() {
         verificationTimer?.cancel()
         verificationTimer = object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                timerText.text = "Resend link in: ${millisUntilFinished / 1000}s"
+                timerText.text = "Resend link in: ${millisUntilFinished / 1000} s"
             }
 
             override fun onFinish() {
@@ -115,7 +115,7 @@ class VerifyEmailActivity : AppCompatActivity() {
         try {
             startActivity(intent)
         } catch (e: Exception) {
-            showError("No email app found")
+            showError()
         }
     }
 
@@ -125,12 +125,12 @@ class VerifyEmailActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun showError() {
+        Toast.makeText(this, "No email app found.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         verificationTimer?.cancel()
+        super.onDestroy()
     }
 }

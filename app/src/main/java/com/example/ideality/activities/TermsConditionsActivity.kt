@@ -94,6 +94,7 @@ class TermsConditionsActivity : AppCompatActivity() {
         // Add touch animation to each card
         cards.forEach { card ->
             card.setOnTouchListener { view, event ->
+                card.performClick()
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         view.startAnimation(cardElevation)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.ideality.databinding.ActivityVerifyEmailUpdateBinding
@@ -34,6 +35,14 @@ class VerifyEmailUpdateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVerifyEmailUpdateBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!isProcessing) {
+                    showExitDialog()
+                }
+            }
+        })
 
         initializeFirebase()
         getIntentExtras()
@@ -254,12 +263,6 @@ class VerifyEmailUpdateActivity : AppCompatActivity() {
     private fun showSuccess(message: String) {
         if (!isFinishing) {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (!isProcessing) {
-            showExitDialog()
         }
     }
 
