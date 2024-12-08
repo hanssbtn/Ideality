@@ -31,7 +31,10 @@
         android:theme="@style/Theme.Ideality">
 
         <activity
-            android:name=".activities.ItemDetailsActivity"
+            android:name=".activities.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CartActivity"
             android:exported="false" />
         <activity
             android:name=".activities.PhoneVerifiedActivity"

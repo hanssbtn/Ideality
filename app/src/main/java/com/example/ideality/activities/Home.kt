@@ -86,6 +86,13 @@ class Home : AppCompatActivity() {
         setupRecyclerViews()
         setupSwipeRefresh()
         setupBottomNavigation()
+        setupCartButton()
+    }
+
+    private fun setupCartButton() {
+        binding.cartLayout.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
     }
 
     private fun setupCarousel() {
@@ -253,7 +260,7 @@ class Home : AppCompatActivity() {
     }
 
     private fun navigateToProductDetail(product: Product) {
-        val intent = Intent(this, ItemDetailsActivity::class.java).apply {
+        val intent = Intent(this, ProductDetailActivity::class.java).apply {
             putExtra("product_id", product.id)
         }
         startActivity(intent)
@@ -296,6 +303,28 @@ class Home : AppCompatActivity() {
             )
         }
     }
+
+    private fun updateCartBadge() {
+        val userId = currentUser?.uid ?: return
+
+        database.getReference("users")
+            .child(userId)
+            .child("cart")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val itemCount = snapshot.childrenCount
+                    binding.cartBadge.apply {
+                        visibility = if (itemCount > 0) View.VISIBLE else View.GONE
+                        text = itemCount.toString()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    binding.cartBadge.visibility = View.GONE
+                }
+            })
+    }
+
 
     private fun setupBottomNavigation() {
         binding.bottomBar.onItemSelected = { position ->
@@ -350,11 +379,24 @@ class Home : AppCompatActivity() {
         binding.shimmerLayout.stopShimmer()
     }
 
+
+
+    // Separate function at class level (with other functions)
+    private fun refreshCartBadge() {
+        if (currentUser != null) {
+            updateCartBadge()
+        } else {
+            binding.cartBadge.visibility = View.GONE
+        }
+    }
+
+    // Update onResume()
     override fun onResume() {
         super.onResume()
         autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
         if (binding.shimmerLayout.visibility == View.VISIBLE) {
             binding.shimmerLayout.startShimmer()
         }
+        refreshCartBadge() // Add this call
     }
 }

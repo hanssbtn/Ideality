@@ -312,9 +312,25 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun toggleProductFavorite(product: Product) {
         if (product.isFavorite) {
-            wishlistManager.removeFromWishlist(product.id)
+            wishlistManager.removeFromWishlist(
+                product.id,
+                onSuccess = {
+                    // Handle success
+                },
+                onFailure = { e ->
+                    showError("Failed to remove from favorites: ${e.message}")
+                }
+            )
         } else {
-            wishlistManager.addToWishlist(product)
+            wishlistManager.addToWishlist(
+                product,
+                onSuccess = {
+                    // Handle success
+                },
+                onFailure = { e ->
+                    showError("Failed to add to favorites: ${e.message}")
+                }
+            )
         }
     }
 
@@ -324,7 +340,7 @@ class ProductDetailActivity : AppCompatActivity() {
             .setMessage("Please sign in to continue")
             .setPositiveButton("Sign In") { _, _ ->
                 // Navigate to login
-                // startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this,LogIn::class.java))
             }
             .setNegativeButton("Cancel", null)
             .show()
