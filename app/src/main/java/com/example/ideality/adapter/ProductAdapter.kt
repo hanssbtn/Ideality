@@ -1,5 +1,6 @@
 package com.example.ideality.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,10 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ideality.R
+import com.example.ideality.activities.ARViewerActivity
+
 import com.example.ideality.models.Product
 import com.facebook.shimmer.ShimmerFrameLayout
 import java.text.NumberFormat
@@ -29,7 +33,6 @@ class ProductAdapter(
         private val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
         private val ratingCount: TextView = view.findViewById(R.id.ratingCount)
         private val favoriteButton: ImageButton = view.findViewById(R.id.favoriteButton)
-        // Changed from Chip to TextView
         private val newBadge: TextView = view.findViewById(R.id.newBadge)
         private val shimmerLayout: ShimmerFrameLayout? = view.findViewById(R.id.shimmerLayout)
         private val quickArButton: ImageButton = view.findViewById(R.id.quickArButton)
@@ -38,11 +41,25 @@ class ProductAdapter(
             // Start shimmer while loading
             shimmerLayout?.startShimmer()
 
-            // Load image and stop shimmer when done
-            image.setImageResource(product.image)
-            shimmerLayout?.stopShimmer()
-            shimmerLayout?.hideShimmer()
+            // Load image based on whether it's a resource ID or URL
+            if (product.thumbnailUrl.isNotEmpty()) {
+                // Load from URL
+                Glide.with(itemView.context)
+                    .load(product.thumbnailUrl)
+                    .placeholder(R.drawable.placeholder_sofa)
+                    .into(image)
+                    .also {
+                        shimmerLayout?.stopShimmer()
+                        shimmerLayout?.hideShimmer()
+                    }
+            } else {
+                // Load from resource ID (for backwards compatibility)
+                image.setImageResource(product.image)
+                shimmerLayout?.stopShimmer()
+                shimmerLayout?.hideShimmer()
+            }
 
+            // Set basic product info
             name.text = product.name
             price.text = NumberFormat.getCurrencyInstance(Locale.US).format(product.price)
             ratingBar.rating = product.rating
@@ -66,11 +83,18 @@ class ProductAdapter(
                 val animation = AnimationUtils.loadAnimation(itemView.context, R.anim.favorite_bounce)
                 favoriteButton.startAnimation(animation)
                 onFavoriteClick(product)
-                notifyItemChanged(adapterPosition)
             }
 
-            quickArButton.setOnClickListener {
-                it.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
+            quickArButton.setOnClickListener { view ->
+                view.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
+                if (product.modelUrl.isNotEmpty()) {
+                    // Launch AR viewer with URL
+                    val intent = Intent(itemView.context, ARViewerActivity::class.java).apply {
+                        putExtra("modelUrl", product.modelUrl)
+                        putExtra("productId", product.id)
+                    }
+                    itemView.context.startActivity(intent)
+                }
                 onQuickArView(product)
             }
         }

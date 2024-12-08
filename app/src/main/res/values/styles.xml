@@ -59,4 +59,31 @@
         <item name="android:animateLayoutChanges">true</item>
         <item name="android:animationDuration">300</item>
     </style>
+    <style name="VerificationCodeInput">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">#CCCCCC</item>
+    </style>
+    <style name="AlertDialog.App.Custom" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.App.Body.Text</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">#757575</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="CustomSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:colorControlActivated">#2196F3</item>
+        <item name="android:colorControlNormal">#757575</item>
+        <item name="trackTint">#2196F3</item>
+        <item name="thumbTint">#2196F3</item>
+    </style>
+
+
 </resources>

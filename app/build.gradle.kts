@@ -16,6 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     dataBinding {
@@ -116,7 +117,7 @@ dependencies {
     implementation ("com.google.ar:core:1.14.0")
 
     //Chip Navigation
-    implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
+        implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
 
     //auth
     implementation("com.google.android.gms:play-services-auth:20.7.0")
@@ -148,7 +149,7 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     //appwrite
     implementation("io.appwrite:sdk-for-android:6.0.0")
@@ -170,5 +171,19 @@ dependencies {
     // Circle ImageView
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    // JavaMail API for custom email sending
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
+
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
+
+    implementation ("com.google.android.filament:filament-android:1.37.0")
+    implementation ("com.google.android.filament:filament-utils-android:1.37.0")
+
+    implementation ("com.google.ar:core:1.40.0")
+    implementation ("androidx.webkit:webkit:1.8.0")
+
+    implementation ("io.github.sceneview:arsceneview:2.2.1")
 
 }

@@ -9,12 +9,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import io.appwrite.enums.ImageGravity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.ideality.R
@@ -162,18 +164,21 @@ class EditProfileActivity : AppCompatActivity() {
                             if (user.profileImageId.isNotEmpty()) {
                                 lifecycleScope.launch {
                                     try {
-                                        val previewUrl = storage.getFilePreview(
-                                            bucketId = "6738a492002ac3c28a0d", // Replace with your bucket ID
+                                        val fileUrl = storage.getFileView(
+                                            bucketId = "6738a492002ac3c28a0d",
                                             fileId = user.profileImageId
                                         ).toString()
 
                                         Glide.with(this@EditProfileActivity)
-                                            .load(previewUrl)
+                                            .load(fileUrl)
                                             .apply(RequestOptions.circleCropTransform())
                                             .placeholder(R.drawable.ic_profile)
                                             .error(R.drawable.ic_profile)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
                                             .into(profileImage)
                                     } catch (e: Exception) {
+                                        e.printStackTrace()
                                         showError("Error loading profile image")
                                     }
                                 }
@@ -322,8 +327,12 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun uploadProfileImageIfNeeded(userId: String, username: String) {
         if (isProfileChanged && tempImageUri != null) {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 try {
+                    withContext(Dispatchers.Main) {
+                        showLoading(true)
+                    }
+
                     // Create a temporary file from Uri
                     val inputStream = contentResolver.openInputStream(tempImageUri!!)
                     val file = File(cacheDir, "temp_profile_image.jpg")
@@ -331,39 +340,64 @@ class EditProfileActivity : AppCompatActivity() {
                         inputStream?.copyTo(outputStream)
                     }
 
-                    // Delete existing profile image if any
-                    currentUser?.profileImageId?.let { oldImageId ->
-                        try {
-                            storage.deleteFile(
-                                bucketId = "6738a492002ac3c28a0d",
-                                fileId = oldImageId
-                            )
-                        } catch (e: Exception) {
-                            // Ignore if file doesn't exist
+                    try {
+                        // Delete old profile image if exists
+                        currentUser?.profileImageId?.takeIf { it.isNotEmpty() }?.let { oldImageId ->
+                            try {
+                                storage.deleteFile(
+                                    bucketId = "6738a492002ac3c28a0d",
+                                    fileId = oldImageId
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                // Continue even if delete fails
+                            }
                         }
+
+                        // Upload new image
+                        val result = storage.createFile(
+                            bucketId = "6738a492002ac3c28a0d",
+                            fileId = "unique()", // Let Appwrite generate unique ID
+                            file = InputFile.fromPath(file.path),
+                            permissions = listOf(
+                                "read(\"any\")",
+                                "write(\"any\")",
+                                "update(\"any\")",
+                                "delete(\"any\")"
+                            )
+                        )
+
+                        // Get direct file URL instead of preview
+                        val fileUrl = storage.getFileView(
+                            bucketId = "6738a492002ac3c28a0d",
+                            fileId = result.id
+                        ).toString()
+
+                        withContext(Dispatchers.Main) {
+                            // Update the UI immediately
+                            Glide.with(this@EditProfileActivity)
+                                .load(fileUrl)
+                                .apply(RequestOptions.circleCropTransform())
+                                .placeholder(R.drawable.ic_profile)
+                                .error(R.drawable.ic_profile)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(binding.profileImage)
+
+                            // Update the database
+                            updateUserData(userId, username, result.id)
+                        }
+
+                    } finally {
+                        // Clean up temporary file
+                        file.delete()
                     }
 
-                    // Convert File to InputFile for Appwrite
-                    val inputFile = InputFile.fromFile(file)
-
-                    // Upload new image
-                    val result = storage.createFile(
-                        bucketId = "6738a492002ac3c28a0d",
-                        fileId = "unique()",
-                        file = inputFile
-                    )
-
-                    // Update user data with new image ID
-                    withContext(Dispatchers.Main) {
-                        updateUserData(userId, username, result.id)
-                    }
-
-                    // Clean up temporary file
-                    file.delete()
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         showLoading(false)
                         showError("Failed to upload profile image: ${e.message}")
+                        e.printStackTrace()
                     }
                 }
             }

@@ -11,10 +11,6 @@
         android:title="Favorite"
         android:icon="@drawable/ic_favorite" />
 
-    <item
-        android:id="@+id/preview"
-        android:title="Preview"
-        android:icon="@drawable/ic_preview" />
 
     <item
         android:id="@+id/transaction"

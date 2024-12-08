@@ -8,5 +8,5 @@ data class UserData(
     val createdAt: Long = 0,
     val googleLinked: Boolean = false,
     val authType: String = "email",
-    var profileImageId: String = "" // Added for Appwrite
+    var profileImageId: String = ""
 )

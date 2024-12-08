@@ -113,45 +113,54 @@
                         android:textColor="#757575"
                         android:textSize="14sp" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/phoneInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/input_border_background"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="8dp">
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/design_default_color_error">
 
-                        <com.hbb20.CountryCodePicker
-                            android:id="@+id/ccp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:ccp_contentColor="@android:color/black"
-                            app:ccp_flagBorderColor="@android:color/transparent"
-                            app:ccp_padding="0dp"
-                            app:ccp_showFlag="true"
-                            app:ccp_showNameCode="true"
-                            app:ccp_textSize="14sp"
-                            app:ccpDialog_showTitle="false" />
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginHorizontal="8dp"
-                            android:layout_marginVertical="4dp"
-                            android:background="#CCCCCC" />
-
-                        <EditText
-                            android:id="@+id/newPhoneInput"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="Enter new phone number"
-                            android:inputType="phone"
-                            android:paddingVertical="4dp"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:background="@drawable/input_border_background"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp">
+
+                            <com.hbb20.CountryCodePicker
+                                android:id="@+id/ccp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:ccp_contentColor="@android:color/black"
+                                app:ccp_flagBorderColor="@android:color/transparent"
+                                app:ccp_padding="0dp"
+                                app:ccp_showFlag="true"
+                                app:ccp_showNameCode="true"
+                                app:ccp_textSize="14sp"
+                                app:ccpDialog_showTitle="false" />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_marginVertical="4dp"
+                                android:background="#CCCCCC" />
+
+                            <EditText
+                                android:id="@+id/newPhoneInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:hint="Enter new phone number"
+                                android:inputType="phone"
+                                android:paddingVertical="4dp"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -178,5 +187,23 @@
         android:textAllCaps="false"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Loading Overlay -->
+    <View
+        android:id="@+id/loadingBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

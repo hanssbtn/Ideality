@@ -1,9 +1,12 @@
 package com.example.ideality.activities
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
+import com.example.ideality.utils.TestDataUtility
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,38 +15,24 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.example.ideality.R
 import com.example.ideality.adapters.*
+import com.example.ideality.databinding.ActivityHomeBinding
 import com.example.ideality.fragments.ProfileFragment
-import com.example.ideality.models.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.paulrybitskyi.persistentsearchview.PersistentSearchView
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
-import android.content.Intent
-import android.util.Log
-import me.ibrahimsn.lib.NiceBottomBar
 import com.example.ideality.managers.WishlistManager
-import com.example.ideality.managers.SearchHistoryManager
-import com.example.ideality.managers.ProductFilterManager
+import com.example.ideality.models.Category
+import com.example.ideality.models.Product
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
 
 class Home : AppCompatActivity() {
-    private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
-    private lateinit var categoriesRecyclerView: RecyclerView
-    private lateinit var recentlyUsedRecyclerView: RecyclerView
-    private lateinit var newReleasesRecyclerView: RecyclerView
-    private lateinit var searchView: PersistentSearchView
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
-    private lateinit var bottomBar: NiceBottomBar
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var wishlistManager: WishlistManager
-    private lateinit var searchHistoryManager: SearchHistoryManager
-    private lateinit var productFilterManager: ProductFilterManager
+    private lateinit var database: FirebaseDatabase
+    private lateinit var productsRef: DatabaseReference
 
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var recentlyUsedAdapter: ProductAdapter
@@ -51,13 +40,12 @@ class Home : AppCompatActivity() {
 
     private var autoScrollHandler = Handler(Looper.getMainLooper())
     private val currentUser = FirebaseAuth.getInstance().currentUser
-    private val database = FirebaseDatabase.getInstance()
 
     private val autoScrollRunnable = Runnable {
-        viewPager.currentItem = (viewPager.currentItem + 1) % images.size
+        binding.viewPager.currentItem = (binding.viewPager.currentItem + 1) % carouselImages.size
     }
 
-    private val images = listOf(
+    private val carouselImages = listOf(
         R.drawable.samplecarousel1,
         R.drawable.samplecaraousel2,
         R.drawable.samplecaraousel3
@@ -65,195 +53,84 @@ class Home : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        initializeViews()
+        // Add test product on first launch
+        addTestProduct()
+
+        initializeFirebase()
+        setupViews()
         setupManagers()
-        setupCarousel()
-        setupCategories()
-        setupSearch()
-        setupRecyclerViews()
-        setupSwipeRefresh()
-        setupBottomNavigation()
         loadData()
     }
 
-    private fun initializeViews() {
-        try {
-            viewPager = findViewById(R.id.viewPager)
-            tabLayout = findViewById(R.id.tabLayout)
-            categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
-            recentlyUsedRecyclerView = findViewById(R.id.recentlyUsedRecyclerView)
-            newReleasesRecyclerView = findViewById(R.id.newReleasesRecyclerView)
-            searchView = findViewById(R.id.searchView)
-            swipeRefreshLayout = findViewById(R.id.swipeRefresh)
-            bottomBar = findViewById(R.id.bottomBar)
-            shimmerFrameLayout = findViewById(R.id.shimmerLayout)
+    private fun addTestProduct() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val isFirstRun = prefs.getBoolean("is_first_run", true)
 
-            // Verify that required views are not null
-            requireNotNull(viewPager) { "ViewPager not found in layout" }
-            requireNotNull(tabLayout) { "TabLayout not found in layout" }
-            requireNotNull(categoriesRecyclerView) { "Categories RecyclerView not found in layout" }
-            requireNotNull(recentlyUsedRecyclerView) { "Recently Used RecyclerView not found in layout" }
-            requireNotNull(newReleasesRecyclerView) { "New Releases RecyclerView not found in layout" }
-            requireNotNull(searchView) { "SearchView not found in layout" }
-            requireNotNull(swipeRefreshLayout) { "SwipeRefreshLayout not found in layout" }
-            requireNotNull(bottomBar) { "BottomBar not found in layout" }
-        } catch (e: Exception) {
-            Log.e("Home", "Error initializing views", e)
-            Toast.makeText(this, "Error initializing app", Toast.LENGTH_SHORT).show()
-            finish()
+        if (isFirstRun) {
+            TestDataUtility.addTestProductToFirebase(this)
+            prefs.edit().putBoolean("is_first_run", false).apply()
         }
     }
 
-    private fun setupBottomNavigation() {
-        bottomBar.onItemSelected = { position ->
-            when (position) {
-                0 -> {
-                    // Home
-                    clearFragments()
-                    showMainContent(true)
-                }
-                1 -> {
-                    // Favorite
-                    // loadFragment(FavoriteFragment())
-                    Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
-                }
-                2 -> {
-                    // Preview
-                    // loadFragment(PreviewFragment())
-                    Toast.makeText(this, "Preview", Toast.LENGTH_SHORT).show()
-                }
-                3 -> {
-                    // Transaction
-                    // loadFragment(TransactionFragment())
-                    Toast.makeText(this, "Transaction", Toast.LENGTH_SHORT).show()
-                }
-                4 -> {
-                    // Profile
-                    loadFragment(ProfileFragment())
-                    showMainContent(false)
-                }
+    private fun initializeFirebase() {
+        database = FirebaseDatabase.getInstance()
+        productsRef = database.getReference("products")
+    }
+
+    private fun setupViews() {
+        setupCarousel()
+        setupCategories()
+        setupRecyclerViews()
+        setupSwipeRefresh()
+        setupBottomNavigation()
+    }
+
+    private fun setupCarousel() {
+        binding.viewPager.adapter = ImageCarouselAdapter(carouselImages)
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                autoScrollHandler.removeCallbacks(autoScrollRunnable)
+                autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
             }
-        }
+        })
     }
 
-    private fun showMainContent(show: Boolean) {
-        val visibility = if (show) View.VISIBLE else View.GONE
-        viewPager.visibility = visibility
-        tabLayout.visibility = visibility
-        categoriesRecyclerView.visibility = visibility
-        recentlyUsedRecyclerView.visibility = visibility
-        newReleasesRecyclerView.visibility = visibility
-        searchView.visibility = visibility
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun clearFragments() {
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    }
-
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
-            bottomBar.setActiveItem(0)  // This is the correct way to set active item
-            showMainContent(true)
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-
-    private fun setupManagers() {
-        currentUser?.let { user ->
-            wishlistManager = WishlistManager(database, user.uid)
-            searchHistoryManager = SearchHistoryManager(this)
-            productFilterManager = ProductFilterManager()
-        }
-    }
-
-    private fun loadRecentlyUsedProducts() {
-        // Example data - replace with your actual data loading
-        val recentProducts = listOf(
-            Product(
-                id = "1",
-                name = "Modern Sofa",
-                description = "Comfortable modern sofa",
-                price = 599.99,
-                image = R.drawable.placeholder_sofa,
-                modelFile = "sofa.glb",
-                category = "sofa",
-                rating = 4.5f,
-                reviewCount = 128,
-                isNew = false,
-                lastUsed = System.currentTimeMillis()
-            )
-            // Add more products
+    private fun setupCategories() {
+        val categories = listOf(
+            Category("sofa", "Sofa", R.drawable.ic_sofa),
+            Category("chair", "Chair", R.drawable.ic_chair),
+            Category("table", "Table", R.drawable.ic_table),
+            Category("shelf", "Shelf", R.drawable.ic_shelf)
         )
-        recentlyUsedAdapter.updateProducts(recentProducts)
-    }
 
-    private fun loadNewReleases() {
-        // Example data - replace with your actual data loading
-        val newProducts = listOf(
-            Product(
-                id = "2",
-                name = "Designer Chair",
-                description = "Modern designer chair",
-                price = 299.99,
-                image = R.drawable.placeholder_chair,
-                modelFile = "chair.glb",
-                category = "chair",
-                rating = 4.8f,
-                reviewCount = 45,
-                isNew = true
-            )
-            // Add more products
-        )
-        newReleasesAdapter.updateProducts(newProducts)
-    }
-
-    private fun setupSearch() {
-        searchView.apply {
-            setOnLeftBtnClickListener {
-                // Handle back button click
-                finish()
-            }
-
-            setOnClearInputBtnClickListener {
-                // Clear input
-                searchView.inputQuery = ""
-            }
-
-            setOnSearchConfirmedListener { searchView, query ->
-                searchHistoryManager.addSearchQuery(query)
-                performSearch(query)
-                searchView.collapse()
-            }
+        categoryAdapter = CategoryAdapter(categories) { category ->
+            filterProductsByCategory(category)
         }
-    }
 
-    private fun updateSuggestions(suggestions: List<String>) {
-        // Update search suggestions
-        // Implementation depends on your search view library
+        binding.categoriesRecyclerView.apply {
+            adapter = categoryAdapter
+            layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(createHorizontalSpacing())
+        }
     }
 
     private fun setupRecyclerViews() {
-        // Setup Recently Used RecyclerView
-        recentlyUsedRecyclerView.apply {
+        // Recently Used RecyclerView
+        binding.recentlyUsedRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = SlideInRightAnimator()
             addItemDecoration(createHorizontalSpacing())
         }
 
-        // Setup New Releases RecyclerView
-        newReleasesRecyclerView.apply {
+        // New Releases RecyclerView
+        binding.newReleasesRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = SlideInRightAnimator()
             addItemDecoration(createHorizontalSpacing())
@@ -263,55 +140,103 @@ class Home : AppCompatActivity() {
         recentlyUsedAdapter = ProductAdapter(
             products = emptyList(),
             onProductClick = { product -> navigateToProductDetail(product) },
-            onFavoriteClick = { product -> toggleFavorite(product) }
+            onFavoriteClick = { product -> toggleFavorite(product) },
+            onQuickArView = { product -> showArView(product) }
         )
 
         newReleasesAdapter = ProductAdapter(
             products = emptyList(),
             onProductClick = { product -> navigateToProductDetail(product) },
-            onFavoriteClick = { product -> toggleFavorite(product) }
+            onFavoriteClick = { product -> toggleFavorite(product) },
+            onQuickArView = { product -> showArView(product) }
         )
 
-        recentlyUsedRecyclerView.adapter = recentlyUsedAdapter
-        newReleasesRecyclerView.adapter = newReleasesAdapter
+        binding.recentlyUsedRecyclerView.adapter = recentlyUsedAdapter
+        binding.newReleasesRecyclerView.adapter = newReleasesAdapter
     }
 
     private fun setupSwipeRefresh() {
-        swipeRefreshLayout.setColorSchemeResources(
-            R.color.black,
-            R.color.blue,
-            R.color.green
-        )
+        binding.swipeRefresh.setColorSchemeResources(R.color.black, R.color.blue, R.color.green)
+        binding.swipeRefresh.setOnRefreshListener { loadData() }
+    }
 
-        swipeRefreshLayout.setOnRefreshListener {
-            loadData()
+    private fun setupManagers() {
+        currentUser?.let { user ->
+            wishlistManager = WishlistManager(database, user.uid)
         }
     }
 
     private fun loadData() {
         showShimmer(true)
 
-        // Simulated data loading delay
-        Handler(Looper.getMainLooper()).postDelayed({
-            // Load your actual data here
-            loadRecentlyUsedProducts()
-            loadNewReleases()
-            showShimmer(false)
-            swipeRefreshLayout.isRefreshing = false
-        }, 1500)
+        productsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val allProducts = mutableListOf<Product>()
+
+                snapshot.children.forEach { child ->
+                    val productMap = child.value as? Map<String, Any?> ?: return@forEach
+                    val product = Product.fromMap(productMap, child.key ?: "")
+                    allProducts.add(product)
+                }
+
+                // Update recently used products
+                val recentlyUsed = allProducts
+                    .filter { it.lastUsed != null }
+                    .sortedByDescending { it.lastUsed }
+                    .take(5)
+                recentlyUsedAdapter.updateProducts(recentlyUsed)
+
+                // Update new releases
+                val newReleases = allProducts
+                    .filter { it.isNew }
+                    .take(5)
+                newReleasesAdapter.updateProducts(newReleases)
+
+                showShimmer(false)
+                binding.swipeRefresh.isRefreshing = false
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Home", "Error loading products: ${error.message}")
+                showShimmer(false)
+                binding.swipeRefresh.isRefreshing = false
+                Toast.makeText(this@Home, "Error loading products", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun filterProductsByCategory(category: Category) {
+        productsRef.orderByChild("category")
+            .equalTo(category.id)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val filteredProducts = mutableListOf<Product>()
+                    snapshot.children.forEach { child ->
+                        val productMap = child.value as? Map<String, Any?> ?: return@forEach
+                        val product = Product.fromMap(productMap, child.key ?: "")
+                        filteredProducts.add(product)
+                    }
+                    // Handle filtered products (e.g., show in a new activity or dialog)
+                    Toast.makeText(this@Home, "Found ${filteredProducts.size} ${category.name}s", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@Home, "Error filtering products", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private fun showShimmer(show: Boolean) {
         if (show) {
-            shimmerFrameLayout.visibility = View.VISIBLE
-            shimmerFrameLayout.startShimmer()
-            recentlyUsedRecyclerView.visibility = View.GONE
-            newReleasesRecyclerView.visibility = View.GONE
+            binding.shimmerLayout.visibility = View.VISIBLE
+            binding.shimmerLayout.startShimmer()
+            binding.recentlyUsedRecyclerView.visibility = View.GONE
+            binding.newReleasesRecyclerView.visibility = View.GONE
         } else {
-            shimmerFrameLayout.stopShimmer()
-            shimmerFrameLayout.visibility = View.GONE
-            recentlyUsedRecyclerView.visibility = View.VISIBLE
-            newReleasesRecyclerView.visibility = View.VISIBLE
+            binding.shimmerLayout.stopShimmer()
+            binding.shimmerLayout.visibility = View.GONE
+            binding.recentlyUsedRecyclerView.visibility = View.VISIBLE
+            binding.newReleasesRecyclerView.visibility = View.VISIBLE
         }
     }
 
@@ -327,17 +252,25 @@ class Home : AppCompatActivity() {
         }
     }
 
-    private fun performSearch(query: String) {
-        // Implement your search logic here
-        Toast.makeText(this, "Searching for: $query", Toast.LENGTH_SHORT).show()
-    }
-
     private fun navigateToProductDetail(product: Product) {
-        // Navigate to product detail screen
-        val intent = Intent(this, ProductDetailActivity::class.java).apply {
+        val intent = Intent(this, ItemDetailsActivity::class.java).apply {
             putExtra("product_id", product.id)
         }
         startActivity(intent)
+    }
+
+    private fun showArView(product: Product) {
+        // Update this function to use ModelViewer instead of ARViewer
+        val intent = Intent(this, ARViewerActivity::class.java).apply {
+            putExtra("modelUrl", product.modelUrl)
+            putExtra("productId", product.id)
+        }
+        startActivity(intent)
+
+        // Update lastUsed timestamp
+        productsRef.child(product.id)
+            .child("lastUsed")
+            .setValue(System.currentTimeMillis())
     }
 
     private fun toggleFavorite(product: Product) {
@@ -364,80 +297,64 @@ class Home : AppCompatActivity() {
         }
     }
 
-    private fun showArView(product: Product) {
-        // Implement AR view logic
-        Toast.makeText(this, "Showing AR view for: ${product.name}", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setupCarousel() {
-        // Set up adapter
-        viewPager.adapter = ImageCarouselAdapter(images)
-
-        // Connect indicators
-        TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
-
-        // Auto-scroll setup
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                // Reset auto-scroll timer when page changes
-                autoScrollHandler.removeCallbacks(autoScrollRunnable)
-                autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
-            }
-        })
-    }
-
-    private fun setupCategories() {
-        // Initialize categories
-        val categories = listOf(
-            Category("sofa", "Sofa", R.drawable.ic_sofa),
-            Category("chair", "Chair", R.drawable.ic_chair),
-            Category("table", "Table", R.drawable.ic_table),
-            Category("shelf", "Shelf", R.drawable.ic_shelf)
-        )
-
-        // Setup RecyclerView
-        categoryAdapter = CategoryAdapter(categories) { category ->
-            // Handle category click
-            Toast.makeText(this, "Selected: ${category.name}", Toast.LENGTH_SHORT).show()
-            // Add your category click handling here
-        }
-
-        categoriesRecyclerView.apply {
-            adapter = categoryAdapter
-            layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.HORIZONTAL, false)
-            // Add spacing between items
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    outRect.left = if (parent.getChildAdapterPosition(view) == 0) 16 else 8
-                    outRect.right = 8
+    private fun setupBottomNavigation() {
+        binding.bottomBar.onItemSelected = { position ->
+            when (position) {
+                0 -> {
+                    clearFragments()
+                    showMainContent(true)
                 }
-            })
+                1 -> Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(this, "Transaction", Toast.LENGTH_SHORT).show()
+                3 -> {
+                    loadFragment(ProfileFragment())
+                    showMainContent(false)
+                }
+            }
         }
     }
 
-    // Method to update images
-    fun updateCarouselImages(newImages: List<Int>) {
-        viewPager.adapter = ImageCarouselAdapter(newImages)
-        TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
+    private fun showMainContent(show: Boolean) {
+        val visibility = if (show) View.VISIBLE else View.GONE
+        binding.viewPager.visibility = visibility
+        binding.tabLayout.visibility = visibility
+        binding.categoriesRecyclerView.visibility = visibility
+        binding.recentlyUsedRecyclerView.visibility = visibility
+        binding.newReleasesRecyclerView.visibility = visibility
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun clearFragments() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+            binding.bottomBar.setActiveItem(0)
+            showMainContent(true)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         autoScrollHandler.removeCallbacks(autoScrollRunnable)
-        shimmerFrameLayout.stopShimmer()
+        binding.shimmerLayout.stopShimmer()
     }
 
     override fun onResume() {
         super.onResume()
         autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
-        if (shimmerFrameLayout.visibility == View.VISIBLE) {
-            shimmerFrameLayout.startShimmer()
+        if (binding.shimmerLayout.visibility == View.VISIBLE) {
+            binding.shimmerLayout.startShimmer()
         }
     }
 }

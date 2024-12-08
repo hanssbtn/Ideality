@@ -1,4 +1,4 @@
-package com.example.ideality.fragments
+/*package com.example.ideality.fragments
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -181,4 +181,4 @@ class PreviewFragment: Fragment() {
             loadingScreen.dismiss()
         }
     }
-}
+}*/
