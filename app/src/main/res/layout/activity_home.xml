@@ -35,7 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp">
+                android:layout_marginEnd="16dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp">
 
                 <ImageView
                     android:id="@+id/cartIcon"
@@ -48,8 +50,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="end|top"
-                    android:layout_marginTop="-5dp"
-                    android:layout_marginEnd="-5dp"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginEnd="-2dp"
                     android:background="@drawable/cart_badge_background"
                     android:gravity="center"
                     android:text="0"

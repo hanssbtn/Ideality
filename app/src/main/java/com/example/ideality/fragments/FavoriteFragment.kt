@@ -21,6 +21,7 @@ import com.google.firebase.database.*
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
+    private var isFragmentActive = false
 
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
@@ -28,7 +29,6 @@ class FavoriteFragment : Fragment() {
     private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
-
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,14 +39,18 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isFragmentActive = true
+
+        // Move this to the top, before other initializations
+        // Hide the main toolbar when favorite is shown
+        (requireActivity() as? Home)?.let { homeActivity ->
+            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.GONE
+        }
+
         initializeFirebase()
         setupRecyclerView()
         setupButtons()
         loadFavorites()
-
-        (requireActivity() as? Home)?.let { homeActivity ->
-            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.GONE
-        }
     }
 
 
@@ -75,7 +79,6 @@ class FavoriteFragment : Fragment() {
 
     private fun setupButtons() {
         binding.exploreButton.setOnClickListener {
-            // Navigate back to home
             (activity as? Home)?.let {
                 it.clearFragments()
                 it.showMainContent(true)
@@ -90,8 +93,9 @@ class FavoriteFragment : Fragment() {
         database.getReference("users")
             .child(userId)
             .child("wishlist")
-            .addValueEventListener(object : ValueEventListener {  // Use ValueEventListener instead of SingleValueEvent
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!isFragmentActive) return
                     val favoriteIds = snapshot.children.mapNotNull { it.key }
                     if (favoriteIds.isEmpty()) {
                         showEmptyState()
@@ -102,17 +106,15 @@ class FavoriteFragment : Fragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    if (!isFragmentActive) return
                     showError("Error loading favorites: ${error.message}")
                     showLoading(false)
                 }
             })
     }
 
-    fun refreshFavorites() {
-        loadFavorites()
-    }
-
     private fun loadFavoriteProducts(favoriteIds: List<String>) {
+        if (!isFragmentActive) return
         val favorites = mutableListOf<Product>()
         var loadedCount = 0
 
@@ -121,18 +123,20 @@ class FavoriteFragment : Fragment() {
                 .child(productId)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
+                        if (!isFragmentActive) return
                         val productMap = snapshot.value as? Map<String, Any?> ?: return
                         val product = Product.fromMap(productMap, snapshot.key ?: "")
-                            .copy(isFavorite = true)  // Make sure to set isFavorite to true
+                            .copy(isFavorite = true)
                         favorites.add(product)
 
                         loadedCount++
                         if (loadedCount == favoriteIds.size) {
-                            updateUI(favorites.sortedByDescending { it.lastUsed })  // Sort by recently used
+                            updateUI(favorites.sortedByDescending { it.lastUsed })
                         }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
+                        if (!isFragmentActive) return
                         loadedCount++
                         if (loadedCount == favoriteIds.size) {
                             updateUI(favorites.sortedByDescending { it.lastUsed })
@@ -142,12 +146,21 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    fun refreshFavorites() {
+        if (isFragmentActive) {
+            loadFavorites()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        loadFavorites() // Refresh when fragment resumes
+        if (isFragmentActive) {
+            loadFavorites()
+        }
     }
 
     private fun updateUI(products: List<Product>) {
+        if (!isFragmentActive) return
         showLoading(false)
         if (products.isEmpty()) {
             showEmptyState()
@@ -157,7 +170,8 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun showEmptyState() {
-        binding.apply {
+        if (!isFragmentActive) return
+        _binding?.apply {
             emptyStateLayout.visibility = View.VISIBLE
             favoritesRecyclerView.visibility = View.GONE
             shimmerLayout.visibility = View.GONE
@@ -165,16 +179,18 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun showProducts(products: List<Product>) {
-        binding.apply {
+        if (!isFragmentActive) return
+        _binding?.apply {
             emptyStateLayout.visibility = View.GONE
             favoritesRecyclerView.visibility = View.VISIBLE
             shimmerLayout.visibility = View.GONE
+            productAdapter.updateProducts(products)
         }
-        productAdapter.updateProducts(products)
     }
 
     private fun showLoading(show: Boolean) {
-        binding.apply {
+        if (!isFragmentActive) return
+        _binding?.apply {
             shimmerLayout.visibility = if (show) View.VISIBLE else View.GONE
             if (show) {
                 shimmerLayout.startShimmer()
@@ -187,9 +203,10 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun toggleFavorite(product: Product) {
+        if (!isFragmentActive) return
         if (product.isFavorite) {
             wishlistManager.removeFromWishlist(
-                product.id,
+                productId = product.id,
                 onSuccess = {
                     // Product will be removed through the ValueEventListener
                 },
@@ -201,6 +218,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun navigateToProductDetail(product: Product) {
+        if (!isFragmentActive) return
         val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
             putExtra("product_id", product.id)
         }
@@ -208,15 +226,26 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun showArView(product: Product) {
+        if (!isFragmentActive) return
         (activity as? Home)?.showArView(product)
     }
 
     private fun showError(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        if (!isFragmentActive) return
+        context?.let {
+            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        // Show the main toolbar again when leaving transaction fragment
+        (requireActivity() as? Home)?.let { homeActivity ->
+            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.VISIBLE
+        }
+
+        isFragmentActive = false
         _binding = null
     }
 
