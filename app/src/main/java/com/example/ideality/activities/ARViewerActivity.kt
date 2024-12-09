@@ -1,21 +1,30 @@
 package com.example.ideality.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.ideality.databinding.ActivityArViewerBinding
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
 import com.google.ar.core.Plane
+import com.google.ar.core.TrackingState
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
+import io.github.sceneview.model.ModelInstance
 import io.github.sceneview.node.ModelNode
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class ARViewerActivity : AppCompatActivity() {
@@ -27,11 +36,18 @@ class ARViewerActivity : AppCompatActivity() {
     private var currentModelNode: ModelNode? = null
     private var initialScale = 2.0f
 
+    private var modelInstance: ModelInstance? = null
     private var isLoading = false
         set(value) {
             field = value
             loadingView.isGone = !value
         }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            finish()
+        }
+    }
 
     private var anchorNode: AnchorNode? = null
         set(value) {
@@ -46,10 +62,13 @@ class ARViewerActivity : AppCompatActivity() {
         binding = ActivityArViewerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intent.getStringExtra("modelUrl") ?: run {
+        if(intent.getStringExtra("modelUrl") == null) {
             Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
+            Log.e("ARViewActivity", "Error: No model URL provided.")
             return finish()
         }
+
+        this.onBackPressedDispatcher.addCallback(this as LifecycleOwner, backPressedCallback)
 
         setupViews()
         setupAR()
@@ -99,9 +118,12 @@ class ARViewerActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     isLoading = true
                     val modelUrl = intent.getStringExtra("modelUrl")
-                    sceneView.modelLoader.loadModelInstance(modelUrl!!)?.let { modelInstance ->
+                    val modelInstance = this@ARViewerActivity.modelInstance ?: sceneView.modelLoader.loadModelInstance(modelUrl!!)?.also {
+                        this@ARViewerActivity.modelInstance = it
+                    }
+                    modelInstance?.let {
                         val modelNode = ModelNode(
-                            modelInstance = modelInstance,
+                            modelInstance = it,
                             scaleToUnits = initialScale,
                             centerOrigin = Position(y = 0f)
                         ).apply {
@@ -110,8 +132,21 @@ class ARViewerActivity : AppCompatActivity() {
 
                         addChildNode(modelNode)
                         currentModelNode = modelNode
+                        isLoading = false
                     }
-                    isLoading = false
+                }.invokeOnCompletion { t ->
+                    if (t == null) {
+                        Log.d("ARViewerActivity", "finished adding model")
+                        return@invokeOnCompletion
+                    }
+                    if (t is Exception) {
+                        runCatching {
+                            if (isLoading && (anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
+                                resetModel()
+                            }
+                            isLoading = false
+                        }
+                    }
                 }
                 anchorNode = this
             }
@@ -121,8 +156,12 @@ class ARViewerActivity : AppCompatActivity() {
     private fun resetModel() {
         runCatching {
             anchorNode?.destroy()
-            anchorNode = null
         }
+        anchorNode = null
+        runCatching {
+            currentModelNode?.destroy()
+        }
+        currentModelNode = null
     }
 
     private fun updateInstructions() {
@@ -133,7 +172,21 @@ class ARViewerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        runCatching {
+            if (isLoading && (anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
+                resetModel()
+            }
+            isLoading = false
+        }
+    }
+
     override fun onDestroy() {
+        resetModel()
+        runCatching {
+            backPressedCallback.remove()
+        }
         super.onDestroy()
     }
 }

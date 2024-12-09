@@ -146,17 +146,17 @@ class Home : AppCompatActivity() {
         }
 
         binding.seeAllRecent.setOnClickListener {
-            val intent = Intent(this, CategoryDetailActivity::class.java).apply {
-                putExtra("list_type", "recent")
+            Intent(this, CategoryDetailActivity::class.java).let {
+                it.putExtra("list_type", "recent")
+                startActivity(it)
             }
-            startActivity(intent)
         }
 
         binding.seeAllNew.setOnClickListener {
-            val intent = Intent(this, CategoryDetailActivity::class.java).apply {
-                putExtra("list_type", "new")
+            Intent(this, CategoryDetailActivity::class.java).let {
+                it.putExtra("list_type", "new")
+                startActivity(it)
             }
-            startActivity(intent)
         }
 
         // Initialize adapters
@@ -229,11 +229,11 @@ class Home : AppCompatActivity() {
     }
 
     private fun filterProductsByCategory(category: Category) {
-        val intent = Intent(this, CategoryDetailActivity::class.java).apply {
-            putExtra("category_id", category.id)
-            putExtra("category_name", category.name)
+        Intent(this, CategoryDetailActivity::class.java).let {
+            it.putExtra("category_id", category.id)
+            it.putExtra("category_name", category.name)
+            startActivity(it)
         }
-        startActivity(intent)
     }
 
     private fun showShimmer(show: Boolean) {
@@ -263,18 +263,18 @@ class Home : AppCompatActivity() {
     }
 
     private fun navigateToProductDetail(product: Product) {
-        val intent = Intent(this, ProductDetailActivity::class.java).apply {
-            putExtra("product_id", product.id)
+        Intent(this, ProductDetailActivity::class.java).let { it
+            it.putExtra("product_id", product.id)
+            startActivity(it)
         }
-        startActivity(intent)
     }
 
     fun showArView(product: Product) {
-        val intent = Intent(this, ARViewerActivity::class.java).apply {
-            putExtra("modelUrl", product.modelUrl)
-            putExtra("productId", product.id)
+        Intent(this, ARViewerActivity::class.java).let {
+            it.putExtra("modelUrl", product.modelUrl)
+            it.putExtra("productId", product.id)
+            startActivity(it)
         }
-        startActivity(intent)
 
         // Update lastUsed timestamp
         productsRef.child(product.id)

@@ -93,7 +93,6 @@
             android:theme="@style/Theme.Ideality.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Add the new activities -->
@@ -160,9 +159,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.SignUp"
-            android:exported="true" />
-        <activity
-            android:name=".activities.MainActivity"
             android:exported="true" />
 
         <meta-data
