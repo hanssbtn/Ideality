@@ -111,6 +111,7 @@ dependencies {
     // Other direct dependencies
     implementation("com.hbb20:ccp:2.7.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(libs.googleid)
 
     // Test dependencies
     testImplementation(libs.junit)
