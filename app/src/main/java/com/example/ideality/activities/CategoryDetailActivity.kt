@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ideality.adapters.ProductAdapter
 import com.example.ideality.databinding.ActivityCategoryDetailBinding
+import com.example.ideality.decorations.GridSpacingItemDecoration
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Product
 import com.google.firebase.auth.FirebaseAuth
@@ -63,9 +64,14 @@ class CategoryDetailActivity : AppCompatActivity() {
             onQuickArView = { product -> showArView(product) }
         )
 
+        val spacing = (8 * resources.displayMetrics.density).toInt()
+
         binding.productsRecyclerView.apply {
             layoutManager = GridLayoutManager(this@CategoryDetailActivity, 2)
             adapter = productAdapter
+            addItemDecoration(GridSpacingItemDecoration(2, spacing))
+            clipToPadding = false
+            setPadding(spacing, spacing, spacing, spacing)
         }
 
         // Setup SwipeRefreshLayout

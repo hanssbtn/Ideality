@@ -364,13 +364,19 @@ class TransactionDetailActivity : AppCompatActivity() {
             "transactions/${transaction.id}/rating" to rating.toMap()
         )
 
-        // Update product ratings
+        // Update product ratings for each item in the transaction
         transaction.items.forEach { cartItem ->
             cartItem.product?.let { product ->
                 val productRef = "products/${product.id}"
-                updates["$productRef/ratingCount"] = product.reviewCount + 1
-                updates["$productRef/rating"] =
-                    ((product.rating * product.reviewCount + rating.rating) / (product.reviewCount + 1))
+                val currentRating = product.rating
+                val currentCount = product.reviewCount
+                val newCount = currentCount + 1
+
+                // Calculate new average rating
+                val newRating = ((currentRating * currentCount) + rating.rating) / newCount
+
+                updates["$productRef/reviewCount"] = newCount
+                updates["$productRef/rating"] = newRating
             }
         }
 
