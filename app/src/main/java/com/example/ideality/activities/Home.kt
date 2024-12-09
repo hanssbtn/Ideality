@@ -31,6 +31,10 @@ import com.google.firebase.database.*
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
 
 class Home : AppCompatActivity() {
+    companion object {
+        const val TAG = "Home"
+    }
+
     private lateinit var binding: ActivityHomeBinding
     private lateinit var wishlistManager: WishlistManager
     private lateinit var database: FirebaseDatabase
@@ -273,6 +277,7 @@ class Home : AppCompatActivity() {
         Intent(this, ARViewerActivity::class.java).let {
             it.putExtra("modelUrl", product.modelUrl)
             it.putExtra("productId", product.id)
+            Log.d(TAG, "Opening AR View")
             startActivity(it)
         }
 
@@ -389,19 +394,6 @@ class Home : AppCompatActivity() {
         binding.shimmerLayout.stopShimmer()
     }
 
-
-
-    // Separate function at class level (with other functions)
-    private fun refreshCartBadge() {
-        if (currentUser != null) {
-            updateCartBadge()
-        } else {
-            binding.cartBadge.visibility = View.GONE
-        }
-    }
-
-
-
     // Update onResume()
     override fun onResume() {
         super.onResume()
@@ -409,6 +401,10 @@ class Home : AppCompatActivity() {
         if (binding.shimmerLayout.visibility == View.VISIBLE) {
             binding.shimmerLayout.startShimmer()
         }
-        refreshCartBadge() // Add this call
+        if (currentUser != null) {
+            updateCartBadge()
+        } else {
+            binding.cartBadge.visibility = View.GONE
+        }
     }
 }

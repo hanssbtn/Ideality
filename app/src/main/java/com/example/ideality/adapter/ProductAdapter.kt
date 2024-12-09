@@ -87,14 +87,6 @@ class ProductAdapter(
 
             quickArButton.setOnClickListener { view ->
                 view.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
-                if (product.modelUrl.isNotEmpty()) {
-                    // Launch AR viewer with URL
-                    val intent = Intent(itemView.context, ARViewerActivity::class.java).apply {
-                        putExtra("modelUrl", product.modelUrl)
-                        putExtra("productId", product.id)
-                    }
-                    itemView.context.startActivity(intent)
-                }
                 onQuickArView(product)
             }
         }
