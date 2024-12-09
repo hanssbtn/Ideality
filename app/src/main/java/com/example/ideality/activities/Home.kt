@@ -8,6 +8,7 @@ import com.example.ideality.utils.TestDataUtility
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -274,17 +275,17 @@ class Home : AppCompatActivity() {
     }
 
     fun showArView(product: Product) {
+        // Update lastUsed timestamp
+        productsRef.child(product.id)
+            .child("lastUsed")
+            .setValue(System.currentTimeMillis())
+
         Intent(this, ARViewerActivity::class.java).let {
             it.putExtra("modelUrl", product.modelUrl)
             it.putExtra("productId", product.id)
             Log.d(TAG, "Opening AR View")
             startActivity(it)
         }
-
-        // Update lastUsed timestamp
-        productsRef.child(product.id)
-            .child("lastUsed")
-            .setValue(System.currentTimeMillis())
     }
 
     private fun toggleFavorite(product: Product) {
@@ -293,6 +294,7 @@ class Home : AppCompatActivity() {
                 product.id,
                 onSuccess = {
                     product.isFavorite = true
+                    binding.toolbar.findViewById<ImageButton>(R.id.favoriteButton).setImageResource(R.drawable.ic_favorite_filled)
                     Toast.makeText(this, "Removed from wishlist", Toast.LENGTH_SHORT).show()
                 },
                 onFailure = { e ->
@@ -304,6 +306,7 @@ class Home : AppCompatActivity() {
                 product,
                 onSuccess = {
                     product.isFavorite = false
+                    binding.toolbar.findViewById<ImageButton>(R.id.favoriteButton).setImageResource(R.drawable.ic_favorite_outline)
                     Toast.makeText(this, "Added to wishlist", Toast.LENGTH_SHORT).show()
                 },
                 onFailure = { e ->

@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.ideality.databinding.ActivityEditPhoneBinding
@@ -33,12 +33,18 @@ class EditPhoneActivity : AppCompatActivity() {
     private var isProcessing = false
     private var hasChanges = false
     private var currentUsername = ""
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            onBackPressedHandler()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditPhoneBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        onBackPressedDispatcher.addCallback(onBackPressedCallback)
         initializeFirebase()
         loadUserData()
         setupUI()
@@ -189,13 +195,14 @@ class EditPhoneActivity : AppCompatActivity() {
                         showSuccess("Verification code sent")
 
                         // Navigate to verification screen
-                        val intent = Intent(this@EditPhoneActivity, VerifyPhoneActivity::class.java)
-                        intent.putExtra("verificationId", verId)
-                        intent.putExtra("phoneNumber", phoneNumber)
-                        intent.putExtra("username", currentUsername)
-                        startActivity(intent)
+                        val intent = Intent(this@EditPhoneActivity, VerifyPhoneActivity::class.java).let {
+                            it.putExtra("verificationId", verId)
+                            it.putExtra("phoneNumber", phoneNumber)
+                            it.putExtra("username", currentUsername)
+                        }
                         isProcessing = false
                         showLoading(false)
+                        startActivity(intent)
                     }
                 })
                 .build()
@@ -266,8 +273,11 @@ class EditPhoneActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onBackPressed() {
-        onBackPressedHandler()
+    override fun onDestroy() {
+        runCatching {
+            onBackPressedCallback.remove()
+        }
+        super.onDestroy()
     }
 
     private fun showLoading(show: Boolean) {

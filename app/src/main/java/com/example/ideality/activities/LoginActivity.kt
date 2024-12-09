@@ -26,20 +26,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.CheckBox
 
 class LoginActivity : AppCompatActivity() {
-    private val RC_SIGN_IN = 9001
+    companion object {
+        private const val RC_SIGN_IN = 9001
+        private const val MAX_LOGIN_ATTEMPTS = 5
+    }
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private lateinit var usersRef: DatabaseReference
     private lateinit var googleSignInClient: GoogleSignInClient
     private var loginAttempts = 0
-    private val MAX_LOGIN_ATTEMPTS = 5
     private lateinit var rememberMeCheckbox: CheckBox
 
     private lateinit var emailInput: TextInputEditText
@@ -455,24 +456,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateEmail(): Boolean {
-        val email = emailInput.text.toString().trim()
-        return when {
-            email.isEmpty() -> {
-                emailInputLayout.error = "Email is required"
-                false
-            }
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                emailInputLayout.error = "Please enter a valid email"
-                false
-            }
-            else -> {
-                emailInputLayout.error = null
-                true
-            }
-        }
-    }
-
     private fun handleFailedLogin() {
         loginAttempts++
         if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
@@ -486,7 +469,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupRememberMe() {
-        val sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("login_pref", MODE_PRIVATE)
         rememberMeCheckbox.isChecked = sharedPref.getBoolean("remember_me", false)
 
         if (rememberMeCheckbox.isChecked) {
@@ -506,7 +489,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkNetworkConnection(): Boolean {
         val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities =
             connectivityManager.getNetworkCapabilities(network) ?: return false

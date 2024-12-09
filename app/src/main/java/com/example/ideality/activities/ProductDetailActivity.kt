@@ -247,7 +247,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         currentProduct?.let { product ->
             if (product.isFavorite) {
-                // If it's currently favorited, remove it
+                // If it's currently favorite, remove it
                 wishlistManager.removeFromWishlist(
                     productId = product.id,
                     onSuccess = {
@@ -258,7 +258,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     onFailure = { e -> showError("Failed to remove from favorites: ${e.message}") }
                 )
             } else {
-                // If it's not favorited, add it
+                // If it's not favorite, add it
                 wishlistManager.addToWishlist(
                     product = product,
                     onSuccess = {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ideality.adapter.AddressAdapter
@@ -22,6 +23,15 @@ class SavedAddressesActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
     private var isProcessing = false
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (!isProcessing) {
+                runCatching {
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -226,9 +236,8 @@ class SavedAddressesActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (!isProcessing) {
-            super.onBackPressed()
-        }
+    override fun onDestroy() {
+        onBackPressedCallback.remove()
+        super.onDestroy()
     }
 }

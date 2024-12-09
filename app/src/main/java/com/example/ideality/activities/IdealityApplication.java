@@ -1,7 +1,6 @@
 package com.example.ideality.activities;
 
 import android.app.Application;
-import android.content.Context;
 
 public class IdealityApplication extends Application {
 
@@ -17,7 +16,4 @@ public class IdealityApplication extends Application {
         return instance;
     }
 
-    public static Context getAppContext() {
-        return instance.getApplicationContext();
-    }
 }

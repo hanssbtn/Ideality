@@ -2,22 +2,14 @@ package com.example.ideality.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.ideality.adapters.OrderItemsAdapter
 import com.example.ideality.databinding.ActivityCheckoutBinding
-import com.example.ideality.databinding.ItemOrderSummaryBinding
 import com.example.ideality.models.Address
 import com.example.ideality.models.CartItem
 import com.example.ideality.models.Product
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -86,7 +78,7 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun loadDefaultAddress() {
         val userId = auth.currentUser?.uid ?: run {
-            showError("Please sign in to continue")
+            showMessage("Please sign in to continue")
             finish()
             return
         }
@@ -99,7 +91,7 @@ class CheckoutActivity : AppCompatActivity() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.exists()) {
-                        showError("Please add a shipping address")
+                        showMessage("Please add a shipping address")
                         startActivity(Intent(this@CheckoutActivity, SavedAddressesActivity::class.java))
                         finish()
                         return
@@ -113,7 +105,7 @@ class CheckoutActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    showError("Error loading address: ${error.message}")
+                    showMessage("Error loading address: ${error.message}")
                 }
             })
     }
@@ -138,7 +130,7 @@ class CheckoutActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    showError("Error loading cart: ${error.message}")
+                    showMessage("Error loading cart: ${error.message}")
                 }
             })
     }
@@ -146,7 +138,7 @@ class CheckoutActivity : AppCompatActivity() {
     private fun loadCartProducts(items: List<CartItem>) {
         var loadedCount = 0
         if (items.isEmpty()) {
-            showError("Your cart is empty")
+            showMessage("Your cart is empty")
             finish()
             return
         }
@@ -220,12 +212,12 @@ class CheckoutActivity : AppCompatActivity() {
         val userId = auth.currentUser?.uid ?: return
 
         if (defaultAddress == null) {
-            showError("Please select a shipping address")
+            showMessage("Please select a shipping address")
             return
         }
 
         if (cartItems.isEmpty()) {
-            showError("Your cart is empty")
+            showMessage("Your cart is empty")
             return
         }
 
@@ -257,44 +249,25 @@ class CheckoutActivity : AppCompatActivity() {
         // Perform all updates atomically
         database.reference.updateChildren(updates)
             .addOnSuccessListener {
-                showSuccess("Order placed successfully!")
+                showMessage("Order placed successfully!")
                 // Navigate to transaction detail
-                startActivity(Intent(this, TransactionDetailActivity::class.java).apply {
-                    putExtra("transaction_id", transactionId)
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                })
+                Intent(this, TransactionDetailActivity::class.java).let {
+                    it.putExtra("transaction_id", transactionId)
+                    it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(it)
+                }
                 finish()
             }
             .addOnFailureListener { e ->
-                showError("Failed to place order: ${e.message}")
+                showMessage("Failed to place order: ${e.message}")
             }
     }
 
-    private fun showSuccess(message: String) {
+    private fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showPaymentSuccessDialog(orderId: String, total: Double) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Order Placed Successfully")
-            .setMessage("Your order (ID: $orderId) has been placed successfully.\nTotal Amount: ${formatPrice(total)}")
-            .setPositiveButton("View Orders") { _, _ ->
-                // Navigate to orders screen
-                // startActivity(Intent(this, OrdersActivity::class.java))
-                finish()
-            }
-            .setNegativeButton("Continue Shopping") { _, _ ->
-                finish()
-            }
-            .setCancelable(false)
-            .show()
     }
 
     private fun formatPrice(price: Double): String {
         return NumberFormat.getCurrencyInstance(Locale.US).format(price)
-    }
-
-    private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
