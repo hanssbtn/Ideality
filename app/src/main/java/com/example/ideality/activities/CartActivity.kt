@@ -211,7 +211,7 @@ class CartActivity : AppCompatActivity() {
         val total = cartAdapter.calculateTotal() + SHIPPING_COST
 
         // Navigate to checkout/address selection
-        val intent = Intent(this, SavedAddressesActivity::class.java)
+        val intent = Intent(this, CheckoutActivity::class.java)
         intent.putExtra("checkout_total", total)
         startActivity(intent)
     }

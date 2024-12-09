@@ -40,7 +40,13 @@
             android:name=".activities.PhoneVerifiedActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddEditAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TransactionDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SavedAddressesActivity"

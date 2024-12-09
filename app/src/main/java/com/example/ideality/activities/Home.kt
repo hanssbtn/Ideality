@@ -20,6 +20,7 @@ import com.example.ideality.adapters.*
 import com.example.ideality.databinding.ActivityHomeBinding
 import com.example.ideality.fragments.FavoriteFragment
 import com.example.ideality.fragments.ProfileFragment
+import com.example.ideality.fragments.TransactionsFragment
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Category
 import com.example.ideality.models.Product
@@ -338,7 +339,11 @@ class Home : AppCompatActivity() {
                     loadFragment(fragment)
                     showMainContent(false)
                 }
-                2 -> Toast.makeText(this, "Transaction", Toast.LENGTH_SHORT).show()
+                2 -> { // Favorite tab
+                    val fragment = TransactionsFragment.newInstance()
+                    loadFragment(fragment)
+                    showMainContent(false)
+                }
                 3 -> {
                     loadFragment(ProfileFragment())
                     showMainContent(false)

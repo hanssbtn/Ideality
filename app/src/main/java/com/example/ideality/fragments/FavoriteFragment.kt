@@ -40,15 +40,20 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isFragmentActive = true
+
+        // Move this to the top, before other initializations
+        // Hide the main toolbar when favorite is shown
+        (requireActivity() as? Home)?.let { homeActivity ->
+            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.GONE
+        }
+
         initializeFirebase()
         setupRecyclerView()
         setupButtons()
         loadFavorites()
-
-        (requireActivity() as? Home)?.let { homeActivity ->
-            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.GONE
-        }
     }
+
+
 
     private fun initializeFirebase() {
         database = FirebaseDatabase.getInstance()
@@ -234,6 +239,12 @@ class FavoriteFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        // Show the main toolbar again when leaving transaction fragment
+        (requireActivity() as? Home)?.let { homeActivity ->
+            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.VISIBLE
+        }
+
         isFragmentActive = false
         _binding = null
     }
