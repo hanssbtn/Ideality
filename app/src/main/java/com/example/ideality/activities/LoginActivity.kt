@@ -8,7 +8,6 @@ import com.google.firebase.auth.AuthCredential
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import com.example.ideality.activities.Home
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -32,7 +31,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.CheckBox
 
-class LogIn : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 9001
 
     private lateinit var auth: FirebaseAuth
@@ -139,7 +138,7 @@ class LogIn : AppCompatActivity() {
         }
 
         forgotPasswordText.setOnClickListener {
-            startActivity(Intent(this, forgot_password::class.java))
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
 
@@ -311,7 +310,7 @@ class LogIn : AppCompatActivity() {
                             usersRef.child(user.uid).setValue(updatedData)
                                 .addOnSuccessListener {
                                     showLoading(false)
-                                    startActivity(Intent(this@LogIn, Home::class.java))
+                                    startActivity(Intent(this@LoginActivity, Home::class.java))
                                     finish()
                                 }
                         } else {
@@ -329,7 +328,7 @@ class LogIn : AppCompatActivity() {
                             usersRef.child(user.uid).setValue(userData)
                                 .addOnSuccessListener {
                                     showLoading(false)
-                                    startActivity(Intent(this@LogIn, Home::class.java))
+                                    startActivity(Intent(this@LoginActivity, Home::class.java))
                                     finish()
                                 }
                         }

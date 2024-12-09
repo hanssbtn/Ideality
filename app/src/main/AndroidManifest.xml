@@ -3,17 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ideality">
 
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- Add these new permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <uses-feature
         android:name="android.hardware.camera.ar"
@@ -101,8 +104,7 @@
             android:theme="@style/Theme.Ideality" />
         <activity
             android:name=".activities.ARViewerActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".activities.EditEmailActivity"
             android:exported="false"
@@ -114,9 +116,6 @@
             android:name=".activities.ChangePasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
-        <activity
-            android:name=".activities.VerifyEmailCodeActivity"
-            android:exported="false" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false" />
@@ -141,23 +140,20 @@
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
         <activity
-            android:name=".activities.LoadingActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.Home"
             android:exported="false" />
         <activity
-            android:name=".activities.lottieEmailverified"
+            android:name=".activities.LottieEmailVerifiedActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.verify_email"
+            android:name=".activities.VerifyEmailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.forgot_password"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.Ideality" />
         <activity
-            android:name=".activities.LogIn"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignUp"

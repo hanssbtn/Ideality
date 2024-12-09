@@ -3,7 +3,6 @@ package com.example.ideality.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 
-class verify_email : AppCompatActivity() {
+class VerifyEmailActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var userEmail: String
     private lateinit var backButton: ImageView
@@ -122,7 +121,7 @@ class verify_email : AppCompatActivity() {
 
     private fun showVerificationSuccess() {
         // Show success animation
-        startActivity(Intent(this, lottieEmailverified::class.java))
+        startActivity(Intent(this, LottieEmailVerifiedActivity::class.java))
         finish()
     }
 

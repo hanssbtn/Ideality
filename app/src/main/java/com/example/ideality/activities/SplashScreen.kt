@@ -78,7 +78,7 @@ class SplashScreen : AppCompatActivity() {
 
     private fun startMainActivity() {
         // Since this is a login-required app, we'll start with the Login activity
-        val intent = Intent(this, LogIn::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
 
         // Add fade transition animation using our custom animations

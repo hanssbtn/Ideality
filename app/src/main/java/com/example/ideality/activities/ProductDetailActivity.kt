@@ -2,14 +2,10 @@ package com.example.ideality.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageButton
-import android.widget.RatingBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ideality.R
 import com.example.ideality.adapters.ProductAdapter
@@ -17,7 +13,6 @@ import com.example.ideality.databinding.ActivityProductDetailBinding
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.CartItem
 import com.example.ideality.models.Product
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -355,7 +350,7 @@ class ProductDetailActivity : AppCompatActivity() {
             .setMessage("Please sign in to continue")
             .setPositiveButton("Sign In") { _, _ ->
                 // Navigate to login
-                startActivity(Intent(this,LogIn::class.java))
+                startActivity(Intent(this,LoginActivity::class.java))
             }
             .setNegativeButton("Cancel", null)
             .show()
