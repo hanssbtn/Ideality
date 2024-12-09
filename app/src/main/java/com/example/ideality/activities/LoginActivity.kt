@@ -1,5 +1,6 @@
 package com.example.ideality.activities
 
+import android.content.Context
 import android.content.Intent
 import com.google.android.material.textfield.TextInputLayout
 import android.os.Bundle
@@ -29,8 +30,26 @@ import com.google.firebase.database.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.CheckBox
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.lifecycle.lifecycleScope
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import org.kotlincrypto.SecureRandom
 
 class LoginActivity : AppCompatActivity() {
+    
+    companion object {
+        const val GOOGLE_TAG = "GoogleSignIn"
+        const val PASSWORD_TAG = "PasswordUpdate"
+        const val TAG = "LoginActivity"
+    }
+    
     private val RC_SIGN_IN = 9001
 
     private lateinit var auth: FirebaseAuth
@@ -50,10 +69,16 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var signUpText: View
     private lateinit var googleLoginBtn: MaterialButton
     private lateinit var forgotPasswordText: View
+    private val sr = SecureRandom()
+    private lateinit var credentialManager: CredentialManager
+
+    private fun nonce(): String = sr.nextBytesOf(64).toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
+
+        credentialManager = CredentialManager.create(this)
 
         initializeFirebase()
         configureGoogleSignIn()
@@ -61,8 +86,6 @@ class LoginActivity : AppCompatActivity() {
         setupClickListeners()
         setupRememberMe()
         checkCurrentUser()
-
-
 
         if (!checkNetworkConnection()) {
             showError("Please check your internet connection")
@@ -72,10 +95,10 @@ class LoginActivity : AppCompatActivity() {
     private fun updatePasswordInDatabase(uid: String, newPassword: String) {
         usersRef.child(uid).child("password").setValue(newPassword)
             .addOnSuccessListener {
-                Log.d("PasswordUpdate", "Password updated in database")
+                Log.d(PASSWORD_TAG, "Password updated in database")
             }
             .addOnFailureListener { e ->
-                Log.e("PasswordUpdate", "Failed to update password in database", e)
+                Log.e(PASSWORD_TAG, "Failed to update password in database", e)
             }
     }
 
@@ -87,9 +110,9 @@ class LoginActivity : AppCompatActivity() {
                 .build()
 
             googleSignInClient = GoogleSignIn.getClient(this, gso)
-            Log.d("GoogleSignIn", "Google Sign In configured successfully")
+            Log.d(GOOGLE_TAG, "Google Sign In configured successfully")
         } catch (e: Exception) {
-            Log.e("GoogleSignIn", "Error configuring Google Sign In", e)
+            Log.e(GOOGLE_TAG, "Error configuring Google Sign In", e)
             showError("Error configuring Google Sign In: ${e.message}")
         }
     }
@@ -154,11 +177,13 @@ class LoginActivity : AppCompatActivity() {
             googleSignInClient.signOut().addOnCompleteListener {
                 val signInIntent = googleSignInClient.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
-                Log.d("GoogleSignIn", "Started Google Sign In flow")
+                Log.d(GOOGLE_TAG, "Started Google Sign In flow")
+
+
             }
         } catch (e: Exception) {
             showLoading(false)
-            Log.e("GoogleSignIn", "Error starting Google Sign In", e)
+            Log.e(GOOGLE_TAG, "Error starting Google Sign In", e)
             showError("Error starting Google Sign In: ${e.message}")
         }
     }
@@ -167,13 +192,13 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            Log.d("GoogleSignIn", "Got activity result for Google Sign In")
+            Log.d(GOOGLE_TAG, "Got activity result for Google Sign In")
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleGoogleSignInResult(task)
             } catch (e: Exception) {
                 showLoading(false)
-                Log.e("GoogleSignIn", "Error in Google Sign In result", e)
+                Log.e(GOOGLE_TAG, "Error in Google Sign In result", e)
                 showError("Google sign in failed: ${e.message}")
             }
         }
@@ -182,17 +207,17 @@ class LoginActivity : AppCompatActivity() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            Log.d("GoogleSignIn", "Got Google account, email: ${account.email}")
+            Log.d(GOOGLE_TAG, "Got Google account, email: ${account.email}")
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
             showLoading(false)
-            Log.e("GoogleSignIn", "Google sign in failed", e)
+            Log.e(GOOGLE_TAG, "Google sign in failed", e)
             showError("Google sign in failed. Error code: ${e.statusCode}")
         }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
-        Log.d("GoogleSignIn", "Starting Firebase auth with Google")
+        Log.d(GOOGLE_TAG, "Starting Firebase auth with Google")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
         val email = googleSignInAccount?.email
@@ -204,7 +229,7 @@ class LoginActivity : AppCompatActivity() {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             val existingData = snapshot.children.first().getValue(UserData::class.java)
-                            Log.d("GoogleSignIn", "Found existing account: ${existingData?.googleLinked}")
+                            Log.d(GOOGLE_TAG, "Found existing account: ${existingData?.googleLinked}")
 
                             if (existingData?.googleLinked == false) {
                                 // This is an email account, try to link it
@@ -221,7 +246,7 @@ class LoginActivity : AppCompatActivity() {
 
                     override fun onCancelled(error: DatabaseError) {
                         showLoading(false)
-                        Log.e("GoogleSignIn", "Database error", error.toException())
+                        Log.e(GOOGLE_TAG, "Database error", error.toException())
                         showError("Database error: ${error.message}")
                     }
                 })
@@ -229,17 +254,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun proceedWithGoogleSignIn(credential: AuthCredential) {
-        Log.d("GoogleSignIn", "Starting Firebase sign in with credential")
-        auth.signInWithCredential(credential)
-            .addOnSuccessListener { result ->
-                Log.d("GoogleSignIn", "Firebase auth successful")
-                updateUserData(result.user)
-            }
-            .addOnFailureListener { e ->
-                showLoading(false)
-                Log.e("GoogleSignIn", "Firebase auth failed", e)
-                showError("Google sign in failed: ${e.message}")
-            }
+        Log.d(GOOGLE_TAG, "Starting Firebase sign in with credential")
+        lifecycleScope.launch {
+            auth.signInWithCredential(credential)
+                .addOnSuccessListener { result ->
+                    Log.d(GOOGLE_TAG, "Firebase auth successful")
+                    updateUserData(result.user)
+                }
+                .addOnFailureListener { e ->
+                    showLoading(false)
+                    Log.e(GOOGLE_TAG, "Firebase auth failed", e)
+                    showError("Google sign in failed: ${e.message}")
+                }.await()
+        }
     }
 
     private fun linkAccounts(googleCredential: AuthCredential, existingData: UserData?) {
@@ -248,43 +275,44 @@ class LoginActivity : AppCompatActivity() {
             showError("Failed to link accounts: Missing user data")
             return
         }
+        lifecycleScope.launch {
+            auth.signInWithEmailAndPassword(existingData.email, existingData.password)
+                .addOnSuccessListener { result ->
+                    val emailUser = result.user
 
-        auth.signInWithEmailAndPassword(existingData.email, existingData.password)
-            .addOnSuccessListener { result ->
-                val emailUser = result.user
+                    emailUser?.linkWithCredential(googleCredential)
+                        ?.addOnCompleteListener(this@LoginActivity) { task ->
+                            if (task.isSuccessful) {
+                                Log.d("Account", "linkWithCredential:success")
 
-                emailUser?.linkWithCredential(googleCredential)
-                    ?.addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            Log.d("Account", "linkWithCredential:success")
+                                // Update user data to reflect both auth methods
+                                val updatedData = existingData.copy(
+                                    googleLinked = true,
+                                    authType = "both"  // This is important
+                                )
 
-                            // Update user data to reflect both auth methods
-                            val updatedData = existingData.copy(
-                                googleLinked = true,
-                                authType = "both"  // This is important
-                            )
-
-                            usersRef.child(emailUser.uid).setValue(updatedData)
-                                .addOnSuccessListener {
-                                    showLoading(false)
-                                    startActivity(Intent(this, Home::class.java))
-                                    finish()
-                                }
-                                .addOnFailureListener { e ->
-                                    showLoading(false)
-                                    showError("Failed to update user data: ${e.message}")
-                                }
-                        } else {
-                            Log.w("Account", "linkWithCredential:failure", task.exception)
-                            showLoading(false)
-                            showError("Failed to link accounts: ${task.exception?.message}")
+                                usersRef.child(emailUser.uid).setValue(updatedData)
+                                    .addOnSuccessListener {
+                                        showLoading(false)
+                                        startActivity(Intent(this@LoginActivity, Home::class.java))
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        showLoading(false)
+                                        showError("Failed to update user data: ${e.message}")
+                                    }
+                            } else {
+                                Log.w("Account", "linkWithCredential:failure", task.exception)
+                                showLoading(false)
+                                showError("Failed to link accounts: ${task.exception?.message}")
+                            }
                         }
-                    }
-            }
-            .addOnFailureListener { e ->
-                showLoading(false)
-                showError("Authentication failed: ${e.message}")
-            }
+                }
+                .addOnFailureListener { e ->
+                    showLoading(false)
+                    showError("Authentication failed: ${e.message}")
+                }
+        }
     }
 
     private fun updateUserData(firebaseUser: FirebaseUser?) {

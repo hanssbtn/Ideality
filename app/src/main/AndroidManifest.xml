@@ -156,11 +156,9 @@
         <activity
             android:name=".activities.SignUp"
             android:exported="true" />
-
         <meta-data
             android:name="com.google.ar.core"
             android:value="required"
             tools:replace="android:value" />
     </application>
-
 </manifest>

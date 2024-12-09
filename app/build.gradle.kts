@@ -153,6 +153,8 @@ dependencies {
 
     // For secure storage of credentials
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("org.kotlincrypto:secure-random:0.3.2")
+
 
     // Image loading and caching
     implementation ("com.github.bumptech.glide:glide:4.16.0")

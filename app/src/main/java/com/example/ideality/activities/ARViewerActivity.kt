@@ -346,8 +346,7 @@ class ARViewerActivity : AppCompatActivity() {
                                     0,
                                     0,
                                     0,
-                                    @Suppress("DEPRECATION")
-                                    Handler(),
+                                    this.handler,
                                 ) {
                                     depthImage.close()
                                 }
