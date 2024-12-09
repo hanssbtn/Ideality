@@ -43,12 +43,6 @@ class ARViewerActivity : AppCompatActivity() {
             loadingView.isGone = !value
         }
 
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            finish()
-        }
-    }
-
     private var anchorNode: AnchorNode? = null
         set(value) {
             if (field != value) {
@@ -68,7 +62,6 @@ class ARViewerActivity : AppCompatActivity() {
             return finish()
         }
 
-        this.onBackPressedDispatcher.addCallback(this as LifecycleOwner, backPressedCallback)
 
         setupViews()
         setupAR()
@@ -184,9 +177,6 @@ class ARViewerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         resetModel()
-        runCatching {
-            backPressedCallback.remove()
-        }
         super.onDestroy()
     }
 }

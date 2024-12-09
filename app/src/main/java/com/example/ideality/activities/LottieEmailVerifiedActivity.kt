@@ -9,17 +9,11 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.ideality.R
 
 class LottieEmailVerifiedActivity : AppCompatActivity() {
-    private lateinit var checkAnimation: LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lottie_emailverified)
-
-        checkAnimation = findViewById(R.id.checkAnimation)
-
-        // Play animation
-        checkAnimation.playAnimation()
-
+        findViewById<LottieAnimationView>(R.id.checkAnimation).playAnimation()
         // Auto-navigate to login after animation
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, LoginActivity::class.java)

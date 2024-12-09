@@ -1,9 +1,11 @@
 package com.example.ideality.adapters
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -75,19 +77,39 @@ class ProductAdapter(
 
             // Setup click listeners with animations
             itemView.setOnClickListener {
-                itemView.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
-                onProductClick(product)
+                itemView.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click).apply {
+                    setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(p0: Animation?) {}
+                        override fun onAnimationEnd(p0: Animation?) {
+                            onProductClick(product)
+                        }
+                        override fun onAnimationRepeat(p0: Animation?) {}
+                    })
+                })
             }
 
             favoriteButton.setOnClickListener {
-                val animation = AnimationUtils.loadAnimation(itemView.context, R.anim.favorite_bounce)
-                favoriteButton.startAnimation(animation)
-                onFavoriteClick(product)
+                favoriteButton.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.favorite_bounce).apply {
+                    setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(p0: Animation?) {}
+                        override fun onAnimationEnd(p0: Animation?) {
+                            onFavoriteClick(product)
+                        }
+                        override fun onAnimationRepeat(p0: Animation?) {}
+                    })
+                })
             }
 
             quickArButton.setOnClickListener { view ->
-                view.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click))
-                onQuickArView(product)
+                view.startAnimation(AnimationUtils.loadAnimation(itemView.context, R.anim.scale_click).apply {
+                    setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(p0: Animation?) {}
+                        override fun onAnimationEnd(p0: Animation?) {
+                            onQuickArView(product)
+                        }
+                        override fun onAnimationRepeat(p0: Animation?) {}
+                    })
+                })
             }
         }
     }
@@ -104,6 +126,7 @@ class ProductAdapter(
 
     override fun getItemCount() = products.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateProducts(newProducts: List<Product>) {
         products = newProducts.toMutableList()
         notifyDataSetChanged()

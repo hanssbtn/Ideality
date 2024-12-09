@@ -224,7 +224,7 @@ class Home : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Home", "Error loading products: ${error.message}")
+                Log.e(TAG, "Error loading products: ${error.message}")
                 showShimmer(false)
                 binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@Home, "Error loading products", Toast.LENGTH_SHORT).show()
@@ -292,6 +292,7 @@ class Home : AppCompatActivity() {
             wishlistManager.removeFromWishlist(
                 product.id,
                 onSuccess = {
+                    product.isFavorite = true
                     Toast.makeText(this, "Removed from wishlist", Toast.LENGTH_SHORT).show()
                 },
                 onFailure = { e ->
@@ -302,6 +303,7 @@ class Home : AppCompatActivity() {
             wishlistManager.addToWishlist(
                 product,
                 onSuccess = {
+                    product.isFavorite = false
                     Toast.makeText(this, "Added to wishlist", Toast.LENGTH_SHORT).show()
                 },
                 onFailure = { e ->

@@ -35,6 +35,7 @@ class SignUp : AppCompatActivity() {
     private lateinit var signInText: View
     private lateinit var progressBar: ProgressBar
     private lateinit var passwordStrengthView: View
+    private lateinit var loadingBackground: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +87,7 @@ class SignUp : AppCompatActivity() {
         signInText = findViewById(R.id.signInText)
         progressBar = findViewById(R.id.progressBar)
         passwordStrengthView = findViewById(R.id.passwordStrengthView)
+        loadingBackground = findViewById(R.id.loadingBackground)
     }
 
     private fun setupRealTimeValidation() {
@@ -282,7 +284,7 @@ class SignUp : AppCompatActivity() {
 
                                 override fun onCancelled(error: DatabaseError) {
                                     showLoading(false)
-                                    showError("Connection error. Please try again.")
+                                    showMessage("Connection error. Please try again.")
                                 }
                             })
                     }
@@ -290,7 +292,7 @@ class SignUp : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     showLoading(false)
-                    showError("Connection error. Please try again.")
+                    showMessage("Connection error. Please try again.")
                 }
             })
     }
@@ -326,12 +328,12 @@ class SignUp : AppCompatActivity() {
                                                 startActivity(intent)
                                                 finish()
                                             } else {
-                                                showError("Failed to save user data. Please try again.")
+                                                showMessage("Failed to save user data. Please try again.")
                                             }
                                         }
                                 } else {
                                     showLoading(false)
-                                    showError("Failed to send verification email. Please try again.")
+                                    showMessage("Failed to send verification email. Please try again.")
                                 }
                             }
                     }
@@ -348,7 +350,7 @@ class SignUp : AppCompatActivity() {
                             passwordInputLayout.error = "Password must be at least 6 characters"
                         }
                         else -> {
-                            showError("Registration failed. Please try again.")
+                            showMessage("Registration failed. Please try again.")
                         }
                     }
                 }
@@ -356,7 +358,8 @@ class SignUp : AppCompatActivity() {
     }
 
     private fun showLoading(show: Boolean) {
-        findViewById<View>(R.id.loadingBackground).visibility = if (show) View.VISIBLE else View.GONE
+        // findViewById<View>(R.id.loadingBackGround).visibility = if (show) View.VISIBLE else View.GONE
+        loadingBackground.visibility = if (show) View.VISIBLE else View.GONE
         progressBar.visibility = if (show) View.VISIBLE else View.GONE
 
         if (show) {
@@ -369,11 +372,7 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showSuccess(message: String) {
+    private fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
