@@ -59,7 +59,7 @@ class Home : AppCompatActivity() {
         setContentView(binding.root)
 
         // Add test product on first launch
-        addTestProduct()
+        /*addTestProduct()*/
 
         initializeFirebase()
         setupViews()
@@ -67,7 +67,7 @@ class Home : AppCompatActivity() {
         loadData()
     }
 
-    private fun addTestProduct() {
+    /*private fun addTestProduct() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val isFirstRun = prefs.getBoolean("is_first_run", true)
 
@@ -75,7 +75,7 @@ class Home : AppCompatActivity() {
             TestDataUtility.addTestProductToFirebase(this)
             prefs.edit().putBoolean("is_first_run", false).apply()
         }
-    }
+    }*/
 
     private fun initializeFirebase() {
         database = FirebaseDatabase.getInstance()
