@@ -6,9 +6,9 @@ import android.hardware.camera2.CameraManager
 import android.opengl.Matrix
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.MotionEvent
 import android.view.Surface
 import android.view.View
 import android.widget.FrameLayout
@@ -42,11 +42,11 @@ import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.camera.ARCameraStream
 import io.github.sceneview.ar.node.AnchorNode
+import io.github.sceneview.gesture.GestureDetector
 import io.github.sceneview.managers.safeDestroy
 import io.github.sceneview.math.Position
-import io.github.sceneview.math.Rotation
-import io.github.sceneview.math.Scale
 import io.github.sceneview.node.ModelNode
+import io.github.sceneview.node.Node
 import io.github.sceneview.safeDestroyMaterialInstance
 import io.github.sceneview.safeDestroyTexture
 import kotlinx.coroutines.CancellationException
@@ -94,8 +94,7 @@ class ARViewerActivity : AppCompatActivity() {
 
     private var modelUrl: String = ""
 
-    private val cameraManager: CameraManager =
-        ContextCompat.getSystemService(this, CameraManager::class.java)!!
+    private lateinit var cameraManager: CameraManager
 
     private var currentCameraRotation = 0
 
@@ -122,6 +121,8 @@ class ARViewerActivity : AppCompatActivity() {
             Toast.makeText(this, "Model position reset", Toast.LENGTH_SHORT).show()
             return finish()
         }
+
+        cameraManager = ContextCompat.getSystemService(this, CameraManager::class.java)!!
 
         setupViews()
         setupAR()
@@ -159,6 +160,7 @@ class ARViewerActivity : AppCompatActivity() {
 
     private fun setupButtons() {
         binding.backButton.setOnClickListener { finish() }
+
         binding.resetButton.setOnClickListener { resetModel() }
     }
 
@@ -186,6 +188,16 @@ class ARViewerActivity : AppCompatActivity() {
                 config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
 
             }
+            onGestureListener = object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDown(e: MotionEvent, node: Node?) {
+                    Log.d("onGestureListener", "onDown: ${e.x}, ${e.y}")
+                    frame?.hitTest(e)?.firstOrNull { it.trackable is Plane }?.let { hitres ->
+                        if (anchorNode == null) {
+                            addAnchorNode(hitres.trackable.createAnchor((hitres.trackable as Plane).centerPose))
+                        }
+                    }
+                }
+            }
 
             onSessionUpdated = { session, frame ->
                 val tesselation = run {
@@ -211,7 +223,7 @@ class ARViewerActivity : AppCompatActivity() {
                     }
 
                     val triangleIndices = ShortArray(tesWidth * tesHeight * 6)
-
+                    @Suppress("KotlinConstantConditions")
                     for (k in 0 until tesHeight) {
                         for (i in 0 until tesWidth) {
                             triangleIndices[((k * tesWidth + i) * 6) + 0] =
@@ -377,7 +389,7 @@ class ARViewerActivity : AppCompatActivity() {
                             addAnchorNode(plane.createAnchor(plane.centerPose))
                         }
                 }
-                if (this@ARViewerActivity::frame.isInitialized) {
+                if (this@ARViewerActivity::texture.isInitialized && this@ARViewerActivity::depthMaterialInstance.isInitialized) {
                     onSessionUpdated = { session, frame ->
                         this@ARViewerActivity.frame = frame
                         if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
@@ -586,17 +598,13 @@ class ARViewerActivity : AppCompatActivity() {
             } + 270) % 360
 
     private fun resetModel() {
-        currentModelNode?.let { node ->
-            // Reset scale to initial value
-            node.scale = Scale(initialScale, initialScale, initialScale)
-
-            // Reset rotation to default
-            node.rotation = Rotation(0f, 0f, 0f)
-
-            // Reset position relative to anchor
-            node.position = Position(0f, 0f, 0f)
-
-            Toast.makeText(this, "Model position reset", Toast.LENGTH_SHORT).show()
+        runCatching {
+            anchorNode?.destroy()
+            anchorNode = null
+        }
+        runCatching {
+            currentModelNode?.destroy()
+            currentModelNode = null
         }
     }
 

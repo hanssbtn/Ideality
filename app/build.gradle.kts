@@ -62,6 +62,10 @@ android {
             )
         }
     }
+
+    androidResources {
+        noCompress += listOf("filamat", "ktx")
+    }
 }
 
 dependencies {
