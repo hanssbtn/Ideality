@@ -3,6 +3,7 @@ package com.example.ideality.activities
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
@@ -45,8 +46,8 @@ class ARViewerActivity : AppCompatActivity() {
         binding = ActivityArViewerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val modelUrl = intent.getStringExtra("modelUrl") ?: run {
-            showToast("No model URL provided")
+        intent.getStringExtra("modelUrl") ?: run {
+            Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
             return finish()
         }
 
@@ -118,17 +119,9 @@ class ARViewerActivity : AppCompatActivity() {
     }
 
     private fun resetModel() {
-        currentModelNode?.let { node ->
-            // Reset scale to initial value
-            node.scale = Position(initialScale, initialScale, initialScale)
-
-            // Reset rotation to default
-            node.rotation = Position(0f, 0f, 0f)
-
-            // Reset position relative to anchor
-            node.position = Position(0f, 0f, 0f)
-
-            showToast("Model position reset")
+        runCatching {
+            anchorNode?.destroy()
+            anchorNode = null
         }
     }
 
@@ -136,12 +129,8 @@ class ARViewerActivity : AppCompatActivity() {
         instructionText.text = if (anchorNode == null) {
             "Point your phone at a surface to place the model"
         } else {
-            null
+            ""
         }
-    }
-
-    private fun showToast(message: String) {
-        instructionText.text = message
     }
 
     override fun onDestroy() {
