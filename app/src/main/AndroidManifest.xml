@@ -49,6 +49,9 @@
             android:name=".activities.TransactionDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.CategoryDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SavedAddressesActivity"
             android:exported="false" />
         <activity

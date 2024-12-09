@@ -59,7 +59,7 @@ class Home : AppCompatActivity() {
         setContentView(binding.root)
 
         // Add test product on first launch
-        /*addTestProduct()*/
+        addTestProduct()
 
         initializeFirebase()
         setupViews()
@@ -67,15 +67,15 @@ class Home : AppCompatActivity() {
         loadData()
     }
 
-    /*private fun addTestProduct() {
+    private fun addTestProduct() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val isFirstRun = prefs.getBoolean("is_first_run", true)
 
         if (isFirstRun) {
-            TestDataUtility.addTestProductToFirebase(this)
+            TestDataUtility.addTestProductsToFirebase(this) // Changed to addTestProductsToFirebase
             prefs.edit().putBoolean("is_first_run", false).apply()
         }
-    }*/
+    }
 
     private fun initializeFirebase() {
         database = FirebaseDatabase.getInstance()
@@ -143,6 +143,20 @@ class Home : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@Home, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = SlideInRightAnimator()
             addItemDecoration(createHorizontalSpacing())
+        }
+
+        binding.seeAllRecent.setOnClickListener {
+            val intent = Intent(this, CategoryDetailActivity::class.java).apply {
+                putExtra("list_type", "recent")
+            }
+            startActivity(intent)
+        }
+
+        binding.seeAllNew.setOnClickListener {
+            val intent = Intent(this, CategoryDetailActivity::class.java).apply {
+                putExtra("list_type", "new")
+            }
+            startActivity(intent)
         }
 
         // Initialize adapters
@@ -215,24 +229,11 @@ class Home : AppCompatActivity() {
     }
 
     private fun filterProductsByCategory(category: Category) {
-        productsRef.orderByChild("category")
-            .equalTo(category.id)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val filteredProducts = mutableListOf<Product>()
-                    snapshot.children.forEach { child ->
-                        val productMap = child.value as? Map<String, Any?> ?: return@forEach
-                        val product = Product.fromMap(productMap, child.key ?: "")
-                        filteredProducts.add(product)
-                    }
-                    // Handle filtered products (e.g., show in a new activity or dialog)
-                    Toast.makeText(this@Home, "Found ${filteredProducts.size} ${category.name}s", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(this@Home, "Error filtering products", Toast.LENGTH_SHORT).show()
-                }
-            })
+        val intent = Intent(this, CategoryDetailActivity::class.java).apply {
+            putExtra("category_id", category.id)
+            putExtra("category_name", category.name)
+        }
+        startActivity(intent)
     }
 
     private fun showShimmer(show: Boolean) {
