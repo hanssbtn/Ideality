@@ -1,4 +1,3 @@
-// adapters/OrderAdapter.kt
 package com.example.ideality.adapters
 
 import android.view.LayoutInflater
@@ -16,8 +15,7 @@ import java.util.Date
 import java.util.Locale
 
 class OrderAdapter(
-    private val onItemClick: (Transaction) -> Unit,
-    private val onActionButtonClick: (Transaction) -> Unit
+    private val onItemClick: (Transaction) -> Unit
 ) : ListAdapter<Transaction, OrderAdapter.ViewHolder>(TransactionDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,10 +43,11 @@ class OrderAdapter(
                 statusBadge.text = transaction.status.name
                 statusBadge.setBackgroundColor(getStatusColor(transaction.status))
 
-                // Set first item preview
+                // Set first item preview with image
                 transaction.items.firstOrNull()?.let { firstItem ->
                     firstItem.product?.let { product ->
-                        Glide.with(itemView)
+                        // Load image with Glide
+                        Glide.with(itemView.context)
                             .load(product.thumbnailUrl)
                             .into(productImage)
 
@@ -61,39 +60,18 @@ class OrderAdapter(
                     }
                 }
 
-                // Set total
+                // Set total amount
                 totalText.text = formatPrice(transaction.totalAmount)
 
-                // Set button states
-                setupButtons(transaction)
-
-                // Click listeners
-                root.setOnClickListener { onItemClick(transaction) }
-                actionButton.setOnClickListener { onActionButtonClick(transaction) }
-            }
-        }
-
-        private fun setupButtons(transaction: Transaction) {
-            binding.actionButton.apply {
-                when (transaction.status) {
-                    TransactionStatus.SHIPPING -> {
-                        text = "Confirm Delivery"
-                        isEnabled = true
-                    }
-                    TransactionStatus.DELIVERED -> {
-                        if (!transaction.isRated) {
-                            text = "Rate Order"
-                            isEnabled = true
-                        } else {
-                            text = "Rated"
-                            isEnabled = false
-                        }
-                    }
-                    else -> {
-                        text = transaction.status.name
-                        isEnabled = false
-                    }
+                // Hide action button and expand details button
+                actionButton.visibility = ViewGroup.GONE
+                detailsButton.layoutParams = (detailsButton.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    marginEnd = 0 // Remove the end margin since there's no action button
+                    width = ViewGroup.LayoutParams.MATCH_PARENT // Make it full width
                 }
+
+                // Set click listener for details button
+                detailsButton.setOnClickListener { onItemClick(transaction) }
             }
         }
 

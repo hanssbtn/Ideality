@@ -10,7 +10,7 @@
         android:id="@+id/productImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:background="#F5F5F5"/>
 
     <LinearLayout

@@ -7,24 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ideality.R
-import com.example.ideality.activities.Home
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.ideality.activities.ARViewerActivity
 import com.example.ideality.activities.ProductDetailActivity
 import com.example.ideality.adapters.ProductAdapter
 import com.example.ideality.databinding.FragmentFavoriteBinding
+import com.example.ideality.decorations.GridSpacingItemDecoration
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Product
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
-    private var isFragmentActive = false
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth
     private lateinit var wishlistManager: WishlistManager
     private lateinit var productAdapter: ProductAdapter
 
@@ -39,31 +40,20 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isFragmentActive = true
-
-        // Move this to the top, before other initializations
-        // Hide the main toolbar when favorite is shown
-        (requireActivity() as? Home)?.let { homeActivity ->
-            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.GONE
-        }
-
         initializeFirebase()
-        setupRecyclerView()
-        setupButtons()
+        setupViews()
         loadFavorites()
     }
 
-
-
     private fun initializeFirebase() {
         database = FirebaseDatabase.getInstance()
-        auth = FirebaseAuth.getInstance()
-        auth.currentUser?.let { user ->
+        FirebaseAuth.getInstance().currentUser?.let { user ->
             wishlistManager = WishlistManager(database, user.uid)
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupViews() {
+        // Setup RecyclerView with GridLayoutManager
         productAdapter = ProductAdapter(
             products = emptyList(),
             onProductClick = { product -> navigateToProductDetail(product) },
@@ -71,126 +61,84 @@ class FavoriteFragment : Fragment() {
             onQuickArView = { product -> showArView(product) }
         )
 
-        binding.favoritesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = productAdapter
-        }
-    }
+        val spacing = (8 * resources.displayMetrics.density).toInt()
 
-    private fun setupButtons() {
+        binding.favoritesRecyclerView.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = productAdapter
+            addItemDecoration(GridSpacingItemDecoration(2, spacing))
+            clipToPadding = false
+            setPadding(spacing, spacing, spacing, spacing)
+        }
+
         binding.exploreButton.setOnClickListener {
-            (activity as? Home)?.let {
-                it.clearFragments()
-                it.showMainContent(true)
-            }
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
     private fun loadFavorites() {
-        val userId = auth.currentUser?.uid ?: return
         showLoading(true)
 
-        database.getReference("users")
-            .child(userId)
-            .child("wishlist")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (!isFragmentActive) return
-                    val favoriteIds = snapshot.children.mapNotNull { it.key }
-                    if (favoriteIds.isEmpty()) {
-                        showEmptyState()
-                        showLoading(false)
-                        return
-                    }
-                    loadFavoriteProducts(favoriteIds)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    if (!isFragmentActive) return
-                    showError("Error loading favorites: ${error.message}")
-                    showLoading(false)
-                }
-            })
-    }
-
-    private fun loadFavoriteProducts(favoriteIds: List<String>) {
-        if (!isFragmentActive) return
-        val favorites = mutableListOf<Product>()
-        var loadedCount = 0
-
-        favoriteIds.forEach { productId ->
-            database.getReference("products")
-                .child(productId)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
+        FirebaseAuth.getInstance().currentUser?.let { user ->
+            database.getReference("users")
+                .child(user.uid)
+                .child("wishlist")
+                .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        if (!isFragmentActive) return
-                        val productMap = snapshot.value as? Map<String, Any?> ?: return
-                        val product = Product.fromMap(productMap, snapshot.key ?: "")
-                            .copy(isFavorite = true)
-                        favorites.add(product)
+                        val favoriteProducts = mutableListOf<Product>()
+                        var loadedProducts = 0
+                        val totalProducts = snapshot.childrenCount.toInt()
 
-                        loadedCount++
-                        if (loadedCount == favoriteIds.size) {
-                            updateUI(favorites.sortedByDescending { it.lastUsed })
+                        if (totalProducts == 0) {
+                            showEmptyState()
+                            return
+                        }
+
+                        snapshot.children.forEach { child ->
+                            val productId = child.key ?: return@forEach
+                            loadProductDetails(productId) { product ->
+                                product?.let {
+                                    favoriteProducts.add(it.copy(isFavorite = true))
+                                }
+                                loadedProducts++
+
+                                if (loadedProducts == totalProducts) {
+                                    if (favoriteProducts.isEmpty()) {
+                                        showEmptyState()
+                                    } else {
+                                        showProducts(favoriteProducts)
+                                    }
+                                }
+                            }
                         }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        if (!isFragmentActive) return
-                        loadedCount++
-                        if (loadedCount == favoriteIds.size) {
-                            updateUI(favorites.sortedByDescending { it.lastUsed })
-                        }
+                        showError("Error loading favorites: ${error.message}")
+                        showEmptyState()
                     }
                 })
-        }
+        } ?: showEmptyState()
     }
 
-    fun refreshFavorites() {
-        if (isFragmentActive) {
-            loadFavorites()
-        }
-    }
+    private fun loadProductDetails(productId: String, onComplete: (Product?) -> Unit) {
+        database.getReference("products")
+            .child(productId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val productMap = snapshot.value as? Map<String, Any?> ?: return
+                    val product = Product.fromMap(productMap, snapshot.key ?: "")
+                    onComplete(product)
+                }
 
-    override fun onResume() {
-        super.onResume()
-        if (isFragmentActive) {
-            loadFavorites()
-        }
-    }
-
-    private fun updateUI(products: List<Product>) {
-        if (!isFragmentActive) return
-        showLoading(false)
-        if (products.isEmpty()) {
-            showEmptyState()
-        } else {
-            showProducts(products)
-        }
-    }
-
-    private fun showEmptyState() {
-        if (!isFragmentActive) return
-        _binding?.apply {
-            emptyStateLayout.visibility = View.VISIBLE
-            favoritesRecyclerView.visibility = View.GONE
-            shimmerLayout.visibility = View.GONE
-        }
-    }
-
-    private fun showProducts(products: List<Product>) {
-        if (!isFragmentActive) return
-        _binding?.apply {
-            emptyStateLayout.visibility = View.GONE
-            favoritesRecyclerView.visibility = View.VISIBLE
-            shimmerLayout.visibility = View.GONE
-            productAdapter.updateProducts(products)
-        }
+                override fun onCancelled(error: DatabaseError) {
+                    onComplete(null)
+                }
+            })
     }
 
     private fun showLoading(show: Boolean) {
-        if (!isFragmentActive) return
-        _binding?.apply {
+        binding.apply {
             shimmerLayout.visibility = if (show) View.VISIBLE else View.GONE
             if (show) {
                 shimmerLayout.startShimmer()
@@ -202,50 +150,77 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    private fun showEmptyState() {
+        showLoading(false)
+        binding.apply {
+            emptyStateLayout.visibility = View.VISIBLE
+            favoritesRecyclerView.visibility = View.GONE
+        }
+    }
+
+    private fun showProducts(products: List<Product>) {
+        showLoading(false)
+        binding.apply {
+            emptyStateLayout.visibility = View.GONE
+            favoritesRecyclerView.visibility = View.VISIBLE
+        }
+        productAdapter.updateProducts(products)
+    }
+
+    private fun navigateToProductDetail(product: Product) {
+        val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+        intent.putExtra("product_id", product.id)
+        startActivity(intent)
+    }
+
+    private fun showArView(product: Product) {
+        val intent = Intent(requireContext(), ARViewerActivity::class.java).apply {
+            putExtra("modelUrl", product.modelUrl)
+            putExtra("productId", product.id)
+        }
+        startActivity(intent)
+
+        // Update lastUsed timestamp
+        database.getReference("products")
+            .child(product.id)
+            .child("lastUsed")
+            .setValue(System.currentTimeMillis())
+    }
+
     private fun toggleFavorite(product: Product) {
-        if (!isFragmentActive) return
         if (product.isFavorite) {
             wishlistManager.removeFromWishlist(
-                productId = product.id,
+                product.id,
                 onSuccess = {
-                    // Product will be removed through the ValueEventListener
+                    showSuccess("Removed from wishlist")
                 },
                 onFailure = { e ->
-                    showError("Failed to remove from favorites: ${e.message}")
+                    showError("Error: ${e.message}")
+                }
+            )
+        } else {
+            wishlistManager.addToWishlist(
+                product,
+                onSuccess = {
+                    showSuccess("Added to wishlist")
+                },
+                onFailure = { e ->
+                    showError("Error: ${e.message}")
                 }
             )
         }
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        if (!isFragmentActive) return
-        val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
-            putExtra("product_id", product.id)
-        }
-        startActivity(intent)
-    }
-
-    private fun showArView(product: Product) {
-        if (!isFragmentActive) return
-        (activity as? Home)?.showArView(product)
-    }
-
     private fun showError(message: String) {
-        if (!isFragmentActive) return
-        context?.let {
-            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
-        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showSuccess(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        // Show the main toolbar again when leaving transaction fragment
-        (requireActivity() as? Home)?.let { homeActivity ->
-            homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.VISIBLE
-        }
-
-        isFragmentActive = false
         _binding = null
     }
 
