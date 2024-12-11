@@ -5,13 +5,10 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.example.ideality.R
 import com.example.ideality.databinding.ActivityArViewerBinding
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
@@ -23,9 +20,8 @@ import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
 import io.github.sceneview.model.ModelInstance
 import io.github.sceneview.node.ModelNode
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ARViewerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityArViewerBinding
@@ -36,7 +32,7 @@ class ARViewerActivity : AppCompatActivity() {
     private var currentModelNode: ModelNode? = null
     private var initialScale = 2.0f
 
-    private var modelInstance: ModelInstance? = null
+    private lateinit var modelInstance: ModelInstance
     private var isLoading = false
         set(value) {
             field = value
@@ -56,12 +52,27 @@ class ARViewerActivity : AppCompatActivity() {
         binding = ActivityArViewerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if(intent.getStringExtra("modelUrl") == null) {
-            Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
-            Log.e("ARViewActivity", "Error: No model URL provided.")
-            return finish()
+        try {
+            intent.getStringExtra("modelUrl").let {
+                if (it == null) {
+                    Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
+                    Log.e("ARViewActivity", "Error: No model URL provided.")
+                    return finish()
+                }
+                runBlocking {
+                    sceneView.modelLoader.loadModelInstance(it).let { instance ->
+                        if (instance == null) {
+                            Toast.makeText(this@ARViewerActivity, "No instance is loaded", Toast.LENGTH_SHORT).show()
+                            Log.e("ARViewActivity", "Error: No instance is loaded.")
+                            return@runBlocking finish()
+                        }
+                        this@ARViewerActivity.modelInstance = instance
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ARViewerActivity", "Got unexpected error ${e}")
         }
-
 
         setupViews()
         setupAR()
@@ -110,11 +121,7 @@ class ARViewerActivity : AppCompatActivity() {
                 isEditable = true
                 lifecycleScope.launch {
                     isLoading = true
-                    val modelUrl = intent.getStringExtra("modelUrl")
-                    val modelInstance = this@ARViewerActivity.modelInstance ?: sceneView.modelLoader.loadModelInstance(modelUrl!!)?.also {
-                        this@ARViewerActivity.modelInstance = it
-                    }
-                    modelInstance?.let {
+                    modelInstance.let {
                         val modelNode = ModelNode(
                             modelInstance = it,
                             scaleToUnits = initialScale,
@@ -159,7 +166,7 @@ class ARViewerActivity : AppCompatActivity() {
 
     private fun updateInstructions() {
         instructionText.text = if (anchorNode == null) {
-            "Point your phone at a surface to place the model"
+            getString(R.string.user_instructions)
         } else {
             ""
         }

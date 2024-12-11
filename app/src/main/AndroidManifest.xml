@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ideality_icon_light_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Ideality">
+        android:theme="@style/AppTheme">
 
         <activity
             android:name=".activities.ProductDetailActivity"
@@ -90,7 +90,7 @@
         <activity
             android:name=".activities.SplashScreen"
             android:exported="true"
-            android:theme="@style/Theme.Ideality.NoActionBar">
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -103,44 +103,44 @@
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ARViewerActivity"
             android:exported="false" />
         <activity
             android:name=".activities.EditEmailActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.EmailVerifiedUpdateActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ChangePasswordActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.EditPhoneActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" /> <!-- Your existing activities -->
+            android:theme="@style/AppTheme" /> <!-- Your existing activities -->
         <activity
             android:name=".activities.PrivacyPolicyActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.TermsConditionsActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.FaqActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ContactUsActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.Home"
             android:exported="false" />
@@ -153,7 +153,7 @@
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
-            android:theme="@style/Theme.Ideality" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />

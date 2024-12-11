@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
         android:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -18,15 +18,14 @@
             android:id="@+id/backButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Shipping Addresses"
-            android:textColor="@color/black"
+            android:text="@string/shipping_addresses"
             android:textSize="20sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
@@ -35,7 +34,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#F0F0F0"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <!-- RecyclerView for addresses -->
@@ -43,6 +41,7 @@
         android:id="@+id/addressesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        tools:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/addAddressButton"
@@ -64,14 +63,14 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:contentDescription="@string/location_image"
             android:src="@drawable/ic_location" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="No addresses saved yet"
-            android:textColor="@color/black"
+            android:text="@string/no_addresses_saved_yet"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -80,8 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Add your first shipping address to get started"
-            android:textColor="#757575"
+            android:text="@string/shipping_address_add_instruction"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -91,9 +89,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/black"
         android:padding="12dp"
-        android:text="Add New Address"
+        android:text="@string/add_new_address"
         android:textAllCaps="false"
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -114,7 +111,6 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
