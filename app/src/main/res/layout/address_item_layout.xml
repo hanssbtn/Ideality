@@ -6,13 +6,11 @@
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    app:strokeColor="#E0E0E0"
     app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -27,7 +25,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -36,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Default"
-                android:textColor="@color/white"
                 android:visibility="gone"
                 app:chipBackgroundColor="#4CAF50" />
         </LinearLayout>
@@ -68,16 +64,14 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit"
-                android:textColor="@color/black" />
+                android:text="@string/edit_label" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/deleteButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
-                android:textColor="#FF5252" />
+                android:text="Delete" />
 
             <Space
                 android:layout_width="0dp"
@@ -89,8 +83,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set as Default"
-                android:textColor="@color/black" />
+                android:text="Set as Default" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

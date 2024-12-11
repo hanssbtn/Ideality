@@ -7,8 +7,7 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
     app:cardElevation="1dp"
-    app:strokeWidth="0.5dp"
-    app:strokeColor="#E0E0E0">
+    app:strokeWidth="0.5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +22,6 @@
                 android:id="@+id/productImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:scaleType="fitCenter" />
 
             <ImageButton
@@ -34,7 +32,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/circle_ripple"
                 android:padding="6dp"
-                android:src="@drawable/favorite_24" />
+                android:src="@drawable/ic_favorite" />
 
             <ImageButton
                 android:id="@+id/quickArButton"
@@ -56,7 +54,6 @@
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
                 android:text="NEW"
-                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -65,7 +62,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical"
             android:padding="12dp">
 
@@ -75,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:text="Modern Sofa" />
 
@@ -98,7 +93,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:textColor="#757575"
                     android:textSize="12sp"
                     tools:text="(128)" />
             </LinearLayout>
@@ -108,7 +102,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="$599.99" />

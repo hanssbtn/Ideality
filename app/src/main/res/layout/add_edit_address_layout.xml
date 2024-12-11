@@ -2,23 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
         android:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/backButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/back_button"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back" />
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/baseline_arrow_back_24" />
 
         <TextView
             android:id="@+id/toolbarTitle"
@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="Add New Address"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
@@ -35,7 +34,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#F0F0F0"
+        android:background="@color/md_theme_tertiary"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <ScrollView
@@ -224,8 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Set as default shipping address"
-                android:textColor="@color/black" />
+                android:text="Set as default shipping address"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -237,7 +235,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/black"
                 android:padding="12dp"
                 android:text="Save Address"
                 android:textAllCaps="false"
@@ -251,7 +248,7 @@
         android:id="@+id/loadingBackground"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#80FFFFFF"
+        android:background="#80000000"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"

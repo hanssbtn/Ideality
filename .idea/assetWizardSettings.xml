@@ -309,7 +309,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/favorite/baseline_favorite_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../Hans%20Sebastian/AppData/Local/Android/Sdk/icons/material/materialicons/shopping_cart/baseline_shopping_cart_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -319,7 +319,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="favorite_24" />
+                            <entry key="outputName" value="baseline_shopping_cart_24" />
                             <entry key="sourceFile" value="C:\Users\Student\AndroidStudioProjects\Ideality\app\src\main\res\drawable\Customer.svg" />
                           </map>
                         </option>

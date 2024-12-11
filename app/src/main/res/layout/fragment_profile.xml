@@ -3,14 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -18,10 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:contentScrim="@color/white"
-            app:statusBarScrim="@color/white"
-            app:collapsedTitleTextColor="@color/black"
-            app:expandedTitleTextColor="@color/black"
+            app:contentScrim="@color/md_theme_surface"
+            app:statusBarScrim="@color/md_theme_surfaceVariant"
+            app:collapsedTitleTextColor="@color/md_theme_secondary_mediumContrast"
+            app:expandedTitleTextColor="@color/md_theme_secondary_mediumContrast"
             app:expandedTitleTextAppearance="@style/ExpandedTitle"
             app:collapsedTitleTextAppearance="@style/CollapsedTitle"
             app:title="Profile">
@@ -52,8 +50,7 @@
                 android:layout_margin="16dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E0E0E0">
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,7 +76,6 @@
                             android:id="@+id/usernameText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -88,7 +84,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="#757575"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -96,8 +91,7 @@
                         android:id="@+id/editProfileButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Edit"
-                        android:textColor="#2196F3"
+                        android:text="@string/edit_label"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -108,8 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Account"
-                android:textColor="@color/black"
+                android:text="@string/account_label"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -146,8 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Shipping Address"
-                        android:textColor="@color/black" />
+                        android:text="@string/shipping_address" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -158,7 +150,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/md_theme_tertiary" />
 
                 <!-- Settings -->
                 <LinearLayout
@@ -181,8 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Settings"
-                        android:textColor="@color/black" />
+                        android:text="Settings" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -200,7 +191,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:text="Help &amp; Support"
-            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -237,8 +227,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="FAQ"
-                        android:textColor="@color/black" />
+                        android:text="@string/faq_label" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -249,7 +238,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/md_theme_tertiary" />
 
                 <!-- Contact Us -->
                 <LinearLayout
@@ -272,8 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Contact Us"
-                        android:textColor="@color/black" />
+                        android:text="@string/contact_us_message" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -284,7 +272,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/md_theme_tertiary" />
 
                 <!-- Privacy Policy -->
                 <LinearLayout
@@ -307,8 +295,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Privacy Policy"
-                        android:textColor="@color/black" />
+                        android:text="@string/privacy_policy_label" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -319,7 +306,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/md_theme_tertiary" />
 
                 <!-- Terms & Conditions -->
                 <LinearLayout
@@ -342,8 +329,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Terms &amp; Conditions"
-                        android:textColor="@color/black" />
+                        android:text="Terms &amp; Conditions"/>
 
                     <ImageView
                         android:layout_width="24dp"
@@ -359,9 +345,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:backgroundTint="#FF5252"
                 android:text="Logout"
-                android:textColor="@color/white"
                 app:cornerRadius="12dp" />
 
         </LinearLayout>

@@ -8,7 +8,6 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
-    app:strokeColor="#E0E0E0"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -61,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/black"
                 android:textSize="14sp"
                 tools:text="Modern Sofa" />
 
@@ -70,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="$599.99" />

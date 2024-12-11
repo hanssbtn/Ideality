@@ -2,4 +2,5 @@
 <resources>
     <dimen name="model_preview_list_element_size">80dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="_24dp">24dp</dimen>
 </resources>

@@ -1,4 +1,15 @@
 <resources>
+    <color name="shimmer_color">#DDDDDD</color>
+    <color name="shimmer_color_start">#E6E6E6</color>
+    <color name="shimmer_color_center">#EEEEEE</color>
+    <color name="green">#AAA583</color>
+    <color name="light_blue">#2196F3</color>
+
+    <color name="switch_active">#2196F3</color>
+    <color name="switch_active_transparent">#332196F3</color>
+    <color name="switch_inactive">#757575</color>
+    <color name="switch_inactive_transparent">#33757575</color>
+
     <color name="md_theme_primary">#445E91</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#D8E2FF</color>

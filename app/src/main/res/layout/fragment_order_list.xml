@@ -19,6 +19,7 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:contentDescription="@string/label_orders"
             android:src="@drawable/ic_empty_orders" />
 
         <TextView
@@ -27,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="No orders yet"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -38,7 +38,6 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="Start shopping to see your orders here"
-            android:textColor="#757575"
             android:textSize="16sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -46,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/black"
             android:text="Shop Now"
             android:textAllCaps="false"
             app:cornerRadius="24dp" />

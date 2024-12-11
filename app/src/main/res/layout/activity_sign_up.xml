@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ideality_icon_light_background"
     tools:context=".activities.SignUp">
 
     <ImageView
@@ -13,7 +12,7 @@
         android:layout_width="237dp"
         android:layout_height="220dp"
         android:layout_marginTop="32dp"
-        android:contentDescription="Sign up illustration"
+        android:contentDescription="@string/sign_up_image"
         android:src="@drawable/signup_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Get Started"
-        android:textColor="@color/black"
+        android:text="@string/get_started_instruction"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
-        android:text="by Creating a free account"
-        android:textColor="@color/black"
+        android:text="@string/create_account_instruction"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -63,15 +60,13 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/black"
-            app:hintEnabled="true"
-            app:hintTextColor="@color/black">
+            app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username"
+                android:hint="@string/username_label"
                 android:inputType="text"
                 android:padding="16dp"
                 android:textSize="14sp" />
@@ -87,15 +82,13 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/black"
-            app:hintEnabled="true"
-            app:hintTextColor="@color/black">
+            app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/email_label"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
                 android:textSize="14sp" />
@@ -111,17 +104,15 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/black"
             app:errorIconDrawable="@null"
             app:hintEnabled="true"
-            app:hintTextColor="@color/black"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/password_label"
                 android:inputType="textPassword"
                 android:padding="16dp"
                 android:textSize="14sp" />
@@ -132,8 +123,7 @@
             android:id="@+id/passwordStrengthView"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/gray"/>
+            android:layout_marginBottom="16dp"/>
 
         <!-- Confirm Password Input -->
         <com.google.android.material.textfield.TextInputLayout
@@ -146,17 +136,15 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/black"
             app:errorIconDrawable="@null"
             app:hintEnabled="true"
-            app:hintTextColor="@color/black"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirmPasswordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Confirm Password"
+                android:hint="@string/confirm_password_label"
                 android:inputType="textPassword"
                 android:padding="16dp"
                 android:textSize="14sp" />
@@ -166,9 +154,8 @@
             android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
             android:padding="16dp"
-            android:text="Create Account"
+            android:text="@string/create_account_label"
             android:textAllCaps="false" />
 
         <LinearLayout
@@ -180,7 +167,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account? " />
+                android:text="@string/already_have_an_account_message" />
 
             <TextView
                 android:id="@+id/signInText"
@@ -188,8 +175,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="Sign in"
-                android:textColor="#2196F3" />
+                android:text="@string/sign_in_message"/>
         </LinearLayout>
 
     </LinearLayout>

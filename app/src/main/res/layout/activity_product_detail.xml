@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -98,7 +97,6 @@
                     android:id="@+id/productName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="Modern Sofa"/>
@@ -108,7 +106,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     tools:text="$599.99"/>
@@ -131,7 +128,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textColor="@color/black"
                         tools:text="(128 reviews)"/>
                 </LinearLayout>
 
@@ -141,7 +137,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Description"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
@@ -151,7 +146,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:lineSpacingMultiplier="1.2"
-                    android:textColor="@color/black"
                     tools:text="A comfortable modern sofa perfect for your living room..."/>
 
                 <!-- Dimensions -->
@@ -160,7 +154,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Dimensions"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
@@ -173,19 +166,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Length: 200cm"
-                        app:chipBackgroundColor="#F5F5F5"/>
+                        app:chipBackgroundColor="@color/md_theme_background"/>
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Width: 90cm"
-                        app:chipBackgroundColor="#F5F5F5"/>
+                        app:chipBackgroundColor="@color/md_theme_background"/>
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Height: 85cm"
-                        app:chipBackgroundColor="#F5F5F5"/>
+                        app:chipBackgroundColor="@color/md_theme_background"/>
                 </com.google.android.material.chip.ChipGroup>
 
                 <!-- Similar Products -->
@@ -194,7 +187,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Similar Products"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
@@ -218,7 +210,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="bottom"
-        android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
         android:padding="16dp">
@@ -230,7 +221,6 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/circle_ripple"
             android:gravity="center"
-            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="1"/>
@@ -249,7 +239,6 @@
             android:layout_weight="1"
             android:text="Add to Cart"
             android:textAllCaps="false"
-            app:backgroundTint="@color/black"
             app:cornerRadius="24dp" />
 
     </LinearLayout>

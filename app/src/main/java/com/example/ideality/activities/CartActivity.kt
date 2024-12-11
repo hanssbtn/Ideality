@@ -13,6 +13,7 @@ import com.example.ideality.models.Product
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.example.ideality.R as Res
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -70,7 +71,7 @@ class CartActivity : AppCompatActivity() {
     private fun setupCheckoutButton() {
         binding.checkoutButton.setOnClickListener {
             if (cartItems.isEmpty()) {
-                showError("Your cart is empty")
+                showError(getString(Res.string.empty_cart_message))
                 return@setOnClickListener
             }
             startCheckout()
@@ -185,7 +186,7 @@ class CartActivity : AppCompatActivity() {
 
         MaterialAlertDialogBuilder(this)
             .setTitle("Remove Item")
-            .setMessage("Are you sure you want to remove $productName from your cart?")
+            .setMessage("Remove $productName from your cart?")
             .setPositiveButton("Remove") { _, _ ->
                 removeFromCart(cartItem.id)
             }

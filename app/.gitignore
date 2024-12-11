@@ -1,4 +1,8 @@
 /build
 /Scratches
+.idea
 .gradle
 /app/google-services.json
+local.properties
+config.properties
+

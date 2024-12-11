@@ -103,18 +103,15 @@ dependencies {
     // Other direct dependencies
     implementation("com.hbb20:ccp:2.7.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("com.google.android.material:material:1.11.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("com.google.firebase:firebase-config-ktx")
-    implementation ("com.google.android.material:material:1.11.0")
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // ARCore dependencies
-    implementation ("com.google.ar:core:1.14.0")
 
     //Chip Navigation
         implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
@@ -125,8 +122,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-safetynet:18.0.1")
     
     //material3
+    implementation(platform("androidx.compose:compose-bom:2024.11.00"))
     implementation("androidx.compose.material3:material3")
-    implementation(platform("androidx.compose:compose-bom:2023.06.01"))
+    implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -139,17 +137,12 @@ dependencies {
 
     //recycle view
     implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
-
-    // Add Firestore
-    implementation("com.google.firebase:firebase-firestore-ktx")
     
     //
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
     implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     //appwrite
     implementation("io.appwrite:sdk-for-android:6.0.0")
@@ -175,15 +168,10 @@ dependencies {
     implementation ("com.sun.mail:android-mail:1.6.7")
     implementation ("com.sun.mail:android-activation:1.6.7")
 
-    implementation ("com.google.android.gms:play-services-auth:20.7.0")
 
+    implementation ("com.google.android.filament:filament-utils-android:1.52.0")
 
-    implementation ("com.google.android.filament:filament-android:1.37.0")
-    implementation ("com.google.android.filament:filament-utils-android:1.37.0")
-
-    implementation ("com.google.ar:core:1.40.0")
     implementation ("androidx.webkit:webkit:1.8.0")
 
-    implementation ("io.github.sceneview:arsceneview:2.2.1")
 
 }

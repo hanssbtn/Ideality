@@ -184,7 +184,7 @@ class Home : AppCompatActivity() {
     }
 
     private fun setupSwipeRefresh() {
-        binding.swipeRefresh.setColorSchemeResources(R.color.black, R.color.blue, R.color.green)
+        binding.swipeRefresh.setColorSchemeResources(R.color.md_theme_scrim /* black */, R.color.light_blue, R.color.green)
         binding.swipeRefresh.setOnRefreshListener { loadData() }
     }
 

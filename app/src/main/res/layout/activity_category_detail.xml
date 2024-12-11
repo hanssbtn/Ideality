@@ -3,20 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
-
+    android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
             app:navigationIcon="@drawable/ic_back"
             app:layout_scrollFlags="scroll|enterAlways">
 
@@ -24,7 +20,6 @@
                 android:id="@+id/categoryTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -60,6 +55,7 @@
                 android:visibility="gone">
 
                 <ImageView
+                    android:contentDescription="@string/current_orders"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -71,8 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:text="No Products Found"
-                    android:textColor="@color/black"
+                    android:text="@string/no_products_found_message"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -83,8 +78,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="We don't have any products in this category yet"
-                    android:textColor="#757575" />
+                    android:text="@string/no_products_in_category_message" />
             </LinearLayout>
 
             <!-- Shimmer Layout -->

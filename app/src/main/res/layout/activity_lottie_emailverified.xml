@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".activities.LottieEmailVerifiedActivity">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -26,8 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Email Verified!"
-        android:textColor="@color/black"
+        android:text="@string/email_verified_message"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +40,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:gravity="center"
-        android:text="Your account has been successfully verified. You can now access all features."
+        android:text="@string/email_verification_success_message"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
