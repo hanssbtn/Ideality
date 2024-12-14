@@ -66,10 +66,10 @@ android {
 
 dependencies {
     // Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
 
     // Individual Firebase dependencies without versions
-    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
@@ -102,43 +102,41 @@ dependencies {
 
     // Other direct dependencies
     implementation("com.hbb20:ccp:2.7.0")
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("com.google.firebase:firebase-config-ktx")
+
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // ARCore dependencies
+    // Chip Navigation
+    implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
 
-    //Chip Navigation
-        implementation ("com.github.ibrahimsn98:NiceBottomBar:2.2")
-
-    //auth
+    // Authentication
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.recaptcha:recaptcha:18.4.0")
     implementation("com.google.android.gms:play-services-safetynet:18.0.1")
-    
-    //material3
-    implementation(platform("androidx.compose:compose-bom:2024.11.00"))
+
+    // Jetpack Compose + Material3
+    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    //lottie
+    // Lottie
     implementation ("com.airbnb.android:lottie:6.6.0")
 
-    //searchview
+    // SearchView
     implementation ("com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.5")
 
-    //recycle view
+    // Recycle view
     implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
-    
-    //
+
+    // Custom views
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
     implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
     implementation ("com.google.code.gson:gson:2.10.1")
@@ -147,7 +145,7 @@ dependencies {
     //appwrite
     implementation("io.appwrite:sdk-for-android:6.0.0")
 
-    // For email sending
+    // JavaMail API for custom email sending
     implementation ("com.sun.mail:android-mail:1.6.7")
     implementation ("com.sun.mail:android-activation:1.6.7")
 
@@ -164,14 +162,9 @@ dependencies {
     // Circle ImageView
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
-    // JavaMail API for custom email sending
-    implementation ("com.sun.mail:android-mail:1.6.7")
-    implementation ("com.sun.mail:android-activation:1.6.7")
-
-
     implementation ("com.google.android.filament:filament-utils-android:1.52.0")
 
-    implementation ("androidx.webkit:webkit:1.8.0")
+    implementation ("androidx.webkit:webkit:1.12.1")
 
 
 }
