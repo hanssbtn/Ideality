@@ -1,6 +1,6 @@
 <resources>
     <style name="app_logo_image">
-        <item name="srcCompat">@drawable/ideality_logo_dark</item>
+        <item name="srcCompat">@drawable/ideality_logo</item>
     </style>
     <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
