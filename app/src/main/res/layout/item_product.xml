@@ -32,7 +32,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/circle_ripple"
                 android:padding="6dp"
-                android:src="@drawable/ic_favorite" />
+                android:src="@drawable/ic_favorite_outline" />
 
             <ImageButton
                 android:id="@+id/quickArButton"

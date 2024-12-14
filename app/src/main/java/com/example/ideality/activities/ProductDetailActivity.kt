@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.ideality.R
-import com.example.ideality.adapters.ProductAdapter
+import com.example.ideality.adapter.ProductAdapter
 import com.example.ideality.databinding.ActivityProductDetailBinding
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.CartItem

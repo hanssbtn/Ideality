@@ -6,7 +6,7 @@ data class Product(
     val description: String = "",
     val price: Double = 0.0,
     // Support both local resource and URL
-    val image: Int = 0,                // For existing local resource images
+    val imageId: Int = 0,                // For existing local resource images
     val thumbnailUrl: String = "",     // For cloud stored images
     val modelUrl: String = "",         // AR model URL from Appwrite
     val modelId: String = "",          // Appwrite file ID

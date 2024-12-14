@@ -2,7 +2,6 @@ package com.example.ideality.activities
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,78 +19,72 @@ import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
 import io.github.sceneview.model.ModelInstance
 import io.github.sceneview.node.ModelNode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class ARViewerActivity : AppCompatActivity() {
+    companion object {
+        const val TAG = "ARViewerActivity"
+    }
     private lateinit var binding: ActivityArViewerBinding
     private lateinit var sceneView: ARSceneView
-    private lateinit var loadingView: View
     private lateinit var instructionText: TextView
 
     private var currentModelNode: ModelNode? = null
     private var initialScale = 2.0f
 
-    private lateinit var modelInstance: ModelInstance
-    private var isLoading = false
-        set(value) {
-            field = value
-            loadingView.isGone = !value
-        }
+    private var modelInstance: ModelInstance? = null
 
     private var anchorNode: AnchorNode? = null
         set(value) {
             if (field != value) {
                 field = value
-                updateInstructions()
+                displayStatus()
             }
         }
+    private var modelUrl: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityArViewerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        try {
-            intent.getStringExtra("modelUrl").let {
-                if (it == null) {
-                    Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
-                    Log.e("ARViewActivity", "Error: No model URL provided.")
-                    return finish()
-                }
-                runBlocking {
-                    sceneView.modelLoader.loadModelInstance(it).let { instance ->
-                        if (instance == null) {
-                            Toast.makeText(this@ARViewerActivity, "No instance is loaded", Toast.LENGTH_SHORT).show()
-                            Log.e("ARViewActivity", "Error: No instance is loaded.")
-                            return@runBlocking finish()
-                        }
-                        this@ARViewerActivity.modelInstance = instance
-                    }
-                }
+        setupViews()
+        setupButtons()
+        Log.d(TAG, "Loading model...")
+        intent.getStringExtra("modelUrl").let {
+            if (it == null) {
+                Toast.makeText(this, "No model URL provided", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Error: No model URL provided.")
+                return finish()
             }
-        } catch (e: Exception) {
-            Log.e("ARViewerActivity", "Got unexpected error ${e}")
+            modelUrl = it
         }
 
-        setupViews()
-        setupAR()
-        setupButtons()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                runBlocking {
+                    modelInstance = binding.sceneView.modelLoader.loadModelInstance(modelUrl)
+                }
+                Log.d(TAG, "Finished loading model.")
+            }
+            displayStatus()
+        }.invokeOnCompletion { t ->
+            if (t is Exception) {
+                Toast.makeText(this, "Got unexpected error.", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Got unexpected error.", t)
+                return@invokeOnCompletion finish()
+            }
+            binding.loadingView.isGone = true
+        }
     }
 
     private fun setupViews() {
-        loadingView = binding.loadingOverlay
         instructionText = binding.instructionText
-        sceneView = binding.sceneView
-    }
-
-    private fun setupButtons() {
-        binding.backButton.setOnClickListener { finish() }
-        binding.resetButton.setOnClickListener { resetModel() }
-    }
-
-    private fun setupAR() {
-        sceneView.apply {
+        displayStatus()
+        sceneView = binding.sceneView.apply {
             lifecycle = this@ARViewerActivity.lifecycle
 
             configureSession { session, config ->
@@ -108,6 +101,7 @@ class ARViewerActivity : AppCompatActivity() {
                     frame.getUpdatedPlanes()
                         .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
                         ?.let { plane ->
+                            if (modelInstance == null) return@let
                             addAnchorNode(plane.createAnchor(plane.centerPose))
                         }
                 }
@@ -115,13 +109,20 @@ class ARViewerActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupButtons() {
+        binding.backButton.setOnClickListener { finish() }
+        binding.resetButton.setOnClickListener { resetModel() }
+    }
+
     private fun addAnchorNode(anchor: Anchor) {
-        sceneView.addChildNode(
-            AnchorNode(sceneView.engine, anchor).apply {
-                isEditable = true
-                lifecycleScope.launch {
-                    isLoading = true
-                    modelInstance.let {
+        displayStatus()
+        lifecycleScope.launch {
+            sceneView.addChildNode(
+                AnchorNode(sceneView.engine, anchor).apply {
+                    if (modelInstance == null) {
+                        Log.e(TAG, "addAnchorNode: modelInstance is destroyed.")
+                    }
+                    modelInstance!!.let {
                         val modelNode = ModelNode(
                             modelInstance = it,
                             scaleToUnits = initialScale,
@@ -132,40 +133,47 @@ class ARViewerActivity : AppCompatActivity() {
 
                         addChildNode(modelNode)
                         currentModelNode = modelNode
-                        isLoading = false
                     }
-                }.invokeOnCompletion { t ->
-                    if (t == null) {
-                        Log.d("ARViewerActivity", "finished adding model")
-                        return@invokeOnCompletion
-                    }
-                    if (t is Exception) {
-                        runCatching {
-                            if (isLoading && (anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
-                                resetModel()
-                            }
-                            isLoading = false
-                        }
+                    Log.d(TAG, "finished adding model")
+                    isEditable = true
+                    anchorNode = this
+                }
+            )
+        }.invokeOnCompletion { t ->
+            if (t == null) {
+                Log.d(TAG, "Finished loading model.")
+                return@invokeOnCompletion
+            }
+            if (t is Exception) {
+                Log.d(TAG,"Got error", t)
+                runCatching {
+                    if ((anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
+                        resetModel()
                     }
                 }
-                anchorNode = this
             }
-        )
+        }
     }
 
     private fun resetModel() {
-        runCatching {
+        try {
             anchorNode?.destroy()
+        } catch (e: Exception) {
+            Log.e(TAG, "resetModel: Failed to destroy anchor node", e)
         }
         anchorNode = null
-        runCatching {
+        try {
             currentModelNode?.destroy()
+        } catch (e: Exception) {
+            Log.e(TAG,"resetModel: Failed to destroy currentModelNode", e)
         }
         currentModelNode = null
     }
 
-    private fun updateInstructions() {
-        instructionText.text = if (anchorNode == null) {
+    private fun displayStatus() {
+        instructionText.text = if (modelInstance == null) {
+            getString(R.string.loading_model)
+        } else if (anchorNode == null) {
             getString(R.string.user_instructions)
         } else {
             ""
@@ -175,10 +183,9 @@ class ARViewerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         runCatching {
-            if (isLoading && (anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
+            if ((anchorNode == null || anchorNode!!.anchor.trackingState != TrackingState.TRACKING)) {
                 resetModel()
             }
-            isLoading = false
         }
     }
 

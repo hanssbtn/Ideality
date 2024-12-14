@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.ideality.R
 import com.example.ideality.databinding.FragmentProfileBinding
@@ -27,6 +28,7 @@ import com.example.ideality.activities.PrivacyPolicyActivity
 import com.example.ideality.activities.SettingsActivity
 import com.example.ideality.activities.TermsConditionsActivity
 import com.example.ideality.activities.LoginActivity
+import com.example.ideality.viewmodels.HomeViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.appwrite.Client
@@ -34,6 +36,8 @@ import io.appwrite.services.Storage
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
@@ -68,6 +72,10 @@ class ProfileFragment : Fragment() {
         initializeAppwrite()
         setupUI()
         loadUserData()
+
+        homeViewModel.refreshTrigger.observe(viewLifecycleOwner) {
+            loadUserData()
+        }
     }
 
     override fun onDestroyView() {
@@ -181,7 +189,7 @@ class ProfileFragment : Fragment() {
     private fun showLogoutConfirmationDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_logout_confirmation, null)
 
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Rounded)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
             .create()
 
@@ -217,9 +225,4 @@ class ProfileFragment : Fragment() {
         requireActivity().finish()
     }
 
-
-
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
 }

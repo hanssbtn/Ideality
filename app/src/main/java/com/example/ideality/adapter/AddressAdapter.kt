@@ -67,7 +67,7 @@ class AddressAdapter(
         }
 
         private fun showDeleteDialog(address: Address) {
-            val dialog = MaterialAlertDialogBuilder(binding.root.context, R.style.AlertDialog_App_Custom)
+            val dialog = MaterialAlertDialogBuilder(binding.root.context)
                 .setView(R.layout.dialog_delete_address)
                 .create()
 

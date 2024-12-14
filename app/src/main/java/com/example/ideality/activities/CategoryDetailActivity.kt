@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.ideality.adapters.ProductAdapter
+import com.example.ideality.adapter.ProductAdapter
 import com.example.ideality.databinding.ActivityCategoryDetailBinding
 import com.example.ideality.decorations.GridSpacingItemDecoration
 import com.example.ideality.managers.WishlistManager

@@ -70,7 +70,7 @@ class VerifyPhoneActivity : AppCompatActivity() {
             // Setup error text
             errorText.apply {
                 visibility = View.GONE
-                setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.error_red))
+                setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.md_theme_error))
                 textSize = 14f
             }
 
@@ -132,7 +132,7 @@ class VerifyPhoneActivity : AppCompatActivity() {
 
             // Handle backspace for previous digit
             editText.setOnKeyListener { _, keyCode, event ->
-                if (keyCode == android.view.KeyEvent.KEYCODE_DEL &&
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
                     editText.text.isEmpty() &&
                     index > 0 &&
                     event.action == KeyEvent.ACTION_DOWN) {
@@ -225,7 +225,7 @@ class VerifyPhoneActivity : AppCompatActivity() {
             errorText.apply {
                 text = "Wrong code! Please try again."
                 visibility = View.VISIBLE
-                setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.error_red))
+                setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.md_theme_error))
             }
 
             // Apply shake animation
@@ -351,7 +351,7 @@ class VerifyPhoneActivity : AppCompatActivity() {
                 errorText.apply {
                     text = message
                     visibility = View.VISIBLE
-                    setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.error_red))
+                    setTextColor(ContextCompat.getColor(this@VerifyPhoneActivity, R.color.md_theme_error))
                 }
                 noteText.visibility = View.GONE  // Hide note text when showing error
             }

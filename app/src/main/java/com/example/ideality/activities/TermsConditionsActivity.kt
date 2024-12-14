@@ -1,5 +1,6 @@
 package com.example.ideality.activities
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -28,7 +29,7 @@ class TermsConditionsActivity : AppCompatActivity() {
     }
 
     private fun setupStatusBar() {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.statusBarColor = Color.parseColor("#FFFFFF")
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
     }
 

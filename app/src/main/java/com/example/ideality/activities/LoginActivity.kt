@@ -29,6 +29,7 @@ import com.google.firebase.database.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.CheckBox
+import androidx.activity.enableEdgeToEdge
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -56,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
-
+        enableEdgeToEdge()
         initializeFirebase()
         configureGoogleSignIn()
         initializeViews()

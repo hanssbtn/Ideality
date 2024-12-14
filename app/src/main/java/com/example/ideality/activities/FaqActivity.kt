@@ -1,25 +1,23 @@
 package com.example.ideality.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ideality.R
-import com.example.ideality.adapters.FAQAdapter
+import com.example.ideality.adapter.FAQAdapter
 import com.example.ideality.databinding.ActivityFaqBinding
 import com.example.ideality.models.FAQItem
 import com.example.ideality.models.FAQSection
-import com.google.android.material.snackbar.Snackbar
 
 class FaqActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaqBinding
@@ -93,6 +91,7 @@ class FaqActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateSearchResults() {
         binding.apply {
             if (filteredFAQs.isEmpty()) {
@@ -112,7 +111,7 @@ class FaqActivity : AppCompatActivity() {
                 suggestionText.visibility = View.GONE
                 popularCategories.visibility = View.GONE
 
-                val totalResults = filteredFAQs.sumBy { it.items.size }
+                val totalResults = filteredFAQs.sumOf { it.items.size }
                 searchResultCount.apply {
                     visibility = View.VISIBLE
                     text = when (totalResults) {
@@ -186,13 +185,13 @@ class FaqActivity : AppCompatActivity() {
         if (query.isBlank()) {
             restoreOriginalList()
         } else {
-            val searchQuery = query.toLowerCase()
+            val searchQuery = query.lowercase()
             filteredFAQs.clear()
 
             allFAQs.forEach { section ->
                 val matchingItems = section.items.filter { item ->
-                    item.question.toLowerCase().contains(searchQuery) ||
-                            item.answer.toLowerCase().contains(searchQuery)
+                    item.question.lowercase().contains(searchQuery) ||
+                            item.answer.lowercase().contains(searchQuery)
                 }
 
                 if (matchingItems.isNotEmpty()) {

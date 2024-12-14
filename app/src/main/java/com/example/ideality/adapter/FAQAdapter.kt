@@ -1,17 +1,11 @@
-package com.example.ideality.adapters
+package com.example.ideality.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ideality.R
 import com.example.ideality.databinding.ItemFaqBinding
 import com.example.ideality.databinding.ItemFaqSectionBinding
 import com.example.ideality.models.FAQItem

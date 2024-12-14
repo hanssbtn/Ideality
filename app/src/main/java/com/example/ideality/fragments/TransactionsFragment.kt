@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class TransactionsFragment : Fragment() {
     private var _binding: FragmentTransactionsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var mediator: TabLayoutMediator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,19 +34,23 @@ class TransactionsFragment : Fragment() {
         }
 
         setupViewPager()
-
     }
 
     private fun setupViewPager() {
-        binding.viewPager.adapter = TransactionsPagerAdapter(this)
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "Ongoing"
-                1 -> "Completed"
-                else -> ""
+        binding.viewPager.let {
+            it.adapter = TransactionsPagerAdapter(this)
+        }
+        mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "Ongoing"
+                }
+                1 -> {
+                    tab.text = "Completed"
+                }
+                else -> throw RuntimeException("Invalid position $position")
             }
-        }.attach()
+        }.also { it.attach() }
     }
 
     override fun onDestroyView() {
@@ -56,12 +61,14 @@ class TransactionsFragment : Fragment() {
             homeActivity.findViewById<View>(R.id.toolbar)?.visibility = View.VISIBLE
         }
 
+        if (this::mediator.isInitialized) {
+            mediator.detach()
+        }
+
         _binding = null
     }
 
-    private inner class TransactionsPagerAdapter(fragment: Fragment) :
-        FragmentStateAdapter(fragment) {
-
+    private inner class TransactionsPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int = 2
 
         override fun createFragment(position: Int): Fragment {

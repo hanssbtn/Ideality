@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ideality.adapters.OrderItemsAdapter
+import com.example.ideality.adapter.OrderItemsAdapter
 import com.example.ideality.databinding.ActivityCheckoutBinding
 import com.example.ideality.models.Address
 import com.example.ideality.models.CartItem

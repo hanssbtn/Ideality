@@ -1,7 +1,6 @@
-package com.example.ideality.adapters
+package com.example.ideality.adapter
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ideality.R
-import com.example.ideality.activities.ARViewerActivity
 
 import com.example.ideality.models.Product
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -56,7 +54,7 @@ class ProductAdapter(
                     }
             } else {
                 // Load from resource ID (for backwards compatibility)
-                image.setImageResource(product.image)
+                image.setImageResource(product.imageId)
                 shimmerLayout?.stopShimmer()
                 shimmerLayout?.hideShimmer()
             }
@@ -130,34 +128,5 @@ class ProductAdapter(
     fun updateProducts(newProducts: List<Product>) {
         products = newProducts.toMutableList()
         notifyDataSetChanged()
-    }
-
-    fun updateProduct(product: Product) {
-        val position = products.indexOfFirst { it.id == product.id }
-        if (position != -1) {
-            (products as MutableList<Product>)[position] = product
-            notifyItemChanged(position)
-        }
-    }
-
-    fun addProduct(product: Product) {
-        (products as MutableList<Product>).add(0, product)
-        notifyItemInserted(0)
-    }
-
-    fun removeProduct(product: Product) {
-        val position = products.indexOf(product)
-        if (position != -1) {
-            (products as MutableList<Product>).removeAt(position)
-            notifyItemRemoved(position)
-        }
-    }
-
-    fun updateFavoriteStatus(productId: String, isFavorite: Boolean) {
-        val position = products.indexOfFirst { it.id == productId }
-        if (position != -1) {
-            (products as MutableList<Product>)[position] = products[position].copy(isFavorite = isFavorite)
-            notifyItemChanged(position)
-        }
     }
 }

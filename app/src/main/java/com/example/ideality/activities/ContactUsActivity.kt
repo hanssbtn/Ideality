@@ -2,6 +2,7 @@ package com.example.ideality.activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -94,7 +95,7 @@ class ContactUsActivity : AppCompatActivity() {
     }
 
     private fun setupStatusBar() {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+        window.statusBarColor = Color.parseColor("#FFFFFF")
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
     }
 

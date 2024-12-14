@@ -1,19 +1,17 @@
 package com.example.ideality.activities
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.TextView
 import android.content.DialogInterface
+import android.graphics.Color
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ideality.R
-import com.example.ideality.adapters.OrderItemsAdapter
+import com.example.ideality.adapter.OrderItemsAdapter
 import com.example.ideality.databinding.ActivityTransactionDetailBinding
 import com.example.ideality.databinding.DialogRatingBinding
 import com.example.ideality.models.CartItem
@@ -22,13 +20,11 @@ import com.example.ideality.models.Rating
 import com.example.ideality.models.Transaction
 import com.example.ideality.models.TransactionStatus
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TransactionDetailActivity : AppCompatActivity() {
@@ -239,7 +235,7 @@ class TransactionDetailActivity : AppCompatActivity() {
             )
         )
 
-        TransactionStatus.values().forEach { status ->
+        TransactionStatus.entries.forEach { status ->
             val isCompleted = status.ordinal <= currentStatus.ordinal
             val stepView = layoutInflater.inflate(
                 R.layout.item_status_step,
@@ -250,44 +246,32 @@ class TransactionDetailActivity : AppCompatActivity() {
             stepView.findViewById<ImageView>(R.id.statusIcon).apply {
                 setImageResource(statusInfo[status]?.first ?: R.drawable.ic_processing)
                 setColorFilter(
-                    ContextCompat.getColor(
-                        this@TransactionDetailActivity,
-                        if (isCompleted) R.color.black else R.color.gray
-                    )
+                    if (isCompleted) Color.parseColor("#000000") else Color.parseColor("#757575")
                 )
             }
 
             stepView.findViewById<TextView>(R.id.statusTitle).apply {
                 text = status.name
                 setTextColor(
-                    ContextCompat.getColor(
-                        this@TransactionDetailActivity,
-                        if (isCompleted) R.color.black else R.color.gray
-                    )
+                    if (isCompleted) Color.parseColor("#000000") else Color.parseColor("757575")
                 )
             }
 
             stepView.findViewById<TextView>(R.id.statusDescription).apply {
                 text = statusInfo[status]?.second
                 setTextColor(
-                    ContextCompat.getColor(
-                        this@TransactionDetailActivity,
-                        if (isCompleted) R.color.black else R.color.gray
-                    )
+                    if (isCompleted) Color.parseColor("#000000") else Color.parseColor("757575")
                 )
             }
 
             binding.statusStepsLayout.addView(stepView)
 
             // Add connector line if not the last item
-            if (status.ordinal < TransactionStatus.values().size - 1) {
+            if (status.ordinal < TransactionStatus.entries.size - 1) {
                 val lineView = View(this).apply {
                     layoutParams = ViewGroup.LayoutParams(2, 40)
                     setBackgroundColor(
-                        ContextCompat.getColor(
-                            this@TransactionDetailActivity,
-                            if (isCompleted) R.color.black else R.color.gray
-                        )
+                        if (isCompleted) Color.parseColor("#000000") else Color.parseColor("757575")
                     )
                 }
                 binding.statusStepsLayout.addView(lineView)

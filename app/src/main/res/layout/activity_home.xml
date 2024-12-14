@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/home"
     tools:context=".activities.Home">
 
     <!-- Top Bar -->
@@ -42,6 +43,20 @@
                     android:layout_width="@dimen/_24dp"
                     android:layout_height="@dimen/_24dp"
                     android:src="@drawable/shopping_cart_24px" />
+
+                <TextView
+                    android:id="@+id/cartBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginEnd="-2dp"
+                    android:background="@drawable/cart_badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </FrameLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
@@ -60,6 +75,7 @@
             android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -136,8 +152,7 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:text="See All"
-                        android:textColor="#2196F3" />
+                        android:text="See All" />
                 </LinearLayout>
 
                 <!-- Shimmer for Recently Used -->
@@ -189,7 +204,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="24dp"
                     android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/recentlyUsedRecyclerView">
+                    app:layout_constraintTop_toBottomOf="@id/shimmerLayout">
 
                     <TextView
                         android:layout_width="0dp"

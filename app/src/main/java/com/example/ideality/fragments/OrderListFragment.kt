@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ideality.activities.TransactionDetailActivity
-import com.example.ideality.adapters.OrderAdapter
+import com.example.ideality.adapter.OrderAdapter
 import com.example.ideality.databinding.FragmentOrderListBinding
 import com.example.ideality.models.*
 import com.example.ideality.databinding.DialogRatingBinding
@@ -17,9 +17,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import android.content.DialogInterface
+import android.util.Log
+import androidx.fragment.app.activityViewModels
 import com.example.ideality.models.Transaction
+import com.example.ideality.viewmodels.HomeViewModel
 
 class OrderListFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private var _binding: FragmentOrderListBinding? = null
     private val binding get() = _binding!!
     private var isCompleted = false
@@ -40,6 +44,10 @@ class OrderListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCompleted = arguments?.getBoolean(ARG_IS_COMPLETED) ?: false
+
+        homeViewModel.refreshTrigger.observe(viewLifecycleOwner) {
+            loadOrders()
+        }
 
         initializeFirebase()
         setupRecyclerView()
@@ -68,10 +76,11 @@ class OrderListFragment : Fragment() {
         }
     }
 
-    private fun loadOrders() {
+    fun loadOrders() {
         showLoading(true)
         val userId = auth.currentUser?.uid ?: return
 
+        Log.d("FragmentStateAdapter", "")
         database.getReference("transactions")
             .orderByChild("userId")
             .equalTo(userId)
@@ -156,17 +165,6 @@ class OrderListFragment : Fragment() {
                     }
                 })
         }
-    }
-
-    private fun showConfirmDeliveryDialog(transaction: Transaction) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Confirm Delivery")
-            .setMessage("Have you received your order?")
-            .setPositiveButton("Yes") { _, _ ->
-                updateTransactionStatus(transaction.id, TransactionStatus.DELIVERED)
-            }
-            .setNegativeButton("No", null)
-            .show()
     }
 
     private fun showRatingDialog(transaction: Transaction) {

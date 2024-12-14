@@ -9,7 +9,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.ideality.R
 
 class LottieEmailVerifiedActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lottie_emailverified)

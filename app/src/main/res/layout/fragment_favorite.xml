@@ -67,7 +67,6 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="Products you like will appear here"
-                    android:textColor="#757575"
                     android:textSize="16sp" />
 
                 <com.google.android.material.button.MaterialButton

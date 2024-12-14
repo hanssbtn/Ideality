@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ideality.adapters.CartAdapter
+import com.example.ideality.adapter.CartAdapter
 import com.example.ideality.databinding.ActivityCartBinding
 import com.example.ideality.models.CartItem
 import com.example.ideality.models.Product
@@ -23,6 +23,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var cartAdapter: CartAdapter
 
+//    List<CartItem>
     private var cartItems = mutableListOf<CartItem>()
     private val SHIPPING_COST = 10.00  // Fixed shipping cost
 

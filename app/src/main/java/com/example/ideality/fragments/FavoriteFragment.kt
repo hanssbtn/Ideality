@@ -7,14 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ideality.activities.ARViewerActivity
 import com.example.ideality.activities.ProductDetailActivity
-import com.example.ideality.adapters.ProductAdapter
+import com.example.ideality.adapter.ProductAdapter
 import com.example.ideality.databinding.FragmentFavoriteBinding
 import com.example.ideality.decorations.GridSpacingItemDecoration
 import com.example.ideality.managers.WishlistManager
 import com.example.ideality.models.Product
+import com.example.ideality.viewmodels.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,6 +26,9 @@ import com.google.firebase.database.ValueEventListener
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
+
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
 
     private lateinit var database: FirebaseDatabase
     private lateinit var wishlistManager: WishlistManager
@@ -43,6 +48,10 @@ class FavoriteFragment : Fragment() {
         initializeFirebase()
         setupViews()
         loadFavorites()
+
+        homeViewModel.refreshTrigger.observe(viewLifecycleOwner) {
+            loadFavorites()
+        }
     }
 
     private fun initializeFirebase() {
